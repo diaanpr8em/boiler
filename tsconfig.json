@@ -1,0 +1,14 @@
+{
+  // https://nuxt.com/docs/guide/concepts/typescript
+  "extends": "./.nuxt/tsconfig.json",
+  "esModuleInterop": true,
+  "allowJs": true,
+  "strict": true,
+  "allowSyntheticDefaultImports": true,
+  "compilerOptions": {
+    "lib": [
+      "esnext",
+      "dom"
+    ]
+  },
+}
