@@ -10,6 +10,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Notifications {
+  id                     Int                      @id @default(autoincrement())
+  userId                 Int
+  entity                 String
+  entityId               Int
+  type                   String
+  status                 String                   @default("unsent")
+  statusMessage          String                   @default("unsent")
+  retryCount             Int                      @default(0)
+  useSystemPreferences   Boolean                  @default(false)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  NotificationRecipients NotificationRecipients[]
+  NotificationContent    NotificationContent[]
+}
+
+model NotificationRecipients {
+  id             Int           @id @default(autoincrement())
+  notifications  Notifications @relation(fields: [notificationId], references: [id])
+  notificationId Int           @unique
+  userId         Int
+  fullName       String
+  email          String
+  mobile         String
+  handle         String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model NotificationContent {
+  id             Int           @id @default(autoincrement())
+  notifications  Notifications @relation(fields: [notificationId], references: [id])
+  notificationId Int           @unique
+  contentType    ContentTypes  @default(HTML)
+  content        String        @db.Text()
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
 model User {
   id           Int           @id @default(autoincrement())
   email        String        @unique
@@ -32,10 +71,15 @@ model UserSecurity {
 }
 
 model UserRoles {
-  id           Int      @id @default(autoincrement())
-  role         String
-  user         User     @relation(fields: [userId], references: [id])
-  userId       Int      @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  role      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ContentTypes {
+  HTML
+  TEXT
 }
