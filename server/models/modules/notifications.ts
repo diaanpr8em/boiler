@@ -9,7 +9,7 @@ const recipientSchema = z.object({
 })
 
 const contentSchema = z.object({
-    contentType: z.string().min(3).max(50),
+    contentType: z.enum(['HTML', 'TEXT']),
     content: z.string().min(3).max(1024000)
 })
 

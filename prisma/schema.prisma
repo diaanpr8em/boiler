@@ -16,8 +16,8 @@ model Notifications {
   entity                 String
   entityId               Int
   type                   String
-  status                 String                   @default("unsent")
-  statusMessage          String                   @default("unsent")
+  status                 StatusTypes              @default(NEW)
+  statusMessage          String                   @default("NEW")
   retryCount             Int                      @default(0)
   useSystemPreferences   Boolean                  @default(false)
   createdAt              DateTime                 @default(now())
@@ -82,4 +82,11 @@ model UserRoles {
 enum ContentTypes {
   HTML
   TEXT
+}
+
+enum StatusTypes {
+  NEW
+  PROCESSING
+  COMPLETE
+  FAILED
 }
