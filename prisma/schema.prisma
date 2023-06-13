@@ -49,7 +49,26 @@ model NotificationContent {
   updatedAt      DateTime      @updatedAt
 }
 
-model User {
+model Subscriptions {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SubscriptionMembers {
+  id             Int           @id @default(autoincrement())
+  subscriptions  Subscriptions @relation(fields: [subscriptionId], references: [id])
+  subscriptionId Int
+  users          Users         @relation(fields: [userId], references: [id])
+  userId         Int
+  description    String        @db.VarChar(255)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Users {
   id           Int           @id @default(autoincrement())
   email        String        @unique
   name         String
