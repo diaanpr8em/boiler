@@ -4,8 +4,8 @@ const recipientSchema = z.object({
     userId: z.number(),
     fullName: z.string().min(3).max(150),
     email: z.string().email(),
-    mobile: z.string().min(3).max(50),
-    handle: z.string().min(3).max(150)
+    mobile: z.string().min(0).max(50),
+    handle: z.string().min(0).max(150)
 })
 
 const contentSchema = z.object({
