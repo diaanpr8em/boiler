@@ -9,15 +9,13 @@ export const insertBundle =  (notificationBundle: NotificationRequest) => {
 		data: {
 			entity: notificationBundle.notification.entity,
             NotificationRecipients: {
-                set [
-                    { }
-                ]
+                createMany: {  
+                    data: notificationBundle.recipients
+                }
             },
             NotificationContent: { 
                 createMany: {
-                    data: {
-                         notificationBundle.content
-                    }
+                    data: notificationBundle.content
                 }
             }
 		}
