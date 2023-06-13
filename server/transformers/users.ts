@@ -1,6 +1,6 @@
-import { User, UserSecurity } from "@prisma/client";
+import { Users, UserSecurity } from "@prisma/client";
 
-type UserType = User & {
+type UserType = Users & {
 	UserSecurity: UserSecurity | null;
 }
 

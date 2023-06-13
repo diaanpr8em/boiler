@@ -2,7 +2,7 @@ import { prisma } from "./prismaConnection"
 import { hashSync } from 'bcrypt'
 import { z } from "zod"
 
-import { userRegister } from "../models/user"
+import { userRegister } from "../models/users"
 
 type UserRegisterRequest = z.TypeOf<typeof userRegister>;
 

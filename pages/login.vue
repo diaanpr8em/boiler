@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { userLogin } from "~/server/models/user"
+	import { userLogin } from "~/server/models/users"
 	import { z } from 'zod'
 
 	type userLoginInput = z.infer<typeof userLogin>

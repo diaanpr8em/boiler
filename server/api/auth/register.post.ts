@@ -1,7 +1,7 @@
 import { z } from "zod"
-import { userRegister } from "../../models/user"
+import { userRegister } from "../../models/users"
 import { sendError } from 'h3'
-import { registerUser, userExists } from "../../db/user"
+import { registerUser, userExists } from "../../db/users"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)

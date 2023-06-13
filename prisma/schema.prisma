@@ -29,7 +29,7 @@ model Notifications {
 model NotificationRecipients {
   id             Int           @id @default(autoincrement())
   notifications  Notifications @relation(fields: [notificationId], references: [id])
-  notificationId Int           @unique
+  notificationId Int
   userId         Int
   fullName       String
   email          String
@@ -42,7 +42,7 @@ model NotificationRecipients {
 model NotificationContent {
   id             Int           @id @default(autoincrement())
   notifications  Notifications @relation(fields: [notificationId], references: [id])
-  notificationId Int           @unique
+  notificationId Int
   contentType    ContentTypes  @default(HTML)
   content        String        @db.Text()
   createdAt      DateTime      @default(now())
@@ -50,11 +50,12 @@ model NotificationContent {
 }
 
 model Subscriptions {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String   @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                  Int                   @id @default(autoincrement())
+  name                String
+  description         String                @db.VarChar(255)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  SubscriptionMembers SubscriptionMembers[]
 }
 
 model SubscriptionMembers {
@@ -69,21 +70,22 @@ model SubscriptionMembers {
 }
 
 model Users {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  name         String
-  surname      String
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  UserSecurity UserSecurity?
-  UserRole     UserRoles[]
+  id                  Int                   @id @default(autoincrement())
+  email               String                @unique
+  name                String
+  surname             String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  UserSecurity        UserSecurity?
+  UserRole            UserRoles[]
+  SubscriptionMembers SubscriptionMembers[]
 }
 
 model UserSecurity {
   id           Int      @id @default(autoincrement())
   password     String
   refreshToken String?  @unique
-  user         User     @relation(fields: [userId], references: [id])
+  user         Users    @relation(fields: [userId], references: [id])
   userId       Int      @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -92,7 +94,7 @@ model UserSecurity {
 model UserRoles {
   id        Int      @id @default(autoincrement())
   role      String
-  user      User     @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id])
   userId    Int      @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

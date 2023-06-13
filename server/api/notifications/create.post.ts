@@ -1,11 +1,6 @@
 import { z } from "zod"
-import { userLogin } from "../../models/users"
 import { sendError } from 'h3'
-import { userExists } from "../../db/users"
-import { compare } from "bcrypt"
-import { generateTokens, sendRefreshToken } from "../../utils/jwt"
-import { userTransform } from "../../transformers/users"
-import { updateRefreshToken } from "../../db/userSecurity"
+import { userLogin } from "../../models/users"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)

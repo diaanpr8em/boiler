@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { userLogin } from "~/server/models/user"
+import { userLogin } from "~/server/models/users"
 
 type userLoginInput = z.infer<typeof userLogin>
 
