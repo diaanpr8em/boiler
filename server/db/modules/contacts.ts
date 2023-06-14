@@ -1,10 +1,16 @@
 import { prisma } from "../prismaConnection";
 import { z } from "zod";
-import { contactSchema } from "~/server/models/modules/contacts";
+import {
+  contactInsertSchema,
+  contactSearchSchema,
+  contactUpdateSchema,
+} from "~/server/models/modules/contacts";
 
-type ContactsRequest = z.TypeOf<typeof contactSchema>;
+type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
+type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;
+type ContactsSearchRequest = z.TypeOf<typeof contactSearchSchema>;
 
-export const insert = (contactSchema: ContactsRequest) => {
+export const insert = (contactSchema: ContactsInsertRequest) => {
   return prisma.contacts.create({
     data: {
       email: contactSchema.email,
@@ -12,5 +18,27 @@ export const insert = (contactSchema: ContactsRequest) => {
       handle: contactSchema.handle,
       mobile: contactSchema.mobile,
     },
+  });
+};
+
+export const update = (contactSchema: ContactsUpdateRequest) => {
+  return prisma.contacts.update({
+    where: { id: contactSchema.id },
+    data: contactSchema,
+  });
+};
+
+export const search = (contactSearchSchema: ContactsSearchRequest) => {
+  return prisma.contacts.findMany({
+    where: {
+      OR: [
+        {
+          email: { contains: contactSearchSchema.searchTerm }
+        },
+        {
+          fullName: { contains: contactSearchSchema.searchTerm }
+        }
+      ]
+    }
   });
 };

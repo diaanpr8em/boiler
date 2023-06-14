@@ -9,17 +9,17 @@ export const insertBundle = (notificationBundle: NotificationRequest) => {
     data: {
       entity: notificationBundle.notification.entity,
       entityId: notificationBundle.notification.entityId,
-      NotificationRecipients: {
-        create: notificationBundle.recipients
-      },
-      NotificationContent: {
-        create: notificationBundle.content
-      },
       type: notificationBundle.notification.type,
       status: "NEW",
       useSystemPreferences:
         notificationBundle.notification.useSystemPreferences,
       userId: notificationBundle.notification.userId,
+      NotificationRecipients: {
+        create: notificationBundle.recipients,
+      },
+      NotificationContent: {
+        create: notificationBundle.content,
+      },
     },
   });
   /*data: {
