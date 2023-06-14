@@ -38,6 +38,9 @@ export const search = (contactSearchSchema: ContactsSearchRequest) => {
         {
           fullName: { contains: contactSearchSchema.searchTerm }
         }
+        {
+          mobile: { contains: contactSearchSchema.searchTerm }
+        }
       ]
     }
   });
