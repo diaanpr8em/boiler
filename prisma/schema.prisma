@@ -10,6 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Contacts {
+  id            Int             @id @default(autoincrement())
+  fullName      String
+  email         String
+  mobile        String
+  handle        String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  ContactGroups ContactGroups[]
+}
+
+model ContactGroups {
+  id          Int      @id @default(autoincrement())
+  contacts    Contacts @relation(fields: [contactId], references: [id])
+  contactId   Int
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Notifications {
   id                     Int                      @id @default(autoincrement())
   userId                 Int

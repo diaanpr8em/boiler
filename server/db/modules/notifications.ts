@@ -1,12 +1,28 @@
-import { z } from "zod"
-import { prisma } from "../prismaConnection"
-import { notificationBundle } from "~/server/models/modules/notifications"
+import { prisma } from "../prismaConnection";
+import { z } from "zod";
+import { notificationBundle } from "~/server/models/modules/notifications";
 
 type NotificationRequest = z.TypeOf<typeof notificationBundle>;
 
-export const insertBundle =  (notificationBundle: NotificationRequest) => {
-	return prisma.notifications.create({
-		data: {
+export const insertBundle = (notificationBundle: NotificationRequest) => {
+  return prisma.notifications.create({
+    data: {
+      entity: notificationBundle.notification.entity,
+      entityId: notificationBundle.notification.entityId,
+      NotificationRecipients: {
+        create: notificationBundle.recipients
+      },
+      NotificationContent: {
+        create: notificationBundle.content
+      },
+      type: notificationBundle.notification.type,
+      status: "NEW",
+      useSystemPreferences:
+        notificationBundle.notification.useSystemPreferences,
+      userId: notificationBundle.notification.userId,
+    },
+  });
+  /*data: {
             entity: notificationBundle.notification.entity,
             entityId: notificationBundle.notification.entityId,
             NotificationRecipients: {
@@ -24,5 +40,5 @@ export const insertBundle =  (notificationBundle: NotificationRequest) => {
             useSystemPreferences: notificationBundle.notification.useSystemPreferences,
             userId: notificationBundle.notification.userId
 		}
-	})
-}
+	})*/
+};
