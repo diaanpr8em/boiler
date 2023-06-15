@@ -30,7 +30,7 @@ export const update = (contactSchema: ContactsUpdateRequest) => {
 };
 
 export const getById = (id: number) => {
-    return prisma.contacts.findFirst({
+    return prisma.contacts.findUnique({
         where: { id: id}
     });
 };
@@ -50,7 +50,7 @@ export const search = (contactSearchSchema: ContactsSearchRequest) => {
         },
         {
           fullName: { contains: contactSearchSchema.searchTerm }
-        }
+        },
         {
           mobile: { contains: contactSearchSchema.searchTerm }
         }
