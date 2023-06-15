@@ -1,31 +1,45 @@
-
 export class SMSAdvancedRequest {
-    messages: Message[]
+    messages: Message[] | undefined
 
-    constructor(messages: Message[]) {
-        this.messages = messages
+    constructor(data?: Message[]) {
+        if (data) {
+            Object.assign(this, data)
+            return
+        }
+
+        this.messages = []
     }
 }
 export class SMSAdvancedResponse {
 
 }
 export class Message {
-    destinations: Destination[]
-    from: string
-    text: string
+    destinations: Destination[] | undefined
+    from: string | undefined
+    text: string | undefined
 
-    constructor(destinations: Destination[], from: string, text: string)
+    constructor(data?: Message)
     {
-        this.destinations = destinations
-        this.from = from
-        this.text = text
+        if (data) {
+            Object.assign(this, data)
+            return
+        }
+
+        this.destinations = []
+        this.from = ""
+        this.text = ""
     }
 }
 export class Destination {
-    to: string[]
+    to: string[] | undefined
 
-    constructor(to: string[])
+    constructor(data?: Destination)
     {
-        this.to = to
+        if (data) {
+            Object.assign(this, data)
+            return
+        }
+
+        this.to = []
     }
 }
