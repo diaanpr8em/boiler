@@ -12,11 +12,11 @@ const generateRefreshToken = (userId: number) => {
 }
 
 export const generateTokens = (userId: number) => {
-	const accessToken = generateAccessToken(userId)
+	const token = generateAccessToken(userId)
 	const refreshToken = generateRefreshToken(userId)
 
 	return {
-		accessToken,
+		token,
 		refreshToken
 	}
 }

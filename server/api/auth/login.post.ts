@@ -1,10 +1,9 @@
 import { z } from "zod"
-import { userLogin } from "../../models/users"
+import { UserLoginResponse, userLogin } from "../../models/users"
 import { sendError } from 'h3'
 import { userExists } from "../../db/users"
 import { compare } from "bcrypt"
 import { generateTokens, sendRefreshToken } from "../../utils/jwt"
-import { userTransform } from "../../transformers/users"
 import { updateRefreshToken } from "../../db/userSecurity"
 
 export default defineEventHandler(async (event) => {
@@ -28,16 +27,14 @@ export default defineEventHandler(async (event) => {
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Password or Email is invalid'}))
 		}
 		
-		const { accessToken, refreshToken } = generateTokens(user.id)
+		const { token, refreshToken } = generateTokens(user.id)
 
 		await updateRefreshToken(user.id, refreshToken)
 		
 		sendRefreshToken(event, refreshToken)
 
-		return {
-			token: accessToken,
-			user: userTransform(user)
-		}
+		return new UserLoginResponse({user, token})
+
 	} catch (e) {
 		if (e instanceof z.ZodError) {
 			return sendError(event, createError({statusCode: 400, statusMessage: JSON.stringify(e.flatten())}))

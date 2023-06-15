@@ -18,11 +18,16 @@
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
+    "@pinia/nuxt": "^0.4.11",
     "@prisma/client": "^4.15.0",
     "bcrypt": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
+    "pinia": "^2.1.4",
     "sass": "^1.63.3",
     "vuetify": "^3.3.3",
     "zod": "^3.21.4"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }
