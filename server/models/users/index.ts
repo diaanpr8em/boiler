@@ -17,8 +17,8 @@ const userRegister = z.object({
 export class UserLoginResponse {
 	token: string | undefined
 	user: Users & {
-		UserSecurity: UserSecurity | undefined
-	} | undefined
+		UserSecurity: UserSecurity | null
+	}
 
 	constructor(data?: UserLoginResponse) {
 		if (data) {
