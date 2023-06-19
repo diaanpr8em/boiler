@@ -1,6 +1,6 @@
 import { prisma } from "../prismaConnection";
 import { z } from "zod";
-import { notificationBundle } from "~/server/models/modules/notifications";
+import { notificationBundle } from "~/server/models/validation/modules/notifications";
 
 type NotificationRequest = z.TypeOf<typeof notificationBundle>;
 

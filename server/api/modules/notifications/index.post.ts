@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { notificationBundle } from "../../../models/modules/notifications"
+import { notificationBundle } from "../../../models/validation/modules/notifications"
 import { insertBundle } from "../../../db/modules/notifications"
 
 export default defineEventHandler(async (event) => {

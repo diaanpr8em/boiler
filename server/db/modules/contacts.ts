@@ -4,7 +4,7 @@ import {
   contactInsertSchema,
   contactSearchSchema,
   contactUpdateSchema,
-} from "~/server/models/modules/contacts";
+} from "~/server/models/validation/modules/contacts";
 
 type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
 type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;

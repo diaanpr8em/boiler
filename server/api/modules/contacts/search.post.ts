@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { contactSearchSchema } from '~/server/models/modules/contacts';
+import { contactSearchSchema } from '~/server/models/validation/modules/contacts';
 import { search } from './../../../db/modules/contacts';
 
 export default defineEventHandler(async (event) => {
