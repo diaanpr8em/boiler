@@ -11,6 +11,7 @@ Example Request:
       ],
       "from": "InfoSMS",
       "text": "This is a sample message"
+      "reference": "reference-1234"
     }
   ]
 }
@@ -18,6 +19,7 @@ Example Request:
 Example Response:
 {
   "bulkId": "2034072219640523072",
+  "reference": "reference-1234"
   "messages": [
     {
       "messageId": "2250be2d4219-3af1-78856-aabe-1362af1edfd2",
