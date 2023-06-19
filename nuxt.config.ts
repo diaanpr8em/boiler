@@ -1,4 +1,7 @@
 export default defineNuxtConfig({
+  imports: {
+    dirs: ['stores']
+  },
   css: [
     'vuetify/lib/styles/main.sass',
     '@mdi/font/css/materialdesignicons.min.css'
@@ -11,7 +14,10 @@ export default defineNuxtConfig({
     JWT_SECRET: process.env.JWT_SECRET,
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   },
-  modules: [
-    '@pinia/nuxt',
-  ]
+  modules: ['@pinia/nuxt'],
+  pinia: {
+    autoImports: [
+      'defineStore'
+    ]
+  }
 })

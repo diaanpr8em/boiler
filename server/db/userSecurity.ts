@@ -10,3 +10,11 @@ export const updateRefreshToken =  (userId: number, refreshToken: string) => {
 		}
 	})
 }
+
+export const getRefreshToken = (refreshToken: string) => {
+	return prisma.userSecurity.findUnique({
+		where: {
+			refreshToken
+		}
+	})
+}

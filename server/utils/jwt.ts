@@ -3,6 +3,22 @@ import { H3Event } from 'h3'
 
 const runtimeConfig = useRuntimeConfig()
 
+export const decodeAccessToken = (token: string) => {
+	try {
+		return jwt.verify(token, runtimeConfig.JWT_SECRET)
+	} catch (error)  {
+		return null
+	}
+}
+export const decodeRefreshToken = (token: string) => {
+	try {
+		return jwt.verify(token, runtimeConfig.JWT_REFRESH_SECRET)
+	} catch (error)  {
+		return null
+	}
+}
+
+
 const generateAccessToken = (userId: number) => {
 	return jwt.sign({ userId }, runtimeConfig.JWT_SECRET, { expiresIn: '15m' })
 }

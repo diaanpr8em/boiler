@@ -25,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "pinia": "^2.1.4",
     "sass": "^1.63.3",
+    "url-pattern": "^1.0.3",
     "vuetify": "^3.3.3",
     "zod": "^3.21.4"
   },

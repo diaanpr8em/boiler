@@ -1,5 +1,3 @@
-import { defineStore } from 'pinia'
-
 // main is the name of the store. It is unique across your application
 // and will appear in devtools
 export const useGeneralStore = defineStore('general', {

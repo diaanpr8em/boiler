@@ -32,19 +32,14 @@
 </template>
 
 <script lang="ts" setup>
-	import { userLogin } from "~/server/models/users"
-	import { z } from 'zod'
-
-	type userLoginInput = z.infer<typeof userLogin>
-
 	definePageMeta({
 		layout: 'auth',
 	})
 
-	const { login } = useAuth()
-
 	const hidePass = ref(true)
 	const form = ref<HTMLFormElement | null>(null)
+
+	const authStore = useAuthStore()
 
 	const formData = reactive({
 		email: '',
@@ -84,11 +79,13 @@
 	const onSubmit = async (): Promise<void> => {
 		try {
 			const { valid } = await form.value?.validate()
-			console.log('submit called')
-			console.log('valid', valid)
 			if (!valid) return
-			await login(formData)
-			console.log('submit')
+
+			const response = await useAsyncData('login', () => authStore.login(formData)) 
+			console.log(response)
+
+			console.log('TOKEN--->', authStore.token)
+			
 		} catch (error) {
 			console.log(error)
 		} finally {
