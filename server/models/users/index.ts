@@ -18,17 +18,19 @@ export class UserLoginResponse {
 	token: string | undefined
 	user: Users & {
 		UserSecurity: UserSecurity | null
-	}
+	} | null = null
 
 	constructor(data?: UserLoginResponse) {
 		if (data) {
 			Object.assign(this, data)
-			delete this.user?.UserSecurity
+			if (this.user) {
+				this.user.UserSecurity = null
+			}
 			return
 		}
 
 		this.token = ""
-		this.user = undefined
+		this.user = null
 	}
 }
 
