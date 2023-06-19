@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { contactUpdateSchema } from '~/server/models/modules/contacts';
+import { contactUpdateSchema } from '~/server/models/validation/modules/contacts';
 import { update } from './../../../db/modules/contacts';
 
 export default defineEventHandler(async (event) => {
