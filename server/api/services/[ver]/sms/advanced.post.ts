@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { requestSchema } from '../../../models/validation/services/sms/advanced';
-import { insert } from './../../../db/services/sms';
+import { requestSchema } from '../../../../models/validation/services/sms/advanced';
+import { insert } from '../../../../db/services/sms';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
