@@ -6,17 +6,20 @@ type userLoginInput = z.infer<typeof userLogin>
 interface IUserAuthState {
   userData: Users | null
   token: string | null
+  loggedIn: boolean
 }
 
 export const useAuthStore = defineStore('auth', () => {
   const auth =  ref<IUserAuthState>({
     userData: null,
-    token: null
+    token: null,
+    loggedIn: false
   })
 
   const token = computed(() => auth.value.token)
   const userId = computed(() => auth.value.userData?.id)
   const userName = computed(() => auth.value.userData?.name)
+  const loggedIn = computed(() => auth.value.loggedIn)
 
   watch(
     auth,
@@ -38,9 +41,22 @@ export const useAuthStore = defineStore('auth', () => {
       if (token) {
         auth.value.userData = user as Users
         auth.value.token = token
+        auth.value.loggedIn = true
       }
 
       return {token, user}
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const logout = async (): Promise<void> => {
+    try {
+      await useFetchApi('/api/auth/logout', { method: 'POST' })
+
+      auth.value.userData = null
+      auth.value.token = null
+      auth.value.loggedIn = false
     } catch (error) {
       throw error
     }
@@ -60,6 +76,7 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (user) {
         auth.value.userData = user
+        auth.value.loggedIn = true
       }
   
       return new UserLoginResponse({token, user} as UserLoginResponse)
@@ -74,48 +91,13 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
+    loggedIn,
     token,
     userId,
     userName,
     login,
+    logout,
     refreshToken,
     reset
   }
 })
-
-// export const useAuthStore2 = defineStore('auth', {
-//   state: (): IUserAuthState => ({
-//     userData: null,
-//     token: null
-//   }),
-//   getters: {
-//     getUserData: (state: IUserAuthState) => state.userData,
-//     getToken: (state: IUserAuthState) => state.token
-//   },
-//   actions: {
-//     login(body: userLoginInput): Promise<UserLoginResponse> {
-//       return new Promise(async (resolve, reject) => {
-//         try {
-//           const data = await $fetch('/api/auth/login', {
-//             method: 'POST',
-//             body
-//           })
-  
-//           const { token, user } = new UserLoginResponse(data as UserLoginResponse)
-  
-//           if (token) {
-//             this.userData = user as Users
-//           }
-  
-//           resolve({token, user})
-//         } catch (error) {
-//           reject(error)
-//         }
-//       })
-//     },
-//     reset() {
-//       this.userData = null
-//       this.token = null
-//     },
-//   }
-// })

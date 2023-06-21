@@ -9,7 +9,6 @@ export default (url: string, options: any = {}) => {
 		headers: {
 			...options.headers,
 			'Authorization': `Bearer ${token}`
-
 		}
 	})
 }
