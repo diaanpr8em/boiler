@@ -2,14 +2,19 @@ import { z } from "zod"
 import { sendError } from 'h3'
 import { requestSchema } from '../../../../models/validation/services/sms/advanced';
 import { insert } from '../../../../db/services/sms';
+import { queueJob } from "~/server/bll/queues/worker";
+import { JobNames, QueueNames } from "~/server/models/enums/queues"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
 
 	try {
+    // switch between version
+    //const { ver } = param.query;
+
 		const parsedBody = requestSchema.parse(body)
-		
 		const sms = await insert(parsedBody)
+    const job = queueJob(QueueNames.OUTBOUND, JobNames.SMS_SEND, sms.id );
 
 		return {
 			sms
