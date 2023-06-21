@@ -11,7 +11,7 @@ export const processSMS = async (body: SMSAdvancedMessage) => {
   //const hasBalance = hasSufficientBalanceAvailable(user, )
   // send if credits
   const sms = await insert(body);
-  const job = queueServiceJob(QueueNames.OUTBOUND, JobNames.SMS_SEND, sms);
+  const job = await queueServiceJob(QueueNames.OUTBOUND, JobNames.SMS_SEND, sms);
 
   return { sms };
 };
