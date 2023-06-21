@@ -10,6 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Billing {
+  id             Int            @id @default(autoincrement())
+  productId      Int
+  availableFunds Decimal        @default(0) @db.Decimal(12, 2)
+  createdAt      DateTime
+  updatedAt      DateTime
+  BillingUsage   BillingUsage[]
+}
+
+model BillingUsage {
+  id         Int      @id @default(autoincrement())
+  billing    Billing  @relation(fields: [billingId], references: [id])
+  billingId  Int
+  /// start of billing period
+  startAt    DateTime
+  /// end of billing period
+  endAt      DateTime
+  /// this is a count of uses
+  usageCount Int
+  /// this is the monetary value of usage
+  usage      Decimal  @default(0) @db.Decimal(12, 2)
+  createdAt  DateTime
+  updatedAt  DateTime
+}
+
 model Contacts {
   id            Int             @id @default(autoincrement())
   fullName      String

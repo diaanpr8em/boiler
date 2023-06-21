@@ -1,17 +1,18 @@
 import { Queue, QueueOptions } from "bullmq";
+import { Services } from '@prisma/client';
 
 const config = useRuntimeConfig();
 
-export const queueJob = async (
+export const queueServiceJob = async (
   queueName: string,
   jobName: string,
-  serviceId: number
+  serviceRecord: Services
 ) => {
   const aQueue = new Queue(queueName, {
     connection: {
       host: config.REDIS_HOST,
-      port: config.REDIS_PORT,
+      port: config.REDIS_PORT as unknown as number
     },
   });
-  await aQueue.add(jobName, serviceId);
+  await aQueue.add(jobName, JSON.stringify(serviceRecord));
 };

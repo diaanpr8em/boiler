@@ -1,18 +1,19 @@
-import { z } from "zod";
+//import { z } from "zod";
 import { JobStatus, ServiceTypes, Services, StatusTypes } from "@prisma/client";
 import { prisma } from "../prismaConnection";
-import { requestSchema } from "~/server/models/validation/services/sms/advanced";
+//import { requestSchema } from "~/server/models/validation/services/sms/advanced";
+import { SMSAdvancedMessage } from '~/server/models/services/generic/sms';
 
-type AdvancedRequestSchema = z.TypeOf<typeof requestSchema>;
+//type AdvancedRequestSchema = z.TypeOf<typeof requestSchema>;
 
-export const insert = (insertSchema: AdvancedRequestSchema) => {
+export const insert = (model: SMSAdvancedMessage) => {
   // queue the job
   // insert the data
   var record = prisma.services.create({
     data: {
       jobStatus: "NEW",
       type: "SMS",
-      request: insertSchema.toString(),
+      request: JSON.stringify(model),
       response: "",
       providerRequest: "",
       providerResponse: "",
