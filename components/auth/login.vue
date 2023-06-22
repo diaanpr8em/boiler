@@ -93,7 +93,7 @@
 			if (!valid) return
 
 			const response = await useAsyncData('login', () => authStore.login(formData)) 
-			if (authStore.token) router.push('/')
+			if (authStore.token) router.push('/client')
 		} catch (error) {
 			console.log(error)
 		} finally {

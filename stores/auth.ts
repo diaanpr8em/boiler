@@ -7,19 +7,23 @@ interface IUserAuthState {
   userData: Users | null
   token: string | null
   loggedIn: boolean
+  isAuthLoading: boolean
 }
 
 export const useAuthStore = defineStore('auth', () => {
   const auth =  ref<IUserAuthState>({
     userData: null,
     token: null,
-    loggedIn: false
+    loggedIn: false,
+    isAuthLoading: true
   })
 
   const token = computed(() => auth.value.token)
   const userId = computed(() => auth.value.userData?.id)
-  const userName = computed(() => auth.value.userData?.name)
+  const userName = computed(() => `${auth.value.userData?.name} ${auth.value.userData?.surname}`)
   const loggedIn = computed(() => auth.value.loggedIn)
+  const isAuthLoading = computed(() => auth.value.isAuthLoading)
+  const userEmail = computed(() => auth.value.userData?.email)
 
   watch(
     auth,
@@ -28,6 +32,11 @@ export const useAuthStore = defineStore('auth', () => {
     },
     { deep: true }
   )
+
+  // private
+  const setAuthLoading = (value: boolean) => {
+    auth.value.isAuthLoading = value
+  }
 
   const login = async (body: userLoginInput): Promise<UserLoginResponse> => {
     try {
@@ -64,6 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const refreshToken = async (): Promise<UserLoginResponse> => {
     try {
+      setAuthLoading(true)
       const tokenData = await $fetch('/api/auth/refresh')
       const { token } = tokenData
 
@@ -78,10 +88,12 @@ export const useAuthStore = defineStore('auth', () => {
         auth.value.userData = user
         auth.value.loggedIn = true
       }
-  
+      
       return new UserLoginResponse({token, user} as UserLoginResponse)
     } catch (error) {
       throw error;
+    } finally {
+      setAuthLoading(false)
     }
   }
 
@@ -91,8 +103,10 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   return {
+    isAuthLoading,
     loggedIn,
     token,
+    userEmail,
     userId,
     userName,
     login,

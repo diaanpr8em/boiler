@@ -1,19 +1,17 @@
 <template>
-    <v-container>
-        <v-row>
-            <v-col>
-                <h1>Home</h1>
-                <v-btn color="primary" variant="flat" @click="logout">Logout</v-btn>
-            </v-col>
-        </v-row>
-    </v-container>
+    <LoadingScreen v-if="authStore.isAuthLoading"></LoadingScreen>
 </template>
 
 <script lang="ts" setup>
+    definePageMeta({
+        layout: "auth",
+        title: "Index",
+    });
+
     const authStore = useAuthStore()
+    const router = useRouter()
 
-    const logout = () => {
-        authStore.logout()
+    if  (authStore.loggedIn) {
+        router.push('/client')
     }
-
 </script>

@@ -9,20 +9,10 @@
 					<v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
 				</template>
 
-				<v-app-bar-title>{{$route.meta.title}}</v-app-bar-title>
+				<v-app-bar-title>Photos</v-app-bar-title>
 
 				<template v-slot:append>
-                    <v-btn variant="outlined" size="small">Add Funds</v-btn>
-                    <v-menu>
-                        <template v-slot:activator="{ props }">
-                            <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
-                        </template>
-                        <v-list>
-                            <v-list-item @click="logout">
-                                <v-list-item-title>Logout</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
+					<v-btn icon="mdi-dots-vertical"></v-btn>
 				</template>
 			</v-app-bar>
 
@@ -36,11 +26,6 @@
 						:title="authStore.userName"
 						:subtitle="authStore.userEmail"
 					>
-                        <template v-slot:prepend>
-                            <v-avatar color="primary">
-                                <span class="text-h6">DP</span>
-                            </v-avatar>
-                        </template>
 						<template v-slot:append>
 							<v-btn
 								size="small"
@@ -86,12 +71,6 @@
 	const rail = ref(false)
 
 	const authStore = useAuthStore()
-    const router = useRouter()
-
-    const logout = () => {
-        authStore.logout()
-        router.push('/')
-    }
 
 	const items = [
         { text: 'My Files', icon: 'mdi-folder' },

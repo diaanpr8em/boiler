@@ -1,6 +1,17 @@
 import { UserSecurity, Users } from '@prisma/client'
 import { z } from 'zod'
 
+const userResetPass = z.object({
+	linkId: z.string(),
+	linkType: z.string(),
+	password: z.string().min(8).max(100),
+	passwordConfirmation: z.string().min(8).max(100),
+})
+
+const userForgotPass = z.object({
+	email: z.string().email(),
+})
+
 const userLogin = z.object({
 	email: z.string().email(),
 	password: z.string().min(8).max(100),
@@ -35,6 +46,8 @@ export class UserLoginResponse {
 }
 
 export {
+	userForgotPass,
 	userLogin,
-	userRegister
+	userRegister,
+	userResetPass
 }

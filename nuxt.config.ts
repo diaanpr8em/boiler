@@ -14,7 +14,8 @@ export default defineNuxtConfig({
     JWT_SECRET: process.env.JWT_SECRET,
     JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
     REDIS_HOST: process.env.REDIS_HOST,
-    REDIS_PORT: process.env.REDIS_PORT
+    REDIS_PORT: process.env.REDIS_PORT,
+    BASE_URL: process.env.BASE_URL,
   },
   modules: ['@pinia/nuxt'],
   pinia: {

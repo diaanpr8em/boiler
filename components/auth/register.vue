@@ -31,13 +31,13 @@
         ></v-text-field>
         <v-text-field 
             class="mt-3"
-            label="Password"
+            label="Confirm Password"
             variant="outlined"
             v-model="formData.passwordConfirmation"
             :rules="confirmPasswordRules"
             :type="hideConfirmPass ? 'password' : 'text'"
             :append-inner-icon="hidePass ? 'mdi-eye-outline' : 'mdi-eye-off-outline'" 
-            @click:append-inner="togglePassword" 
+            @click:append-inner="toggleConfirmPassword" 
         ></v-text-field>
         <!-- center the buttons -->
         <div class="d-flex flex-row align-center justify-center mb-3">
@@ -126,6 +126,9 @@
 
     const togglePassword = (): void => {
 		hidePass.value = !hidePass.value
+	}
+    const toggleConfirmPassword = (): void => {
+		hideConfirmPass.value = !hideConfirmPass.value
 	}
 
     const register = async (): Promise<void> => {

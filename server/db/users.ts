@@ -40,3 +40,18 @@ export const registerUser = async (parsedBody: UserRegisterRequest) => {
 		}
 	})
 }
+
+export const resetPassword = async (email: string, password: string) => {
+	return prisma.users.update({
+		where: {
+			email
+		},
+		data: {
+			UserSecurity: {
+				update: {
+					password: await hashSync(password, 10)
+				}
+			}
+		}
+	})
+}

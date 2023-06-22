@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if="authStore.loggedIn">
+    <LoadingScreen v-if="authStore.isAuthLoading"></LoadingScreen>
+    <div v-else-if="authStore.loggedIn || route.meta.title == 'Reset Password'">
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
@@ -13,6 +14,7 @@
 
 <script lang="ts" setup>
   const authStore = useAuthStore()
+  const route = useRoute()
 
   onBeforeMount(() => {
     authStore.refreshToken()
