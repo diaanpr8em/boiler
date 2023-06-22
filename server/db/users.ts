@@ -6,7 +6,7 @@ import { userRegister } from "../models/users"
 
 type UserRegisterRequest = z.TypeOf<typeof userRegister>;
 
-export const getUserById = (id: number) => {
+export const getById = (id: number) => {
 	return prisma.users.findUnique({
 		where: {
 			id
