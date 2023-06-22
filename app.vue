@@ -1,8 +1,13 @@
 <template>
   <div>
-    <NuxtLayout>
-			<NuxtPage />
-		</NuxtLayout>
+    <div v-if="authStore.loggedIn">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </div>
+    <div v-else>
+      <auth></auth>
+    </div>
   </div>
 </template>
 

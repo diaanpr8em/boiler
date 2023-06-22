@@ -18,3 +18,14 @@ export const getRefreshToken = (refreshToken: string) => {
 		}
 	})
 }
+
+export const removeRefreshToken = (refreshToken: string) => {
+	return prisma.userSecurity.update({
+		where: {
+			refreshToken
+		},
+		data: {
+			refreshToken: null
+		}
+	})
+}
