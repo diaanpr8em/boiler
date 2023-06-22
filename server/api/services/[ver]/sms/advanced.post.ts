@@ -1,8 +1,8 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { requestSchema } from '../../../../models/validation/services/sms/advanced';
 import { processSMS } from "~/server/bll/services/sms";
-
+import { BusinessError } from "~/server/models/exceptions/BusinessError";
+import { requestSchema } from "~/server/models/validation/services/sms/advanced";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -23,6 +23,10 @@ export default defineEventHandler(async (event) => {
 		if (e instanceof z.ZodError) {
 			return sendError(event, createError({statusCode: 400, statusMessage: JSON.stringify(e.flatten())}))
 		}
+
+    if (e instanceof BusinessError){
+      return sendError(event, createError({statusCode: 400, statusMessage: JSON.stringify(e)}))
+    }
 
 		return sendError(event, createError({statusCode: 500, statusMessage: 'Server Error'}))
 	}

@@ -108,7 +108,7 @@ model NotificationContent {
 
 model Products {
   id             Int              @id @default(autoincrement())
-  name           String
+  name           String           
   description    String           @db.Text
   unitPrice      Decimal          @default(1) @db.Decimal(7, 4)
   createdAt      DateTime         @default(now())
@@ -165,6 +165,7 @@ model Users {
   email         String          @unique
   name          String
   surname       String
+  currency      String          @default("ZAR")
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   UserSecurity  UserSecurity?
@@ -211,6 +212,8 @@ enum ProviderType {
 enum ServiceTypes {
   EMAIL
   SMS
+  VIBER
+  VOICE
   WHATSAPP
 }
 

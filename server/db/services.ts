@@ -1,24 +1,19 @@
-//import { z } from "zod";
-import { JobStatus, ServiceTypes, Services, StatusTypes } from "@prisma/client";
-import { prisma } from "../prismaConnection";
-//import { requestSchema } from "~/server/models/validation/services/sms/advanced";
-import { SMSAdvancedMessage } from '~/server/models/services/generic/sms';
+import { JobStatus, ServiceTypes, StatusTypes } from "@prisma/client";
+import { prisma } from "./prismaConnection";
 
-//type AdvancedRequestSchema = z.TypeOf<typeof requestSchema>;
-
-export const insert = (model: SMSAdvancedMessage) => {
+export const insert = (model: any, serviceType: ServiceTypes) => {
   // queue the job
   // insert the data
   var record = prisma.services.create({
     data: {
-      jobStatus: "NEW",
-      type: "SMS",
+      jobStatus: JobStatus.NEW,
+      type: serviceType,
       request: JSON.stringify(model),
       response: "",
       providerRequest: "",
       providerResponse: "",
       userId: 1,
-      status: "NEW",
+      status: JobStatus.NEW,
     },
   });
 
@@ -38,13 +33,13 @@ export const update = (id: number, jobId: string, jobStatus: JobStatus, status: 
 };
 
 export const getById = (id: number) => {
-  return prisma.contacts.findUnique({
+  return prisma.services.findUnique({
     where: { id: id },
   });
 };
 
 export const deleteById = (id: number) => {
-  return prisma.contacts.delete({
+  return prisma.services.delete({
     where: { id: id },
   });
 };
