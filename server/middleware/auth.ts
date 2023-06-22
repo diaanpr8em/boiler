@@ -1,7 +1,7 @@
 import UrlPattern from 'url-pattern'
 import { decodeAccessToken } from '../utils/jwt'
 import { JwtPayload } from 'jsonwebtoken'
-import { getUserById } from '../db/users'
+import { getById } from '../db/users'
 
 export default defineEventHandler(async (event) => {
 	const endpoints = [
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
 	
 	try {
 		const { userId } = decoded as JwtPayload
-		const user = await getUserById(userId)
+		const user = await getById(userId)
 		event.context.auth = { user }
 	} catch (e) {
 		return

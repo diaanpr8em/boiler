@@ -1,7 +1,7 @@
 import { LinkType } from "@prisma/client"
 import { z } from "zod"
 import { getUniqueLinkByLinkIdAndType } from "~/server/db/uniqueLinks"
-import { getUserById, resetPassword } from "~/server/db/users"
+import { getById, resetPassword } from "~/server/db/users"
 import { userResetPass } from "~/server/models/users"
 
 export default defineEventHandler(async (event) => {
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Link is invalid or expired'}))
         }
 
-        const user = await getUserById(uniqueLink.userId)
+        const user = await getById(uniqueLink.userId)
 
         if (!user) {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Password or Email is invalid'}))
