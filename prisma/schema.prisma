@@ -12,8 +12,9 @@ datasource db {
 
 model Billing {
   id             Int            @id @default(autoincrement())
-  productId      Int
+  subscriptionId Int
   availableFunds Decimal        @default(0) @db.Decimal(12, 2)
+  unitPrice      Decimal        @default(0) @db.Decimal(12, 2)
   createdAt      DateTime
   updatedAt      DateTime
   BillingUsage   BillingUsage[]
@@ -56,6 +57,16 @@ model ContactGroups {
   updatedAt   DateTime @updatedAt
 }
 
+model LookupCurrencies {
+  id                   Int             @id @default(autoincrement())
+  // currency iso code e.g. ZAR
+  code                 String
+  /// compared to US $
+  dollar_exchange_rate Decimal         @default(1) @db.Decimal(7, 4)
+  updateAt             DateTime        @updatedAt
+  Subscriptions        Subscriptions[]
+}
+
 model Notifications {
   id                     Int                      @id @default(autoincrement())
   userId                 Int
@@ -95,6 +106,28 @@ model NotificationContent {
   updatedAt      DateTime      @updatedAt
 }
 
+model Products {
+  id             Int              @id @default(autoincrement())
+  name           String
+  description    String           @db.Text
+  unitPrice      Decimal          @default(1) @db.Decimal(7, 4)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  ProductBundles ProductBundles[]
+  Subscriptions  Subscriptions[]
+}
+
+model ProductBundles {
+  id          Int      @id @default(autoincrement())
+  products    Products @relation(fields: [productId], references: [id])
+  productId   Int
+  name        String
+  description String   @db.Text
+  unitPrice   Decimal  @default(1) @db.Decimal(7, 4)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Services {
   id               Int          @id @default(autoincrement())
   userId           Int
@@ -114,35 +147,29 @@ model Services {
 }
 
 model Subscriptions {
-  id                  Int                   @id @default(autoincrement())
-  name                String
-  description         String                @db.VarChar(255)
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  SubscriptionMembers SubscriptionMembers[]
-}
-
-model SubscriptionMembers {
-  id             Int           @id @default(autoincrement())
-  subscriptions  Subscriptions @relation(fields: [subscriptionId], references: [id])
-  subscriptionId Int
-  users          Users         @relation(fields: [userId], references: [id])
-  userId         Int
-  description    String        @db.VarChar(255)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id         Int              @id @default(autoincrement())
+  products   Products         @relation(fields: [productId], references: [id])
+  productId  Int
+  currency   LookupCurrencies @relation(fields: [currencyId], references: [id])
+  currencyId Int
+  users      Users            @relation(fields: [userId], references: [id])
+  userId     Int
+  /// what each unit costs e.g. email = 0,001
+  unitPrice  Decimal          @default(0) @db.Decimal(7, 4)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
 }
 
 model Users {
-  id                  Int                   @id @default(autoincrement())
-  email               String                @unique
-  name                String
-  surname             String
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  UserSecurity        UserSecurity?
-  UserRole            UserRoles[]
-  SubscriptionMembers SubscriptionMembers[]
+  id            Int             @id @default(autoincrement())
+  email         String          @unique
+  name          String
+  surname       String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  UserSecurity  UserSecurity?
+  UserRole      UserRoles[]
+  Subscriptions Subscriptions[]
 }
 
 model UserSecurity {
