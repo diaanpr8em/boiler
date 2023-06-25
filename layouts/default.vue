@@ -1,31 +1,7 @@
 <template>
 	<v-app>
 		<v-layout>
-			<v-app-bar
-				color="primary"
-				density="compact"
-			>
-				<template v-slot:prepend>
-					<v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
-				</template>
-
-				<v-app-bar-title>{{$route.meta.title}}</v-app-bar-title>
-
-				<template v-slot:append>
-                    <v-btn variant="outlined" size="small">Add Funds</v-btn>
-                    <v-menu>
-                        <template v-slot:activator="{ props }">
-                            <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
-                        </template>
-                        <v-list>
-                            <v-list-item @click="logout">
-                                <v-list-item-title>Logout</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
-				</template>
-			</v-app-bar>
-
+			
 			<v-navigation-drawer
 				v-model="drawer"
 				:rail="rail"
@@ -71,6 +47,33 @@
 					</v-list-item>
 				</v-list>
 			</v-navigation-drawer>
+			
+			<v-app-bar
+				color="primary"
+			>
+				<template v-slot:prepend>
+					<v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
+				</template>
+
+				<v-app-bar-title>{{$route.meta.title}}</v-app-bar-title>
+
+				<template v-slot:append>
+                    <v-btn variant="outlined" size="small">Add Funds</v-btn>
+                    <v-menu>
+                        <template v-slot:activator="{ props }">
+                            <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+                        </template>
+                        <v-list>
+							<v-list-item to="/admin">
+								<v-list-item-title>Admin</v-list-item-title>
+							</v-list-item>
+                            <v-list-item @click="logout">
+                                <v-list-item-title>Logout</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+				</template>
+			</v-app-bar>
 
 			<v-main>
 				<v-container fluid>

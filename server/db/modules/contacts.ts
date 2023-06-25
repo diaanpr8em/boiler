@@ -13,12 +13,6 @@ type ContactsSearchRequest = z.TypeOf<typeof contactSearchSchema>;
 export const insert = (contactSchema: ContactsInsertRequest) => {
   return prisma.contacts.create({
     data: contactSchema
-    // data: {
-    //   email: contactSchema.email,
-    //   fullName: contactSchema.fullName,
-    //   handle: contactSchema.handle,
-    //   mobile: contactSchema.mobile,
-    // },
   });
 };
 
@@ -41,8 +35,18 @@ export const deleteById = (id: number) => {
     });
 };
 
-export const search = (contactSearchSchema: ContactsSearchRequest) => {
-  return prisma.contacts.findMany({
+export const search = async (contactSearchSchema: ContactsSearchRequest) => {
+  const skip = (contactSearchSchema.page - 1) * contactSearchSchema.rows;
+
+  const sortBy = {
+    orderBy: contactSearchSchema.sortBy?.map(({key, order}: {key: string, order: string}) => {
+      const obj = {} as {[key: string]: string}
+      obj[key] = order
+      return obj
+    })
+  }
+
+  const where = {
     where: {
       OR: [
         {
@@ -56,5 +60,21 @@ export const search = (contactSearchSchema: ContactsSearchRequest) => {
         }
       ]
     }
+  }
+
+  const total = await prisma.contacts.count({
+    ...(contactSearchSchema.searchTerm != '' ? where : {})
+  })
+
+  const records = await prisma.contacts.findMany({
+    skip,
+    take: contactSearchSchema.rows,
+    ...(contactSearchSchema.searchTerm != '' ? where : {}),
+    ...(contactSearchSchema.sortBy ? sortBy : {})
   });
+
+  return {
+    records,
+    total
+  }
 };

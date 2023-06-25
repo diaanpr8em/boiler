@@ -14,6 +14,17 @@ export const getById = (id: number) => {
 	})
 }
 
+export const getUserTenantById = async (id: number) => {
+	return prisma.users.findUnique({
+		where: {
+			id
+		},
+		include: {
+			Tenants: true
+		}
+	})
+}
+
 export const userExists = (email: string) => {
 	return prisma.users.findUnique({
 		where: {

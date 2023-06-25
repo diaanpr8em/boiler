@@ -74,50 +74,13 @@
         surname: ''
 	})
 
-    const requiredRules = (message: string) => [
-		(value: string) => {
-			if (value) return true
+    const requiredRules = (message: string) => useValidationRules('required', '', message)
 
-			return message
-		},
-	]
+    const emailRules = useValidationRules('email')
 
-    const emailRules = [
-		(value: string) => {
-			if (value) return true
+	const passwordRules = useValidationRules('password')
 
-			return 'E-mail is requred.'
-		},
-		(value: string) => {
-			if (/.+@.+\..+/.test(value)) return true
-
-			return 'E-mail must be valid.'
-		},
-	]
-
-	const passwordRules = [
-		(value: string) => {
-			if (value) return true
-
-			return 'Password is requred.'
-		},
-		(value: string) => {
-			if (value.length >= 8) return true
-
-			return 'Password must be at least 8 characters.'
-		}
-	]
-
-    const confirmPasswordRules = [
-        (value: string) => {
-            if (value) return true
-            return 'Password confirmation is required.'
-        },
-        (value: string) => {
-            if (value === formData.password) return true
-            return 'Password confirmation must match.'
-        }
-    ]
+    const confirmPasswordRules = useValidationRules('confirmPassword', formData.password)
 
     const emit = defineEmits(['windowToggle'])
     const handleWindowToggle = (newStep: number): void => {

@@ -53,29 +53,9 @@
         emit('showResetSuccess', true)
     }
 
-    const passwordRules = [
-        (value: string) => {
-            if (value) return true
+    const passwordRules = useValidationRules('password')
 
-            return 'Password is requred.'
-        },
-        (value: string) => {
-            if (value.length >= 8) return true
-
-            return 'Password must be at least 8 characters.'
-        }
-    ]
-
-    const confirmPasswordRules = [
-        (value: string) => {
-            if (value) return true
-            return 'Password confirmation is required.'
-        },
-        (value: string) => {
-            if (value === formData.password) return true
-            return 'Password confirmation must match.'
-        }
-    ]
+    const confirmPasswordRules = useValidationRules('confirmPassword', formData.password)
 
     const togglePassword = (): void => {
 		hidePass.value = !hidePass.value

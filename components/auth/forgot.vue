@@ -4,6 +4,7 @@
             v-model="formData.email"
             label="Email"
             type="email"
+            :rules="emailRules"
             required></v-text-field>
         <div class="d-flex flex-row align-center justify-center mb-3">
             <v-btn 
@@ -36,11 +37,12 @@
         email: ''
     })   
 
-
     const emit = defineEmits(['windowToggle'])
     const handleWindowToggle = (newStep: number): void => {
         emit('windowToggle', newStep)
     }
+
+    const emailRules = useValidationRules('email')
 
     const onSubmit = async () => {
         try {

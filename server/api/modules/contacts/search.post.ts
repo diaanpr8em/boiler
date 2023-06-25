@@ -10,10 +10,12 @@ export default defineEventHandler(async (event) => {
 		const parsedBody = contactSearchSchema.parse(body)
 		
 		const result = await search(parsedBody)
-
-		return {
-			result
+		const response = {
+			page: parsedBody.page,
+			rows: parsedBody.rows,
+			...result
 		}
+		return response
 	} catch (e) {
 		if (e instanceof z.ZodError) {
 			return sendError(event, createError({statusCode: 400, statusMessage: JSON.stringify(e.flatten())}))

@@ -1,10 +1,10 @@
 import { useAuthStore } from "~/stores/auth"
 
-export default (url: string, options: any = {}) => {
+export const useFetchApi = <T>(url: string, options: any = {}): Promise<T> => {
 
 	const token = useAuthStore().token
 
-	return $fetch(url, {
+	return $fetch<T>(url, {
 		...options,
 		headers: {
 			...options.headers,
