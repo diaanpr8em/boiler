@@ -1,4 +1,11 @@
 <template>
+    <NotificationConfirmation
+        :show-alert="showCheckAction"
+        :message="notificationMesg"
+        @confirm="deleteContact"
+        @decline="deleteCancelled"
+    ></NotificationConfirmation>
+    <loader v-if="isProcessing">Deleting...</loader>
     <v-row>
         <v-col>
             <v-data-table-server
@@ -68,7 +75,7 @@
                         size="x-small"
                         color="error"
                         class="mx-1"
-                        @click="() => {}">
+                        @click="onDeleteAction(item)">
                         <v-icon>mdi-delete</v-icon>
                     </v-btn>
                 </template>
@@ -80,10 +87,11 @@
 <script lang="ts" setup>
     import { Contacts } from '@prisma/client';
     import { z } from 'zod';
-    import { VDataTable } from 'vuetify/lib/labs/components.mjs'
+    
     // models
     import { ContactsSearchResponse } from '~/server/models/modules/contacts';
     import { contactSearchSchema } from '~/server/models/validation/modules/contacts';
+    import { ReadonlyDataTableHeader } from '~/server/utils/models'
 
     definePageMeta({
         layout: "admin",
@@ -93,14 +101,14 @@
     const route = useRoute();
 
     const isLoading = ref(false)
+    const isProcessing = ref(false)
+    const showCheckAction = ref(false)
     const serverItems = ref<Contacts[]>([])
     const totalItems = ref(0)
     const itemsPerPage = ref(10)
+    const notificationMesg = ref('You are about to delete this item.')
+    const idToDelete = ref(0)
 
-    // WTF is this?
-    type UnwrapReadonlyArrayType<A> = A extends Readonly<Array<infer I>> ? UnwrapReadonlyArrayType<I> : A
-    type DT = InstanceType<typeof VDataTable>;
-    type ReadonlyDataTableHeader = UnwrapReadonlyArrayType<DT['headers']>;
     const headers: ReadonlyDataTableHeader[] = [
         { key: 'id', title: 'ID', value: 'id', align: 'start', sortable: false },
         { key: 'fullName', title: 'Name', value: 'fullName' },
@@ -137,5 +145,33 @@
         searchRequest.sortBy = sortBy
 
         search()
+    }
+
+    const onDeleteAction = (item: any) => {
+        notificationMesg.value = `You are about to delete ${item.columns.fullName}.`
+        showCheckAction.value = true
+        idToDelete.value = item.columns.id
+    }
+
+    const deleteCancelled = () => {
+        showCheckAction.value = false
+    }
+
+    const deleteContact = async () => {
+        isProcessing.value = true
+
+        try {
+            await useFetchApi(`/api/modules/contacts/${idToDelete.value}`, {
+                method: 'DELETE',
+            })
+            
+            showCheckAction.value = false
+            search()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            showCheckAction.value = false
+            isProcessing.value = false
+        }
     }
 </script>

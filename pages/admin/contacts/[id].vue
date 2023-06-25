@@ -1,5 +1,16 @@
 <template>
-    <div></div>
+    <v-row>
+        <v-col sm="7">
+            <v-card>
+                <v-card-text>
+                    <ContactsEdit></ContactsEdit>
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <v-col sm="5">
+
+        </v-col>
+    </v-row>
     <!-- left col 7 -->
     <!-- Form with the contact details : Disabled -->
     <!-- click on edit, then form editable -->

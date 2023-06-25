@@ -121,13 +121,13 @@
 
 	const authStore = useAuthStore()
     const contacts = [
-        ['Contacts', 'mdi-account-multiple-outline', '/admin/contacts'],
-        ['Contact Groups', 'mdi-history', '/admin/contact-groups']
+        ['Contacts List', 'mdi-account-multiple-outline', '/admin/contacts'],
+        ['Contact Groups', 'mdi-account-group-outline', '/admin/contact-groups']
     ]
     const users = [
-        ['Users', 'mdi-star', '/admin/users'],
-        ['Tenants', 'mdi-check-circle', '/admin/tenants'],
-        ['Subscriptions', 'mdi-check-circle', '/admin/subscriptions'],
+        ['Users', 'mdi-account-circle-outline', '/admin/users'],
+        ['Tenants', 'mdi-handshake-outline', '/admin/tenants'],
+        ['Subscriptions', 'mdi-currency-usd', '/admin/subscriptions'],
     ]
 
 	const logout = () => {

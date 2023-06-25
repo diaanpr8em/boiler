@@ -5,6 +5,7 @@ import {
   contactSearchSchema,
   contactUpdateSchema,
 } from "~/server/models/validation/modules/contacts";
+import { sortByFix } from "~/server/utils/models";
 
 type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
 type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;
@@ -39,11 +40,7 @@ export const search = async (contactSearchSchema: ContactsSearchRequest) => {
   const skip = (contactSearchSchema.page - 1) * contactSearchSchema.rows;
 
   const sortBy = {
-    orderBy: contactSearchSchema.sortBy?.map(({key, order}: {key: string, order: string}) => {
-      const obj = {} as {[key: string]: string}
-      obj[key] = order
-      return obj
-    })
+    orderBy: sortByFix(contactSearchSchema.sortBy),
   }
 
   const where = {
