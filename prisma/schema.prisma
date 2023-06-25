@@ -70,9 +70,13 @@ model ContactGroups {
   id                Int                 @id @default(autoincrement())
   name              String
   description       String
+  tenant            Tenants             @relation(fields: [tenantId], references: [id])
+  tenantId          Int
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   ContactGroupLinks ContactGroupLinks[]
+
+  @@index([tenantId], name: "ContactGroups_tenantId")
 }
 
 model LookupCurrencies {
@@ -195,14 +199,15 @@ model SystemSettings {
 }
 
 model Tenants {
-  id        Int        @id @default(autoincrement())
-  name      String
-  domain    String
-  users     Users      @relation(fields: [userId], references: [id])
-  userId    Int
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Contacts  Contacts[]
+  id            Int             @id @default(autoincrement())
+  name          String
+  domain        String
+  users         Users           @relation(fields: [userId], references: [id])
+  userId        Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Contacts      Contacts[]
+  ContactGroups ContactGroups[]
 
   @@index([userId], name: "Tenants_userId")
 }

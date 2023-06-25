@@ -4,7 +4,8 @@ const contactInsertSchema = z.object({
     fullName: z.string().min(3).max(150),
     email: z.string().email(),
     mobile: z.string().min(0).max(50),
-    handle: z.string().min(0).max(150)
+    handle: z.string().min(0).max(150),
+    tenantId: z.number()
 })
 
 const contactUpdateSchema = z.object({
