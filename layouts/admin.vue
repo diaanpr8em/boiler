@@ -1,20 +1,6 @@
 <template>
 	<v-app>
 		<v-layout>
-			<v-app-bar
-				color="primary"
-				density="compact"
-			>
-				<template v-slot:prepend>
-					<v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
-				</template>
-
-				<v-app-bar-title>Photos</v-app-bar-title>
-
-				<template v-slot:append>
-					<v-btn icon="mdi-dots-vertical"></v-btn>
-				</template>
-			</v-app-bar>
 
 			<v-navigation-drawer
 				v-model="drawer"
@@ -26,6 +12,11 @@
 						:title="authStore.userName"
 						:subtitle="authStore.userEmail"
 					>
+						<template v-slot:prepend>
+                            <v-avatar color="blue-grey-darken-4">
+                                <span class="text-h6">DP</span>
+                            </v-avatar>
+                        </template>
 						<template v-slot:append>
 							<v-btn
 								size="small"
@@ -37,25 +28,81 @@
 				</v-list>
 
 				<v-divider></v-divider>
-
+                
 				<v-list
 					:lines="false"
 					density="compact"
 					nav
 				>
-					<v-list-item
-						v-for="(item, i) in items"
-						:key="i"
-						:value="item"
-						color="primary"
-					>
-						<template v-slot:prepend>
-							<v-icon :icon="item.icon"></v-icon>
-						</template>
-						<v-list-item-title v-text="item.text"></v-list-item-title>
-					</v-list-item>
+                    <v-list-item
+                        title="Dashboard"
+                        prepend-icon="mdi-view-dashboard-outline"
+                        to="/admin"
+                    ></v-list-item>
+
+                    <v-list-group value="Contacts">
+                        <template v-slot:activator="{ props }">
+                            <v-list-item
+                                v-bind="props"
+                                prepend-icon="mdi-account-multiple-outline"
+                                title="Contacts"
+                            ></v-list-item>
+                        </template>
+
+                        <v-list-item 
+                            v-for="([title, icon, href], i) in contacts"
+                            :key="i"
+                            :title="title"
+                            :prepend-icon="icon"
+                            :value="title"
+                            :to="href"
+                        ></v-list-item>
+                    </v-list-group>
+
+					<v-list-group value="Users">
+                        <template v-slot:activator="{ props }">
+                            <v-list-item
+                                v-bind="props"
+                                prepend-icon="mdi-account-outline"
+                                title="Users"
+                            ></v-list-item>
+                        </template>
+
+                        <v-list-item 
+                            v-for="([title, icon, href], j) in users"
+                            :key="j"
+                            :title="title"
+                            :prepend-icon="icon"
+                            :value="title"
+                            :to="href"
+                        ></v-list-item>
+                    </v-list-group>
 				</v-list>
 			</v-navigation-drawer>
+
+			<v-app-bar
+				color="blue-grey-darken-4"
+			>
+				<template v-slot:prepend>
+					<v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
+				</template>
+
+				<v-app-bar-title>{{$route.meta.title}}</v-app-bar-title>
+
+				<v-menu>
+					<template v-slot:activator="{ props }">
+						<v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
+					</template>
+					<v-list>
+						<v-list-item to="/client">
+							<v-list-item-title>Client</v-list-item-title>
+						</v-list-item>
+						<v-list-item @click="logout">
+							<v-list-item-title>Logout</v-list-item-title>
+						</v-list-item>
+					</v-list>
+				</v-menu>
+			</v-app-bar>
 
 			<v-main>
 				<v-container fluid>
@@ -70,15 +117,21 @@
 	const drawer = ref(true)
 	const rail = ref(false)
 
-	const authStore = useAuthStore()
+	const router = useRouter()
 
-	const items = [
-        { text: 'My Files', icon: 'mdi-folder' },
-        { text: 'Shared with me', icon: 'mdi-account-multiple' },
-        { text: 'Starred', icon: 'mdi-star' },
-        { text: 'Recent', icon: 'mdi-history' },
-        { text: 'Offline', icon: 'mdi-check-circle' },
-        { text: 'Uploads', icon: 'mdi-upload' },
-        { text: 'Backups', icon: 'mdi-cloud-upload' },
-	]
+	const authStore = useAuthStore()
+    const contacts = [
+        ['Contacts', 'mdi-account-multiple-outline', '/admin/contacts'],
+        ['Contact Groups', 'mdi-history', '/admin/contact-groups']
+    ]
+    const users = [
+        ['Users', 'mdi-star', '/admin/users'],
+        ['Tenants', 'mdi-check-circle', '/admin/tenants'],
+        ['Subscriptions', 'mdi-check-circle', '/admin/subscriptions'],
+    ]
+
+	const logout = () => {
+        authStore.logout()
+        router.push('/')
+    }
 </script>

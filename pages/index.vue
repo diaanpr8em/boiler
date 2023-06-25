@@ -1,5 +1,5 @@
 <template>
-    <LoadingScreen v-if="authStore.isAuthLoading"></LoadingScreen>
+    <div></div>
 </template>
 
 <script lang="ts" setup>

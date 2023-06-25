@@ -18,6 +18,12 @@ const contactUpdateSchema = z.object({
 const contactSearchSchema = z.object({
     searchTerm: z.string().max(150),
     rows: z.number(),
-    page: z.number()
+    page: z.number(),
+    sortBy: z.array(
+        z.object({
+            key: z.string().max(150),
+            order: z.string().max(4),
+        })
+    ).optional(),
 })
 export { contactInsertSchema, contactSearchSchema, contactUpdateSchema }

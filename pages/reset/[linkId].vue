@@ -38,7 +38,7 @@
         title: "Reset Password",
     });
 
-    const resetSuccess = ref(true)
+    const resetSuccess = ref(false)
 
     const showAlert = (value: boolean): void => {
         resetSuccess.value = value

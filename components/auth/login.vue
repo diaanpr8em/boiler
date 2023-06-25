@@ -57,31 +57,9 @@
 		password: ''
 	})
 
-	const emailRules = [
-		(value: string) => {
-			if (value) return true
+    const emailRules = useValidationRules('email')
 
-			return 'E-mail is requred.'
-		},
-		(value: string) => {
-			if (/.+@.+\..+/.test(value)) return true
-
-			return 'E-mail must be valid.'
-		},
-	]
-
-	const passwordRules = [
-		(value: string) => {
-			if (value) return true
-
-			return 'Password is requred.'
-		},
-		(value: string) => {
-			if (value.length >= 8) return true
-
-			return 'Password must be at least 8 characters.'
-		}
-	]
+	const passwordRules = useValidationRules('password')
 
 	const togglePassword = (): void => {
 		hidePass.value = !hidePass.value

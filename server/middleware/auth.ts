@@ -1,7 +1,7 @@
 import UrlPattern from 'url-pattern'
 import { decodeAccessToken } from '../utils/jwt'
 import { JwtPayload } from 'jsonwebtoken'
-import { getById } from '../db/users'
+import { getUserTenantById } from '../db/users'
 
 export default defineEventHandler(async (event) => {
 	const endpoints = [
@@ -21,7 +21,16 @@ export default defineEventHandler(async (event) => {
 	
 	try {
 		const { userId } = decoded as JwtPayload
-		const user = await getById(userId)
+		const user = await getUserTenantById(userId)
+
+		if (!user) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+
+		// https://[abc].talentforge.co.za
+		const { Tenants } = user
+		if (!Tenants || Tenants.length <= 0 || !Tenants.map(x => x.domain).includes(event.node.req.headers.host ?? '')) {
+			return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+		}
+
 		event.context.auth = { user }
 	} catch (e) {
 		return
