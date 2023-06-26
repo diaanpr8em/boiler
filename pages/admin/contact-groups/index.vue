@@ -1,18 +1,17 @@
 <template>
-    <div>
-        <h1>Contact Groups</h1>
-
-        <!-- paged table with search -->
-        <!-- 3 actions per row -->
-            <!-- 1. View Detail -->
-            <!-- 2. Send Message -->
-            <!-- 3. Delete -->
-    </div>
+    <loader v-if="isProcessing">Deleting...</loader>
+    <v-row>
+        <v-col>
+            
+        </v-col>
+    </v-row>
 </template>
 
-<script>
+<script lang="ts" setup>
 definePageMeta({
     layout: "admin",
     title: "Contact Groups",
 });
+
+const isProcessing = ref(false)
 </script>

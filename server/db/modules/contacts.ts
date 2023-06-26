@@ -5,21 +5,18 @@ import {
   contactSearchSchema,
   contactUpdateSchema,
 } from "~/server/models/validation/modules/contacts";
+import { sortByFix } from "~/server/utils/models";
 
 type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
 type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;
 type ContactsSearchRequest = z.TypeOf<typeof contactSearchSchema>;
 
-export const insert = (contactSchema: ContactsInsertRequest) => {
-  return prisma.contacts.create({
-    data: contactSchema
-  });
-};
+export const insert = (data: ContactsInsertRequest) => prisma.contacts.create({ data });
 
-export const update = (contactSchema: ContactsUpdateRequest) => {
+export const update = (data: ContactsUpdateRequest) => {
   return prisma.contacts.update({
-    where: { id: contactSchema.id },
-    data: contactSchema,
+    where: { id: data.id },
+    data: data,
   });
 };
 
@@ -35,42 +32,38 @@ export const deleteById = (id: number) => {
     });
 };
 
-export const search = async (contactSearchSchema: ContactsSearchRequest) => {
-  const skip = (contactSearchSchema.page - 1) * contactSearchSchema.rows;
+export const search = async (data: ContactsSearchRequest) => {
+  const skip = (data.page - 1) * data.rows;
 
   const sortBy = {
-    orderBy: contactSearchSchema.sortBy?.map(({key, order}: {key: string, order: string}) => {
-      const obj = {} as {[key: string]: string}
-      obj[key] = order
-      return obj
-    })
+    orderBy: sortByFix(data.sortBy),
   }
 
   const where = {
     where: {
       OR: [
         {
-          email: { contains: contactSearchSchema.searchTerm }
+          email: { contains: data.searchTerm }
         },
         {
-          fullName: { contains: contactSearchSchema.searchTerm }
+          fullName: { contains: data.searchTerm }
         },
         {
-          mobile: { contains: contactSearchSchema.searchTerm }
+          mobile: { contains: data.searchTerm }
         }
       ]
     }
   }
 
   const total = await prisma.contacts.count({
-    ...(contactSearchSchema.searchTerm != '' ? where : {})
+    ...(data.searchTerm != '' ? where : {})
   })
 
   const records = await prisma.contacts.findMany({
     skip,
-    take: contactSearchSchema.rows,
-    ...(contactSearchSchema.searchTerm != '' ? where : {}),
-    ...(contactSearchSchema.sortBy ? sortBy : {})
+    take: data.rows,
+    ...(data.searchTerm != '' ? where : {}),
+    ...(data.sortBy ? sortBy : {})
   });
 
   return {

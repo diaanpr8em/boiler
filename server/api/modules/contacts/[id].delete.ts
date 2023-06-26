@@ -1,26 +1,35 @@
 import { sendError } from 'h3'
-import { del } from 'nuxt/dist/app/compat/capi';
-import { deleteById } from './../../../db/modules/contacts';
+import { deleteById } from '~/server/db/modules/contacts';
 
 export default defineEventHandler(async (event) => {
 	try {
-        //const id = query.id as number;
-        if (!event || !event.context.params?.id) {
+        if (!event || !event.context.params) {
           return sendError(
             event,
             createError({
               statusCode: 400,
-              statusMessage: "id should be an integer",
+              statusMessage: "id must be provided",
+            })
+          );
+        }
+
+        const id = parseInt(event.context.params.id);
+
+        if (isNaN(id)) {
+          return sendError(
+            event,
+            createError({
+              statusCode: 400,
+              statusMessage: "id must be a number",
             })
           );
         }
     
-        const id = parseInt(event.context.params.id) as number;
-    
-        const contact = await deleteById(id);
+        await deleteById(id);
 
-        // returns 200OK by default
-    
+        return {
+          success: true,
+        }
       } catch (e) {
         return sendError(
           event,

@@ -34,27 +34,49 @@ model BillingUsage {
   usage      Decimal  @default(0) @db.Decimal(12, 2)
   createdAt  DateTime
   updatedAt  DateTime
+
+  @@index([billingId], name: "BillingUsage_billingId")
 }
 
 model Contacts {
-  id            Int             @id @default(autoincrement())
-  fullName      String
-  email         String
-  mobile        String
-  handle        String
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  ContactGroups ContactGroups[]
+  id                 Int                 @id @default(autoincrement())
+  fullName           String
+  email              String
+  mobile             String
+  handle             String
+  tenant             Tenants             @relation(fields: [tenantId], references: [id])
+  tenantId           Int
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  ContactGroupsLinks ContactGroupLinks[]
+
+  @@index([tenantId], name: "Contacts_tenantId")
+}
+
+model ContactGroupLinks {
+  id             Int           @id @default(autoincrement())
+  contactGroups  ContactGroups @relation(fields: [contactGroupId], references: [id])
+  contactGroupId Int
+  contacts       Contacts      @relation(fields: [contactId], references: [id])
+  contactId      Int
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([contactGroupId], name: "ContactGroupLinks_contactGroupId")
+  @@index([contactId], name: "ContactGroupLinks_contactId")
 }
 
 model ContactGroups {
-  id          Int      @id @default(autoincrement())
-  contacts    Contacts @relation(fields: [contactId], references: [id])
-  contactId   Int
-  name        String
-  description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                Int                 @id @default(autoincrement())
+  name              String
+  description       String
+  tenant            Tenants             @relation(fields: [tenantId], references: [id])
+  tenantId          Int
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  ContactGroupLinks ContactGroupLinks[]
+
+  @@index([tenantId], name: "ContactGroups_tenantId")
 }
 
 model LookupCurrencies {
@@ -94,6 +116,8 @@ model NotificationRecipients {
   handle         String
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+
+  @@index([notificationId], name: "NotificationRecipients_notificationId")
 }
 
 model NotificationContent {
@@ -104,6 +128,8 @@ model NotificationContent {
   content        String        @db.Text()
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
+
+  @@index([notificationId], name: "NotificationContent_notificationId")
 }
 
 model Products {
@@ -126,6 +152,8 @@ model ProductBundles {
   unitPrice   Decimal  @default(1) @db.Decimal(7, 4)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([productId], name: "ProductBundles_productId")
 }
 
 model Services {
@@ -158,6 +186,10 @@ model Subscriptions {
   unitPrice  Decimal          @default(0) @db.Decimal(7, 4)
   createdAt  DateTime         @default(now())
   updatedAt  DateTime         @updatedAt
+
+  @@index([productId], name: "Subscriptions_productId")
+  @@index([currencyId], name: "Subscriptions_currencyId")
+  @@index([userId], name: "Subscriptions_userId")
 }
 
 model SystemSettings {
@@ -172,14 +204,18 @@ model SystemSettings {
 }
 
 model Tenants {
-  id        Int              @id @default(autoincrement())
-  name      String           @default("")
-  domain    String
-  users     Users            @relation(fields: [userId], references: [id])
-  userId    Int
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
-  settings  SystemSettings[]
+  id            Int              @id @default(autoincrement())
+  name          String           @default("")
+  domain        String
+  users         Users            @relation(fields: [userId], references: [id])
+  userId        Int
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  Settings      SystemSettings[]
+  Contacts      Contacts[]
+  ContactGroups ContactGroups[]
+
+  @@index([userId], name: "Tenants_userId")
 }
 
 model UniqueLinks {
@@ -192,6 +228,8 @@ model UniqueLinks {
   expiry    DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId], name: "UniqueLinks_userId")
 }
 
 model Users {
@@ -217,6 +255,8 @@ model UserSecurity {
   userId       Int      @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@index([userId], name: "UserSecurity_userId")
 }
 
 model UserRoles {
@@ -226,6 +266,8 @@ model UserRoles {
   userId    Int      @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId], name: "UserRoles_userId")
 }
 
 enum ContentTypes {
