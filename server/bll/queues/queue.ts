@@ -1,4 +1,4 @@
-import { Queue, QueueOptions } from "bullmq";
+import { Queue } from "bullmq";
 import { Services } from '@prisma/client';
 
 const config = useRuntimeConfig();
