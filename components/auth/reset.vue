@@ -55,7 +55,8 @@
 
     const passwordRules = useValidationRules('password')
 
-    const confirmPasswordRules = useValidationRules('confirmPassword', formData.password)
+    let confirmPasswordRules = useValidationRules('confirmPassword', formData.password)
+    watch(() => formData.passwordConfirmation, () => confirmPasswordRules = useValidationRules('confirmPassword', formData.password))
 
     const togglePassword = (): void => {
 		hidePass.value = !hidePass.value

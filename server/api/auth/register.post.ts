@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
 		if (exists) {
 			return sendError(event, createError({statusCode: 409, statusMessage: 'User already exists'}))
 		}
-
-		const user = registerUser(parsedBody)
+		const domain = event.node.req.headers.host
+		const user = registerUser(parsedBody, domain as string)
 
 		return {
 			user

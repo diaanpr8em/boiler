@@ -79,8 +79,9 @@
     const emailRules = useValidationRules('email')
 
 	const passwordRules = useValidationRules('password')
-
-    const confirmPasswordRules = useValidationRules('confirmPassword', formData.password)
+    
+    let confirmPasswordRules = useValidationRules('confirmPassword', formData.password)
+    watch(() => formData.passwordConfirmation, () => confirmPasswordRules = useValidationRules('confirmPassword', formData.password))
 
     const emit = defineEmits(['windowToggle'])
     const handleWindowToggle = (newStep: number): void => {

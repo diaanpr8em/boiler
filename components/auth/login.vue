@@ -2,14 +2,12 @@
     <v-form ref="form"  @submit.prevent="onSubmit">
         <v-text-field
             label="E-mail"
-            variant="outlined"
             v-model="formData.email"
             :rules="emailRules"
         ></v-text-field>
         <v-text-field 
             class="mt-3"
             label="Password"
-            variant="outlined"
             v-model="formData.password"
             :rules="passwordRules"
             :type="hidePass ? 'password' : 'text'"

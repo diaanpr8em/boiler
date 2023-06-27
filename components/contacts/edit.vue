@@ -64,7 +64,7 @@ import { Contacts } from '@prisma/client';
         fullName: '',
         email: '',
         mobile: '',
-        handle: ''
+        handle: '',
     })   
     
     const isLoading = ref(false)

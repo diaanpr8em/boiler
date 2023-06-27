@@ -5,7 +5,7 @@ const contactInsertSchema = z.object({
     email: z.string().email(),
     mobile: z.string().min(0).max(50),
     handle: z.string().min(0).max(150),
-    tenantId: z.number()
+    tenantId: z.number().optional(),
 })
 
 const contactUpdateSchema = z.object({
@@ -13,7 +13,7 @@ const contactUpdateSchema = z.object({
     fullName: z.string().min(3).max(150),
     email: z.string().email(),
     mobile: z.string().min(0).max(50),
-    handle: z.string().min(0).max(150)
+    handle: z.string().min(0).max(150),
 })
 
 const contactSearchSchema = z.object({

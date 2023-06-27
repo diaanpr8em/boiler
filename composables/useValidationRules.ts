@@ -1,6 +1,6 @@
 type RuleTypes = 'email' | 'password' | 'confirmPassword' | 'required'
 
-export const useValidationRules = (type: RuleTypes, confirmPassword?: string, mesg?: string) => {
+export const useValidationRules = (type: RuleTypes, passwordCheck?: string, mesg?: string) => {
     switch (type) {
         case 'email':
             return [
@@ -35,7 +35,7 @@ export const useValidationRules = (type: RuleTypes, confirmPassword?: string, me
                     return 'Password confirmation is required.'
                 },
                 (value: string) => {
-                    if (value === confirmPassword) return true
+                    if (value === passwordCheck) return true
                     return 'Password confirmation must match.'
                 }
             ]
