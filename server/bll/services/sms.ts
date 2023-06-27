@@ -2,13 +2,13 @@ import { insert } from "~/server/db/services";
 import { queueServiceJob } from "~/server/bll/queues/queue";
 import { JobNames, QueueNames } from "~/server/models/enums/queues";
 import { hasSufficientBalanceAvailable, reduceBalance } from "~/server/bll/billing/billing";
-import { SMSAdvancedMessage } from "~/server/models/services/sms";
+import { SMSMessage } from "~/server/models/services/sms";
 import { ServiceTypes, Users } from '@prisma/client';
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 import { Products } from "~/server/models/enums/products";
 import { getByName } from "~/server/db/products/products";
 
-export const processSMS = async (body: SMSAdvancedMessage) => {
+export const processSMS = async (body: SMSMessage) => {
   // who is this? Diaan to show usage of auth here
   const user: Users = {
     id: 1,
