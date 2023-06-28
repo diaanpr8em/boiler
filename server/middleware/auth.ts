@@ -8,6 +8,9 @@ export default defineEventHandler(async (event) => {
 	const adminEndpoints = [
 		''
 	]
+	const clientAdminEndpoints = [
+		''
+	]
 	// these are endpoints that require authentication to access
 	const endpoints = [
 		'/api/auth/user',
@@ -17,7 +20,7 @@ export default defineEventHandler(async (event) => {
 		'/api/modules/subscriptions/*',
 	]
 
-	const matched = [...endpoints, ...adminEndpoints].some(endpoint => {
+	const matched = [...endpoints, ...clientAdminEndpoints, ...adminEndpoints].some(endpoint => {
 		const pattern = new UrlPattern(endpoint)
 		return pattern.match(event.node.req.url as string)
 	})
@@ -37,7 +40,7 @@ export default defineEventHandler(async (event) => {
 		// if user is not an admin, check if they are allowed to access the endpoint
 		if (user.UserRole.map(x => x.role).includes('USER')) {
 			// check if the endpoint is an admin endpoint
-			if (adminEndpoints.some(endpoint => {
+			if ([...clientAdminEndpoints, ...adminEndpoints].some(endpoint => {
 				const pattern = new UrlPattern(endpoint)
 				return pattern.match(event.node.req.url as string)
 			})) {
