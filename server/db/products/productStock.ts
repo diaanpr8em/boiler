@@ -1,13 +1,20 @@
+import { ProductStock } from "@prisma/client";
 import { prisma } from "../prismaConnection";
 
-export const getById = (id: number) => {
+export const update = async(model: ProductStock) => {
+    return prisma.productStock.update({
+        where: { id: model.id },
+        data: model
+    })
+}
+export const getById = async (id: number) => {
     return prisma.productStock.findUnique({
         where: { id: id}
     })
 }
 
-export const getByTenantId = (tenantId: number) => {
-    return prisma.productStock.findUnique({
+export const getByTenantId = async (tenantId: number) => {
+    return prisma.productStock.findMany({
         where: { tenantId: tenantId}
     })
 };
@@ -18,6 +25,6 @@ export const getStockLevels = async (userId: number, productId: number) => {
     })
 
     return prisma.productStock.findMany({
-        where: { userId: userId, productId: productId, tenantId: tenant?.id}
+        where: { productId: productId, tenantId: tenant?.id}
     })
 }
