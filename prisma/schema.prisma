@@ -166,6 +166,7 @@ model Products {
   name           String
   description    String           @db.Text
   unitPrice      Decimal          @default(1) @db.Decimal(7, 4)
+  currency       Currencies       @default(ZAR)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   ProductBundles ProductBundles[]
@@ -193,7 +194,7 @@ model ProductStock {
   productId Int
   orders    Orders   @relation(fields: [orderId], references: [id])
   orderId   Int
-  tenants   Tenants @relation(fields: [tenantId], references: [id])
+  tenants   Tenants  @relation(fields: [tenantId], references: [id])
   tenantId  Int
   bundle    Boolean  @default(false)
   bundleId  Int
@@ -254,19 +255,20 @@ model SystemSettings {
 }
 
 model Tenants {
-  id            Int              @id @default(autoincrement())
-  name          String           @default("")
-  domain        String
-  userId        Int              @default(0)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  Settings      SystemSettings[]
-  Contacts      Contacts[]
-  ContactGroups ContactGroups[]
+  id              Int               @id @default(autoincrement())
+  name            String            @default("")
+  domain          String
+  userId          Int               @default(0)
+  currency        Currencies        @default(ZAR)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Settings        SystemSettings[]
+  Contacts        Contacts[]
+  ContactGroups   ContactGroups[]
   UserTenantLinks UserTenantLinks[]
-  Invoices      Invoices[]
-  Orders        Orders[]
-  ProductStock  ProductStock[]
+  Invoices        Invoices[]
+  Orders          Orders[]
+  ProductStock    ProductStock[]
 
   @@index([userId], name: "Tenants_userId")
 }
@@ -290,7 +292,6 @@ model Users {
   email           String            @unique
   name            String
   surname         String
-  currency        String            @default("ZAR")
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserSecurity    UserSecurity?
@@ -334,6 +335,14 @@ model UserRoles {
   updatedAt DateTime @updatedAt
 
   @@index([userId], name: "UserRoles_userId")
+}
+
+enum Currencies {
+  AUD
+  EUR
+  GBP
+  USD
+  ZAR
 }
 
 enum ContentTypes {
