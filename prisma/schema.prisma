@@ -249,22 +249,24 @@ model SystemSettings {
   value     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([tenantId], name: "SystemSettings_tenantId")
 }
 
 model Tenants {
   id            Int              @id @default(autoincrement())
   name          String           @default("")
   domain        String
-  users         Users            @relation(fields: [userId], references: [id])
   userId        Int              @default(0)
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
+  Settings      SystemSettings[]
   Contacts      Contacts[]
   ContactGroups ContactGroups[]
+  UserTenantLinks UserTenantLinks[]
   Invoices      Invoices[]
   Orders        Orders[]
   ProductStock  ProductStock[]
-  Settings      SystemSettings[]
 
   @@index([userId], name: "Tenants_userId")
 }
@@ -284,18 +286,31 @@ model UniqueLinks {
 }
 
 model Users {
-  id            Int             @id @default(autoincrement())
-  email         String          @unique
-  name          String
-  surname       String
-  currency      String          @default("ZAR")
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  UserSecurity  UserSecurity?
-  UserRole      UserRoles[]
-  UniqueLinks   UniqueLinks[]
-  Subscriptions Subscriptions[]
-  Tenants       Tenants[]
+  id              Int               @id @default(autoincrement())
+  email           String            @unique
+  name            String
+  surname         String
+  currency        String            @default("ZAR")
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  UserSecurity    UserSecurity?
+  UserRole        UserRoles[]
+  UniqueLinks     UniqueLinks[]
+  Subscriptions   Subscriptions[]
+  UserTenantLinks UserTenantLinks[]
+}
+
+model UserTenantLinks {
+  id        Int      @id @default(autoincrement())
+  users     Users    @relation(fields: [userId], references: [id])
+  userId    Int
+  tenants   Tenants  @relation(fields: [tenantId], references: [id])
+  tenantId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId], name: "UserTenantLinks_userId")
+  @@index([tenantId], name: "UserTenantLinks_tenantId")
 }
 
 model UserSecurity {
@@ -312,7 +327,7 @@ model UserSecurity {
 
 model UserRoles {
   id        Int      @id @default(autoincrement())
-  role      String
+  role      UserRole @default(USER)
   user      Users    @relation(fields: [userId], references: [id])
   userId    Int      @unique
   createdAt DateTime @default(now())
@@ -355,4 +370,9 @@ enum StatusTypes {
 
 enum LinkType {
   RESET_PASSWORD
+}
+
+enum UserRole {
+  ADMIN // admin
+  USER // client user
 }

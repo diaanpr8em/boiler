@@ -3,6 +3,8 @@ import { hashSync } from 'bcrypt'
 import { z } from "zod"
 
 import { userRegister } from "../models/users"
+import { getTenantByDomain } from "./tenants"
+import { BusinessError, Codes } from "../models/exceptions/BusinessError"
 
 type UserRegisterRequest = z.TypeOf<typeof userRegister>;
 
@@ -14,13 +16,18 @@ export const getById = (id: number) => {
 	})
 }
 
-export const getUserTenantById = async (id: number) => {
+export const getUserAuthDataById = async (id: number) => {
 	return prisma.users.findUnique({
 		where: {
 			id
 		},
 		include: {
-			Tenants: true
+			UserTenantLinks: {
+				include: {
+					tenants: true
+				}
+			},
+			UserRole: true
 		}
 	})
 }
@@ -36,7 +43,11 @@ export const userExists = (email: string) => {
 	})
 }
 
-export const registerUser = async (parsedBody: UserRegisterRequest) => {
+export const registerUser = async (parsedBody: UserRegisterRequest, domain: string) => {
+
+	const tenant = await getTenantByDomain(domain) 
+	if (!tenant) throw new BusinessError(Codes.E111) 
+
 	return prisma.users.create({
 		data: {
 			email: parsedBody.email,
@@ -46,6 +57,22 @@ export const registerUser = async (parsedBody: UserRegisterRequest) => {
 			UserSecurity: {
 				create: {
 					password: await hashSync(parsedBody.password, 10)
+				}
+			},
+
+			UserRole: {
+				create: {
+					role: 'USER'
+				}
+			},
+
+			UserTenantLinks: {
+				create: {
+					tenants: {
+						connect: {
+							id: tenant.id
+						}
+					}
 				}
 			}
 		}

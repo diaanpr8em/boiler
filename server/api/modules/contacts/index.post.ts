@@ -8,7 +8,15 @@ export default defineEventHandler(async (event) => {
 
 	try {
 		const parsedBody = contactInsertSchema.parse(body)
-		
+
+		// this is only necessary if user is not an admin and created from client
+		const { auth } = event.context
+		if (!parsedBody.tenantId && auth.role == 'USER') {
+			parsedBody.tenantId = auth.tenant.id
+		}
+
+		if (!parsedBody.tenantId) sendError(event, createError({statusCode: 400, statusMessage: 'Tenant ID is required'}))
+
 		const contact = await insert(parsedBody)
 
 		return {
