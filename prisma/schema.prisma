@@ -240,7 +240,7 @@ model Users {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserSecurity    UserSecurity?
-  UserRole        UserRoles[]
+  UserRole        UserRole        @default(USER)
   UniqueLinks     UniqueLinks[]
   Subscriptions   Subscriptions[]
   UserTenantLinks UserTenantLinks[]
@@ -269,17 +269,6 @@ model UserSecurity {
   updatedAt    DateTime @updatedAt
 
   @@index([userId], name: "UserSecurity_userId")
-}
-
-model UserRoles {
-  id        Int      @id @default(autoincrement())
-  role      UserRole @default(USER)
-  user      Users    @relation(fields: [userId], references: [id])
-  userId    Int      @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId], name: "UserRoles_userId")
 }
 
 enum ContentTypes {
@@ -320,5 +309,6 @@ enum LinkType {
 
 enum UserRole {
   ADMIN // admin
+  CLIENTADMIN // client admin
   USER // client user
 }
