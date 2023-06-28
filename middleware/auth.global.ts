@@ -13,7 +13,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
 	})
     if (!matched) return
 
-    if (authStore.role != 'ADMIN') {
+    if (authStore.role != 'ADMIN' && from.path != to.path) {
         return navigateTo(from.path)
+    } else if (authStore.role != 'ADMIN' && from.path == to.path) {
+        return navigateTo('/')
     }
 })
