@@ -11,17 +11,8 @@ import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 import { Products } from "~/server/models/enums/products";
 import { getByName } from "~/server/db/products/products";
 
-export const processEmail = async (body: EmailMessage) => {
-  // who is this? Diaan to show usage of auth here
-  const user: Users = {
-    id: 1,
-    email: "mike.honeycomb@outlook.com",
-    name: "Michael",
-    surname: "Hanekom",
-    currency: "ZAR",
-    createdAt: Date() as unknown as Date,
-    updatedAt: Date() as unknown as Date,
-  };
+export const processEmail = async (body: EmailMessage, event: any) => {
+  const user = event.auth.user as Users;
 
   // what product is this
   var product = await getByName(Products.EMAIL);

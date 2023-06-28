@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
     // map the custom body into a generic body
     const parsedBody = messageSchema.parse(body);
-    var sms = await processEmail(parsedBody)
+    var sms = await processEmail(parsedBody, event)
 
 		return {
 			sms

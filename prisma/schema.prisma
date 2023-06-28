@@ -193,7 +193,7 @@ model ProductStock {
   productId Int
   orders    Orders   @relation(fields: [orderId], references: [id])
   orderId   Int
-  tenants   Tenants @relation(fields: [tenantId], references: [id])
+  tenants   Tenants  @relation(fields: [tenantId], references: [id])
   tenantId  Int
   bundle    Boolean  @default(false)
   bundleId  Int
@@ -254,19 +254,19 @@ model SystemSettings {
 }
 
 model Tenants {
-  id            Int              @id @default(autoincrement())
-  name          String           @default("")
-  domain        String
-  userId        Int              @default(0)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  Settings      SystemSettings[]
-  Contacts      Contacts[]
-  ContactGroups ContactGroups[]
+  id              Int               @id @default(autoincrement())
+  name            String            @default("")
+  domain          String
+  userId          Int               @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  Settings        SystemSettings[]
+  Contacts        Contacts[]
+  ContactGroups   ContactGroups[]
   UserTenantLinks UserTenantLinks[]
-  Invoices      Invoices[]
-  Orders        Orders[]
-  ProductStock  ProductStock[]
+  Invoices        Invoices[]
+  Orders          Orders[]
+  ProductStock    ProductStock[]
 
   @@index([userId], name: "Tenants_userId")
 }
@@ -294,7 +294,7 @@ model Users {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserSecurity    UserSecurity?
-  UserRole        UserRole        @default(USER)
+  UserRole        UserRole          @default(USER)
   UniqueLinks     UniqueLinks[]
   Subscriptions   Subscriptions[]
   UserTenantLinks UserTenantLinks[]
