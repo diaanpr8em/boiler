@@ -5,13 +5,6 @@ import { boolean } from "zod";
 
 export const hasSufficientBalanceAvailable = async (userId: number, productId: number, volume: number) => {
     var sufficient = false;
-
-    // get the product 
-    const product = getProductById(productId);
-
-    // get the user 
-    const user = getUserById(userId)
-
     // get the stock levels of all products matching
     // so that it still makes sense even if they have multiple bundles
     const stock = await getStockLevels(userId, productId)
@@ -22,12 +15,6 @@ export const hasSufficientBalanceAvailable = async (userId: number, productId: n
 }
 
 export const reduceBalance = async (userId: number, productId: number, volume: number) => {
-    // get the product 
-    const product = getProductById(productId);
-
-    // get the user 
-    const user = getUserById(userId)
-
     // get the stock levels of all products matching
     // so that it still makes sense even if they have multiple bundles
     const stock = await getStockLevels(userId, productId)
@@ -49,5 +36,6 @@ export const reduceBalance = async (userId: number, productId: number, volume: n
 
         item.volume = item.volume - volume;
         filled = true;
+        update(item);
     }
 }

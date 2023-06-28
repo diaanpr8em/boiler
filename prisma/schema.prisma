@@ -166,6 +166,7 @@ model Products {
   name           String
   description    String           @db.Text
   unitPrice      Decimal          @default(1) @db.Decimal(7, 4)
+  currency       Currencies       @default(ZAR)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   ProductBundles ProductBundles[]
@@ -258,6 +259,7 @@ model Tenants {
   name            String            @default("")
   domain          String
   userId          Int               @default(0)
+  currency        Currencies        @default(ZAR)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   Settings        SystemSettings[]
@@ -290,7 +292,6 @@ model Users {
   email           String            @unique
   name            String
   surname         String
-  currency        String            @default("ZAR")
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserSecurity    UserSecurity?
@@ -323,6 +324,14 @@ model UserSecurity {
   updatedAt    DateTime @updatedAt
 
   @@index([userId], name: "UserSecurity_userId")
+}
+
+enum Currencies {
+  AUD
+  EUR
+  GBP
+  USD
+  ZAR
 }
 
 enum ContentTypes {
