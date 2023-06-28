@@ -24,7 +24,7 @@ export const processEmail = async (body: EmailMessage) => {
   };
 
   // what product is this
-  var product = await getByName(Products.EMAIL.toString());
+  var product = await getByName(Products.EMAIL);
   if (product == null) throw new BusinessError(Codes.E202);
 
   // check volumes and credits
@@ -44,7 +44,7 @@ export const processEmail = async (body: EmailMessage) => {
 
   // send if credits
   const email = await insert(body, ServiceTypes.EMAIL);
-  const billing = await reduceBalance(user.id, Products.EMAIL, volumeCount);
+  const billing = await reduceBalance(user.id, product.id, volumeCount);
   const job = await queueServiceJob(
     QueueNames.OUTBOUND_EMAIL,
     JobNames.EMAIL_SEND,

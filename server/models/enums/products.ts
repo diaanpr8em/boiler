@@ -1,9 +1,9 @@
 enum Products {
-    EMAIL,
-    SMS,
-    VIBER,
-    VOICE,
-    WHATSAPP
+    EMAIL = "EMAIL",
+    SMS = "SMS",
+    VIBER = "VIBER",
+    VOICE = "VOICE",
+    WHATSAPP = "WHATSAPP"
 }
 
 export { Products }
