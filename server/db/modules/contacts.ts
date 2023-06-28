@@ -11,7 +11,15 @@ type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
 type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;
 type ContactsSearchRequest = z.TypeOf<typeof contactSearchSchema>;
 
-export const insert = (data: ContactsInsertRequest) => prisma.contacts.create({ data });
+export const insert = (data: ContactsInsertRequest) => prisma.contacts.create({ 
+  data: {
+    email: data.email,
+    fullName: data.fullName,
+    mobile: data.mobile,
+    tenantId: data.tenantId as number,
+    handle: data.handle,
+  }
+});
 
 export const update = (data: ContactsUpdateRequest) => {
   return prisma.contacts.update({

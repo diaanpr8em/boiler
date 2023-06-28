@@ -15,15 +15,16 @@ export const useAuthStore = defineStore('auth', () => {
     userData: null,
     token: null,
     loggedIn: false,
-    isAuthLoading: true
+    isAuthLoading: true,
   })
 
+  const isAuthLoading = computed(() => auth.value.isAuthLoading)
+  const loggedIn = computed(() => auth.value.loggedIn)
+  const role = computed(() => auth.value.userData?.UserRole)
   const token = computed(() => auth.value.token)
+  const userEmail = computed(() => auth.value.userData?.email)
   const userId = computed(() => auth.value.userData?.id)
   const userName = computed(() => `${auth.value.userData?.name} ${auth.value.userData?.surname}`)
-  const loggedIn = computed(() => auth.value.loggedIn)
-  const isAuthLoading = computed(() => auth.value.isAuthLoading)
-  const userEmail = computed(() => auth.value.userData?.email)
 
   watch(
     auth,
@@ -105,6 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     isAuthLoading,
     loggedIn,
+    role,
     token,
     userEmail,
     userId,

@@ -2,22 +2,26 @@ import UrlPattern from 'url-pattern'
 import { decodeAccessToken } from '../utils/jwt'
 import { JwtPayload } from 'jsonwebtoken'
 import { getUserAuthDataById } from '../db/users'
-import { client } from 'process'
 
 export default defineEventHandler(async (event) => {
 	// these are admin only endpoints
 	const adminEndpoints = [
-		''
+		'/api/tenants',
+		'/api/tenants/*'
 	]
 	const clientAdminEndpoints = [
-		''
+		'/api/client-admin/*'
 	]
 	// these are endpoints that require authentication to access
 	const endpoints = [
 		'/api/auth/user',
+		'/api/modules/contacts',
 		'/api/modules/contacts/*',
+		'/api/modules/contact-groups',
 		'/api/modules/contact-groups/*',
+		'/api/modules/notifications',
 		'/api/modules/notifications/*',
+		'/api/modules/subscriptions',
 		'/api/modules/subscriptions/*',
 	]
 
