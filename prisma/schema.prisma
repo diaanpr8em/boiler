@@ -79,6 +79,21 @@ model ContactGroups {
   @@index([tenantId], name: "ContactGroups_tenantId")
 }
 
+model Invoices {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  orders      Orders   @relation(fields: [orderId], references: [id])
+  orderId     Int
+  tenant      Tenants  @relation(fields: [tenantId], references: [id])
+  tenantId    Int
+  amount      Decimal  @default(0) @db.Decimal(12, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([tenantId], name: "Invoices_tenantId")
+}
+
 model LookupCurrencies {
   id                   Int             @id @default(autoincrement())
   // currency iso code e.g. ZAR
@@ -132,6 +147,20 @@ model NotificationContent {
   @@index([notificationId], name: "NotificationContent_notificationId")
 }
 
+model Orders {
+  id           Int            @id @default(autoincrement())
+  name         String
+  description  String         @db.Text
+  unitPrice    Decimal        @default(1) @db.Decimal(7, 4)
+  volume       Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  ProductStock ProductStock[]
+  Invoices     Invoices[]
+  Tenants      Tenants?       @relation(fields: [tenantsId], references: [id])
+  tenantsId    Int?
+}
+
 model Products {
   id             Int              @id @default(autoincrement())
   name           String
@@ -140,6 +169,7 @@ model Products {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   ProductBundles ProductBundles[]
+  ProductStock   ProductStock[]
   Subscriptions  Subscriptions[]
 }
 
@@ -150,10 +180,28 @@ model ProductBundles {
   name        String
   description String   @db.Text
   unitPrice   Decimal  @default(1) @db.Decimal(7, 4)
+  volume      Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([productId], name: "ProductBundles_productId")
+}
+
+model ProductStock {
+  id        Int      @id @default(autoincrement())
+  products  Products @relation(fields: [productId], references: [id])
+  productId Int
+  orders    Orders   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  tenants   Tenants @relation(fields: [tenantId], references: [id])
+  tenantId  Int
+  bundle    Boolean  @default(false)
+  bundleId  Int
+  volume    Int
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@index([productId], name: "ProductStock_productId")
 }
 
 model Services {
@@ -206,15 +254,21 @@ model SystemSettings {
 }
 
 model Tenants {
-  id              Int               @id @default(autoincrement())
-  name            String            @default("")
-  domain          String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  Settings        SystemSettings[]
-  Contacts        Contacts[]
-  ContactGroups   ContactGroups[]
+  id            Int              @id @default(autoincrement())
+  name          String           @default("")
+  domain        String
+  userId        Int              @default(0)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  Settings      SystemSettings[]
+  Contacts      Contacts[]
+  ContactGroups ContactGroups[]
   UserTenantLinks UserTenantLinks[]
+  Invoices      Invoices[]
+  Orders        Orders[]
+  ProductStock  ProductStock[]
+
+  @@index([userId], name: "Tenants_userId")
 }
 
 model UniqueLinks {
