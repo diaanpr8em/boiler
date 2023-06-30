@@ -27,7 +27,6 @@ export const getUserAuthDataById = async (id: number) => {
 					tenants: true
 				}
 			},
-			UserRole: true
 		}
 	})
 }
@@ -57,12 +56,6 @@ export const registerUser = async (parsedBody: UserRegisterRequest, domain: stri
 			UserSecurity: {
 				create: {
 					password: await hashSync(parsedBody.password, 10)
-				}
-			},
-
-			UserRole: {
-				create: {
-					role: 'USER'
 				}
 			},
 

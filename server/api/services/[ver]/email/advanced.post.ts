@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { queueSimpleEmail } from "~/server/bll/services/email";
+import { queueEmail } from "~/server/bll/services/email";
 import { BusinessError } from "~/server/models/exceptions/BusinessError";
 import { messageSchema } from "~/server/models/validation/services/email/advanced";
 
@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
     // map the custom body into a generic body
     const parsedBody = messageSchema.parse(body);
-    var email = await queueSimpleEmail(parsedBody)
+    var email = await queueEmail(parsedBody, event)
 
 		return {
 			email

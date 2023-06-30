@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactInsertSchema } from '~/server/models/validation/modules/contacts';
-import { insert } from './../../../db/modules/contacts';
+import { insert } from "~/server/db/modules/contacts";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -11,8 +11,8 @@ export default defineEventHandler(async (event) => {
 
 		// this is only necessary if user is not an admin and created from client
 		const { auth } = event.context
-		if (!parsedBody.tenantId && auth.role == 'USER') {
-			parsedBody.tenantId = auth.tenant.id
+		if (!parsedBody.tenantId && (auth.role == 'USER' || auth.role == 'CLIENTADMIN')) {
+			parsedBody.tenantId = auth.tenantId
 		}
 
 		if (!parsedBody.tenantId) sendError(event, createError({statusCode: 400, statusMessage: 'Tenant ID is required'}))

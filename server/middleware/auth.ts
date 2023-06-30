@@ -6,17 +6,22 @@ import { getUserAuthDataById } from '../db/users'
 export default defineEventHandler(async (event) => {
 	// these are admin only endpoints
 	const adminEndpoints = [
-		''
+		'/api/tenants',
+		'/api/tenants/*'
 	]
 	const clientAdminEndpoints = [
-		''
+		'/api/client-admin/*'
 	]
 	// these are endpoints that require authentication to access
 	const endpoints = [
 		'/api/auth/user',
+		'/api/modules/contacts',
 		'/api/modules/contacts/*',
+		'/api/modules/contact-groups',
 		'/api/modules/contact-groups/*',
+		'/api/modules/notifications',
 		'/api/modules/notifications/*',
+		'/api/modules/subscriptions',
 		'/api/modules/subscriptions/*',
 	]
 
@@ -38,15 +43,22 @@ export default defineEventHandler(async (event) => {
 		if (!user) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 		// if user is not an admin, check if they are allowed to access the endpoint
-		if (user.UserRole.map(x => x.role).includes('USER')) {
-			// check if the endpoint is an admin endpoint
-			if ([...clientAdminEndpoints, ...adminEndpoints].some(endpoint => {
-				const pattern = new UrlPattern(endpoint)
-				return pattern.match(event.node.req.url as string)
-			})) {
-				return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
-			}
-		} 
+		let unAuthEndpoints: string[] = [] 
+		switch (user.UserRole) {
+			case 'USER':
+				unAuthEndpoints = [...clientAdminEndpoints, ...adminEndpoints]
+				break
+			case 'CLIENTADMIN':
+				unAuthEndpoints = [...adminEndpoints]
+				break;
+		}
+
+		if (unAuthEndpoints.some(endpoint => {
+			const pattern = new UrlPattern(endpoint)
+			return pattern.match(event.node.req.url as string)
+		})) {
+			return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+		}
 
 		// domain: https://[abc].talentforge.co.za
 		// local: http://localhost:3000
@@ -60,8 +72,8 @@ export default defineEventHandler(async (event) => {
 
 		event.context.auth = { 
 			user,
-			tenant,
-			role: user.UserRole.map(x => x.role)[0]
+			tenantId: tenant.id,
+			role: user.UserRole
 		}
 	} catch (e) {
 		return
