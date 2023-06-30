@@ -1,8 +1,8 @@
 export type EmailMessage = {
     from: string,
-    to: string[],
-    cc: string[],
-    bcc: string[],
+    to: Destination[],
+    cc: Destination[] | undefined,
+    bcc: Destination[] | undefined,
     subject: string,
     text: string,
     html: string,
@@ -15,4 +15,14 @@ export type EmailMessage = {
     notifyUrl?: string | undefined,
     notifyContentyType?: string | undefined,
     callbackData?: string | undefined
+}
+
+type Destination = {
+    to: string,
+    placeholders: Placeholders[]
+}
+
+type Placeholders = {
+    key: string,
+    value: string
 }

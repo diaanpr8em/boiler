@@ -5,13 +5,13 @@ import {
   hasSufficientBalanceAvailable,
   reduceBalance,
 } from "~/server/bll/billing/billing";
-import { EmailMessage } from "~/server/models/services/email";
+import { EmailMessage } from "~/server/models/services/email_simple";
 import { ServiceTypes, Users } from "@prisma/client";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 import { Products } from "~/server/models/enums/products";
 import { getByName } from "~/server/db/products/products";
 
-export const processEmail = async (body: EmailMessage) => {
+export const queueSimpleEmail = async (body: EmailMessage) => {
   // who is this? Diaan to show usage of auth here
   const user: Users = {
     id: 1,
@@ -53,3 +53,7 @@ export const processEmail = async (body: EmailMessage) => {
 
   return { email };
 };
+
+export const formatAdvancedEmail = async(text: string, html: string, placeholders: Map<string, string> ) => {
+
+}

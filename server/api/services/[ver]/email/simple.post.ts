@@ -2,7 +2,7 @@ import { z } from "zod"
 import { sendError } from 'h3'
 import { queueSimpleEmail } from "~/server/bll/services/email";
 import { BusinessError } from "~/server/models/exceptions/BusinessError";
-import { messageSchema } from "~/server/models/validation/services/email/advanced";
+import { messageSchema } from "~/server/models/validation/services/email/simple";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
