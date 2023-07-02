@@ -6,7 +6,7 @@ const config = useRuntimeConfig();
 export const queueServiceJob = async (
   queueName: string,
   jobName: string,
-  serviceRecord: Services
+  serviceId: number
 ) => {
   const aQueue = new Queue(queueName, {
     connection: {
@@ -14,5 +14,5 @@ export const queueServiceJob = async (
       port: config.REDIS_PORT as unknown as number
     },
   });
-  await aQueue.add(jobName, JSON.stringify(serviceRecord));
+  await aQueue.add(jobName, serviceId);
 };

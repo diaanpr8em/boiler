@@ -20,11 +20,11 @@ export const getByTenantId = async (tenantId: number) => {
 };
 
 export const getStockLevels = async (userId: number, productId: number) => {
-    const tenant = await prisma.tenants.findFirst({
+    const tenantLink = await prisma.userTenantLinks.findFirst({
         where: { userId: userId}
     })
 
     return prisma.productStock.findMany({
-        where: { productId: productId, tenantId: tenant?.id}
+        where: { productId: productId, tenantId: tenantLink?.tenantId}
     })
 }

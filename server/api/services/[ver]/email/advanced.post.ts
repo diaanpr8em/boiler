@@ -3,6 +3,7 @@ import { sendError } from 'h3'
 import { queueEmail } from "~/server/bll/services/email";
 import { BusinessError } from "~/server/models/exceptions/BusinessError";
 import { messageSchema } from "~/server/models/validation/services/email/advanced";
+import { MessageTypes } from "@prisma/client";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -14,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
     // map the custom body into a generic body
     const parsedBody = messageSchema.parse(body);
-    var email = await queueEmail(parsedBody, event)
+    var email = await queueEmail(parsedBody, MessageTypes.EMAIL_ADVANCED, event)
 
 		return {
 			email

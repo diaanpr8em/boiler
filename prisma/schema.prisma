@@ -197,8 +197,8 @@ model ProductStock {
   tenants   Tenants  @relation(fields: [tenantId], references: [id])
   tenantId  Int
   bundle    Boolean  @default(false)
-  bundleId  Int
-  volume    Int
+  bundleId  Int      @default(0)
+  volume    Int      @default(0)
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 
@@ -208,8 +208,9 @@ model ProductStock {
 model Services {
   id               Int          @id @default(autoincrement())
   userId           Int
-  type             ServiceTypes @default(SMS)
-  provider         ProviderType @default(INFOBIP)
+  serviceType      ServiceTypes @default(SMS)
+  messageType      MessageTypes @default(SMS_SIMPLE)
+  providerType     ProviderType @default(INFOBIP)
   providerRequest  String       @db.Text
   providerResponse String       @db.Text
   status           StatusTypes  @default(NEW)
@@ -341,6 +342,15 @@ enum JobStatus {
   NEW
   PROCESSING
   SUCCESS
+}
+
+enum MessageTypes {
+  EMAIL_ADVANCED
+  EMAIL_DELIVERY_REPORT
+  EMAIL_LOGS
+  EMAIL_SIMPLE
+  SMS_SIMPLE
+  SMS_ADVANCED
 }
 
 enum ProviderType {

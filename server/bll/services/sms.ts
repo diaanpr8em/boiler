@@ -3,19 +3,19 @@ import { queueServiceJob } from "~/server/bll/queues/queue";
 import { JobNames, QueueNames } from "~/server/models/enums/queues";
 import { hasSufficientBalanceAvailable, reduceBalance } from "~/server/bll/billing/billing";
 import { SMSMessage } from "~/server/models/services/sms";
-import { ServiceTypes, Users } from '@prisma/client';
+import { MessageTypes, ServiceTypes, Users } from '@prisma/client';
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 import { Products } from "~/server/models/enums/products";
 import { getByName } from "~/server/db/products/products";
 
-export const processSMS = async (body: SMSMessage) => {
+export const processSMS = async (body: SMSMessage, messageType: MessageTypes, event: any) => {
   // who is this? Diaan to show usage of auth here
   const user: Users = {
     id: 1,
     email: "mike.honeycomb@outlook.com",
     name: "Michael",
     surname: "Hanekom",
-    currency: "ZAR",
+    UserRole: "USER",
     createdAt: Date() as unknown as Date,
     updatedAt: Date() as unknown as Date
   };
@@ -35,7 +35,7 @@ export const processSMS = async (body: SMSMessage) => {
   }
 
   // send if credits
-  const sms = await insert(body, ServiceTypes.SMS);
+  const sms = await insert(body, ServiceTypes.SMS, messageType);
   const billing = await reduceBalance(user.id, product?.id, volumeCount);
   const job = await queueServiceJob(QueueNames.OUTBOUND_SMS, JobNames.SMS_SEND, sms);
 

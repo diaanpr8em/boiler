@@ -1,13 +1,14 @@
-import { JobStatus, ServiceTypes, StatusTypes } from "@prisma/client";
+import { JobStatus, MessageTypes, ServiceTypes, StatusTypes } from "@prisma/client";
 import { prisma } from "./prismaConnection";
 
-export const insert = async(model: any, serviceType: ServiceTypes) => {
+export const insert = async(model: any, serviceType: ServiceTypes, messageType: MessageTypes) => {
   // queue the job
   // insert the data
   return prisma.services.create({
     data: {
       jobStatus: JobStatus.NEW,
-      type: serviceType,
+      serviceType: serviceType,
+      messageType: messageType,
       request: JSON.stringify(model),
       response: "",
       providerRequest: "",

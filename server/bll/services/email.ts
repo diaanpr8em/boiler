@@ -6,15 +6,26 @@ import {
   reduceBalance,
 } from "~/server/bll/billing/billing";
 import { EmailMessage } from "~/server/models/services/email_simple";
-import { ServiceTypes, Users } from "@prisma/client";
+import { MessageTypes, ServiceTypes, Users } from "@prisma/client";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 import { Products } from "~/server/models/enums/products";
 import { getByName } from "~/server/db/products/products";
+import { logger } from "../logging/logger";
 
-export const queueEmail = async (body: EmailMessage, event: any) => {
-  const user = event.auth.user as Users;
+export const queueEmail = async (body: EmailMessage, messageType: MessageTypes, event: any) => {
+  //const user = event.auth.user as Users;
+  const user: Users = {
+    id: 1,
+    email: "mike.honeycomb@outlook.com",
+    name: "Michael",
+    surname: "Hanekom",
+    UserRole: "USER",
+    createdAt: Date() as unknown as Date,
+    updatedAt: Date() as unknown as Date,
+  };
 
   // what product is this
+  logger.info(`Getting product by name:${Products.EMAIL}`);
   var product = await getByName(Products.EMAIL);
   if (product == null) throw new BusinessError(Codes.E202);
 
@@ -34,12 +45,14 @@ export const queueEmail = async (body: EmailMessage, event: any) => {
   }
 
   // send if credits
-  const email = await insert(body, ServiceTypes.EMAIL);
+  const email = await insert(body, ServiceTypes.EMAIL, messageType);
   const billing = await reduceBalance(user.id, product.id, volumeCount);
+  // the service job here may be too big, so just pass the id and
+  // query the Services record on the worker
   const job = await queueServiceJob(
     QueueNames.OUTBOUND_EMAIL,
     JobNames.EMAIL_SEND,
-    email
+    email.id
   );
 
   return { email };
