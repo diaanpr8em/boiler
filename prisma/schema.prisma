@@ -106,33 +106,21 @@ model LookupCurrencies {
 
 model Notifications {
   id                     Int                      @id @default(autoincrement())
+  templates              Templates                @relation(fields: [templateId], references: [id])
+  templateId             Int
   userId                 Int
   entity                 String
   entityId               Int
-  type                   String
+  notificationType       NotificationTypes        @default(GENERAL)
+  serviceType            ServiceTypes             @default(EMAIL)
   status                 StatusTypes              @default(NEW)
   statusMessage          String                   @default("NEW")
   retryCount             Int                      @default(0)
   useSystemPreferences   Boolean                  @default(false)
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
-  NotificationRecipients NotificationRecipients[]
   NotificationContent    NotificationContent[]
-}
-
-model NotificationRecipients {
-  id             Int           @id @default(autoincrement())
-  notifications  Notifications @relation(fields: [notificationId], references: [id])
-  notificationId Int
-  userId         Int
-  fullName       String
-  email          String
-  mobile         String
-  handle         String
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-
-  @@index([notificationId], name: "NotificationRecipients_notificationId")
+  NotificationRecipients NotificationRecipients[]
 }
 
 model NotificationContent {
@@ -145,6 +133,23 @@ model NotificationContent {
   updatedAt      DateTime      @updatedAt
 
   @@index([notificationId], name: "NotificationContent_notificationId")
+}
+
+model NotificationRecipients {
+  id             Int           @id @default(autoincrement())
+  notifications  Notifications @relation(fields: [notificationId], references: [id])
+  notificationId Int
+  userId         Int
+  contactId      Int
+  copyType       CopyTypes     @default(TO)
+  fullName       String
+  email          String
+  mobile         String
+  handle         String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([notificationId], name: "NotificationRecipients_notificationId")
 }
 
 model Orders {
@@ -255,6 +260,20 @@ model SystemSettings {
   @@index([tenantId], name: "SystemSettings_tenantId")
 }
 
+model Templates {
+  id            Int             @id @default(autoincrement())
+  tenants       Tenants         @relation(fields: [tenantId], references: [id])
+  tenantId      Int
+  name          String
+  htmlBody      String          @db.Text()
+  textBody      String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Notifications Notifications[]
+
+  @@index([tenantId], name: "NotificationTemplates_tenantId")
+}
+
 model Tenants {
   id              Int               @id @default(autoincrement())
   name            String            @default("")
@@ -262,13 +281,14 @@ model Tenants {
   currency        Currencies        @default(ZAR)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  Settings        SystemSettings[]
   Contacts        Contacts[]
   ContactGroups   ContactGroups[]
-  UserTenantLinks UserTenantLinks[]
   Invoices        Invoices[]
   Orders          Orders[]
   ProductStock    ProductStock[]
+  Settings        SystemSettings[]
+  Templates       Templates[]
+  UserTenantLinks UserTenantLinks[]
 }
 
 model UniqueLinks {
@@ -296,7 +316,20 @@ model Users {
   UserRole        UserRole          @default(USER)
   UniqueLinks     UniqueLinks[]
   Subscriptions   Subscriptions[]
+  UserPreferences UserPreferences[]
   UserTenantLinks UserTenantLinks[]
+}
+
+model UserPreferences {
+  id        Int      @id @default(autoincrement())
+  users     Users    @relation(fields: [userId], references: [id])
+  userId    Int
+  setting   String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId], name: "UserPreferences_userId")
 }
 
 model UserTenantLinks {
@@ -337,6 +370,12 @@ enum ContentTypes {
   TEXT
 }
 
+enum CopyTypes {
+  TO
+  CC
+  BCC
+}
+
 enum JobStatus {
   FAILED
   NEW
@@ -349,17 +388,29 @@ enum MessageTypes {
   EMAIL_DELIVERY_REPORT
   EMAIL_LOGS
   EMAIL_SIMPLE
+  OTP
   SMS_SIMPLE
   SMS_ADVANCED
+}
+
+enum NotificationTypes {
+  ACCOUNT_OTP
+  ACCOUNT_PASSWORD_RESET
+  ACCOUNT_VALIDATION
+  GENERAL
+  ENTITY_NEW
 }
 
 enum ProviderType {
   ELMNTRY
   INFOBIP
+  SMTP
 }
 
 enum ServiceTypes {
+  APP
   EMAIL
+  PUSH
   SMS
   VIBER
   VOICE

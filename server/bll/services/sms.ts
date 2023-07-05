@@ -37,7 +37,7 @@ export const processSMS = async (body: SMSMessage, messageType: MessageTypes, ev
   // send if credits
   const sms = await insert(body, ServiceTypes.SMS, messageType);
   const billing = await reduceBalance(user.id, product?.id, volumeCount);
-  const job = await queueServiceJob(QueueNames.OUTBOUND_SMS, JobNames.SMS_SEND, sms);
+  const job = await queueServiceJob(QueueNames.OUTBOUND_SMS, JobNames.SMS_SEND, sms.id);
 
   return { sms };
 };

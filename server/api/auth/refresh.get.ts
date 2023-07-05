@@ -1,7 +1,7 @@
 import { sendError } from 'h3'
 import { JwtPayload } from 'jsonwebtoken'
-import { getRefreshToken } from '~/server/db/userSecurity'
-import { getUserById } from '~/server/db/users'
+import { getRefreshToken } from '~/server/db/users/userSecurity'
+import { getUserById } from '~/server/db/users/users'
 import { decodeRefreshToken, generateTokens } from '~/server/utils/jwt'
 
 export default defineEventHandler(async (event) => {

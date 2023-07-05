@@ -15,7 +15,7 @@
     "@types/node": "^18",
     "@types/uuid": "^9.0.2",
     "nuxt": "^3.5.2",
-    "prisma": "^4.15.0"
+    "prisma": "^4.16.2"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",

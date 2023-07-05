@@ -1,4 +1,4 @@
-import { getById as getUserById } from "~/server/db/users"
+import { getById as getUserById } from "~/server/db/users/users"
 import { getById as getProductById } from "~/server/db/products/products";
 import { update, getStockLevels } from "~/server/db/products/productStock";
 import { boolean } from "zod";

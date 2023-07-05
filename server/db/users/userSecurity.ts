@@ -1,4 +1,4 @@
-import { prisma } from "./prismaConnection"
+import { prisma } from "../prismaConnection"
 
 export const updateRefreshToken =  (userId: number, refreshToken: string) => {
 	return prisma.userSecurity.update({

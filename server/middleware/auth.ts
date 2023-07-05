@@ -1,7 +1,7 @@
 import UrlPattern from 'url-pattern'
 import { decodeAccessToken } from '../utils/jwt'
 import { JwtPayload } from 'jsonwebtoken'
-import { getUserAuthDataById } from '../db/users'
+import { getUserAuthDataById } from '../db/users/users'
 
 export default defineEventHandler(async (event) => {
 	// these are admin only endpoints

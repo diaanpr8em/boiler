@@ -1,4 +1,4 @@
-import { removeRefreshToken } from "~/server/db/userSecurity"
+import { removeRefreshToken } from "~/server/db/users/userSecurity"
 
 export default defineEventHandler(async (event) => {
     

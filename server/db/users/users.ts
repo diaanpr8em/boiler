@@ -1,10 +1,10 @@
-import { prisma } from "./prismaConnection"
+import { prisma } from "../prismaConnection"
 import { hashSync } from 'bcrypt'
 import { z } from "zod"
 
-import { userRegister } from "../models/users"
-import { getTenantByDomain } from "./tenants"
-import { BusinessError, Codes } from "../models/exceptions/BusinessError"
+import { userRegister } from "../../models/users"
+import { getTenantByDomain } from "../tenants"
+import { BusinessError, Codes } from "../../models/exceptions/BusinessError"
 
 type UserRegisterRequest = z.TypeOf<typeof userRegister>;
 

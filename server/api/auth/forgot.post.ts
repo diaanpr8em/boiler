@@ -1,7 +1,7 @@
 import { LinkType } from "@prisma/client"
 import { z } from "zod" 
 import { addUniqueLink } from "~/server/bll/system/uniqueLinks"
-import { userExists } from "~/server/db/users"
+import { userExists } from "~/server/db/users/users"
 import { UniqueLinkRequest } from "~/server/models/system/uniqueLinks"
 import { userForgotPass } from "~/server/models/users"
 
