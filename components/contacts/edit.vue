@@ -42,6 +42,15 @@
                     required></v-text-field>
             </v-col>
         </v-row>
+        <v-row v-if="admin">
+            <v-col>
+                <SelectTenant 
+                    :required="true"
+                    v-model="formData.tenantId"
+                ></SelectTenant>
+            </v-col>
+            <v-col></v-col>
+        </v-row>
         <v-btn 
             :disabled="checkEditable"
             class="float-right mt-3 mr-3 mb-3"
@@ -52,7 +61,14 @@
 </template>
 
 <script lang="ts" setup>
-import { Contacts } from '@prisma/client';
+    import { Contacts } from '@prisma/client';
+
+    interface IProps {
+        admin: boolean
+    }
+
+    const props = defineProps<IProps>()
+    const authStore = useAuthStore()
 
     const route = useRoute()
     const router = useRouter()
@@ -65,6 +81,7 @@ import { Contacts } from '@prisma/client';
         email: '',
         mobile: '',
         handle: '',
+        tenantId: 0
     })   
     
     const isLoading = ref(false)
@@ -78,12 +95,12 @@ import { Contacts } from '@prisma/client';
             const { contact } = await useFetchApi<{contact: Contacts}>(`/api/modules/contacts/${route.params.id}`, {
                 method: 'GET'
             })
-            console.log(contact)
             formData.id = contact.id
             formData.fullName = contact.fullName
             formData.email = contact.email
             formData.mobile = contact.mobile
             formData.handle = contact.handle
+            formData.tenantId = contact.tenantId
             isLoading.value = false
         } catch (error) {
             console.log(error)
@@ -115,6 +132,8 @@ import { Contacts } from '@prisma/client';
                 })
                 editable.value = false
             } else {
+                if (!authStore.tenantId) throw new Error('Tenant is required.')
+                formData.tenantId = props.admin ? formData.tenantId : authStore.tenantId
                 const {contact} = await useFetchApi<{contact: Contacts}>('/api/modules/contacts', {
                     method: 'POST', 
                     body: formData

@@ -14,3 +14,7 @@ export const insert = async (data: TenantInsertRequest) => {
 		data
 	})
 }
+
+export const getAll = async () => {
+	return prisma.tenants.findMany()
+}

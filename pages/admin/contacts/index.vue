@@ -112,6 +112,7 @@
     const headers: ReadonlyDataTableHeader[] = [
         { key: 'id', title: 'ID', value: 'id', align: 'start', sortable: false },
         { key: 'fullName', title: 'Name', value: 'fullName' },
+        { key: 'tenantName', title: 'Tenant', value: 'tenant.name'},
         { key: 'email', title: 'Email', value: 'email' },
         { key: 'mobile', title: 'Mobile', value: 'mobile' },
         { key: 'handle', title: 'Handle', value: 'handle' },

@@ -37,7 +37,12 @@ export const userExists = (email: string) => {
 			email
 		},
 		include: {
-			UserSecurity: true
+			UserSecurity: true,
+			UserTenantLinks: {
+				include: {
+					tenants: true
+				}
+			}
 		}
 	})
 }

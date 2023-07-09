@@ -10,19 +10,12 @@ export default defineEventHandler(async (event) => {
 		'/api/tenants/*'
 	]
 	const clientAdminEndpoints = [
-		'/api/client-admin/*'
+		'/api/client-admin/*' // this is not actually endpoint, there is ts issue with empty array
 	]
 	// these are endpoints that require authentication to access
 	const endpoints = [
 		'/api/auth/user',
-		'/api/modules/contacts',
-		'/api/modules/contacts/*',
-		'/api/modules/contact-groups',
-		'/api/modules/contact-groups/*',
-		'/api/modules/notifications',
-		'/api/modules/notifications/*',
-		'/api/modules/subscriptions',
-		'/api/modules/subscriptions/*',
+		'/api/modules/*',
 	]
 
 	const matched = [...endpoints, ...clientAdminEndpoints, ...adminEndpoints].some(endpoint => {

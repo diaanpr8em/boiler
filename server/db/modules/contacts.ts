@@ -68,6 +68,9 @@ export const search = async (data: ContactsSearchRequest) => {
   })
 
   const records = await prisma.contacts.findMany({
+    include: {
+      tenant: true
+    },
     skip,
     take: data.rows,
     ...(data.searchTerm != '' ? where : {}),

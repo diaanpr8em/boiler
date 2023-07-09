@@ -3,7 +3,7 @@
         <v-col>
             <v-card>
                 <v-card-text>
-                    <ContactsEdit></ContactsEdit>
+                    <ContactsEdit :admin="true"></ContactsEdit>
                 </v-card-text>
             </v-card>
         </v-col>

@@ -30,6 +30,7 @@ export class UserLoginResponse {
 	user: Users & {
 		UserSecurity: UserSecurity | null
 	} | null = null
+	tenantId: number | undefined
 
 	constructor(data?: UserLoginResponse) {
 		if (data) {
@@ -42,6 +43,7 @@ export class UserLoginResponse {
 
 		this.token = ""
 		this.user = null
+		this.tenantId = 0
 	}
 }
 
