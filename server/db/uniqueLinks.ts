@@ -1,7 +1,7 @@
 import { LinkType } from "@prisma/client"
 import { prisma } from "./prismaConnection"
 import { z } from "zod"
-import { UniqueLinkCreateSchema } from "../models/system/uniqueLinks"
+import { UniqueLinkCreateSchema } from "../models/validation/system/uniqueLinks"
 
 type UniqueLinkCreateRequest = z.TypeOf<typeof UniqueLinkCreateSchema>
 

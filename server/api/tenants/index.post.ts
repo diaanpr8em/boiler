@@ -1,6 +1,6 @@
 import { z } from 'zod'
-import { insert } from '~/server/db/tenants'
-import { tenantInsertSchema } from '~/server/models/tenants'
+import { insert } from '~/server/db/tenants/tenants'
+import { tenantInsertSchema } from '~/server/models/validation/tenants'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)

@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { UserLoginResponse, userLogin } from "../../models/users"
+import { UserLoginResponse, userLogin } from "../../models/validation/users"
 import { sendError } from 'h3'
 import { userExists } from "../../db/users/users"
 import { compare } from "bcrypt"
