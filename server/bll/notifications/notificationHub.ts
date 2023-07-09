@@ -1,30 +1,82 @@
-import { NotificationContent, NotificationRecipients, Notifications } from "@prisma/client";
-import { accountValidation } from "./notificationFormatters";
-import { getByNotificationID as getContentByNotificationId } from "~/server/db/notifications/notificationContent";
-import { getByNotificationID as getRecipientsByNotificationId } from "~/server/db/notifications/notificationRecipients";
+import {
+  CopyTypes,
+  MessageTypes,
+  NotificationRecipients,
+  Notifications,
+  ServiceTypes,
+  Services,
+  Templates
+} from "@prisma/client";
+import { EmailMessage as SimpleEmailMessage } from "~/server/models/services/email_simple";
+import { FormattedMessage } from "~/server/models/templates/formatted_message";
+import { globalFormatter } from "./notificationFormatters";
+import { getByNotificationId as getRecipientsByNotificationId } from "~/server/db/notifications/notificationRecipients";
+import { getByUserId as getUserPrefsByUserId } from "~/server/db/users/userPreferences";
+import { getById as getTemplateById } from "~/server/db/templates/templates";
+import { insert as insertService } from "~/server/db/services";
 
-export const dispatch = async (model: Notifications) => {
-  const content = await getContentByNotificationId(model.id);
-  const recipients = await getRecipientsByNotificationId(model.id);
+export const dispatch = async (noti: Notifications) => {
+  const recipients: NotificationRecipients[] | null = await getRecipientsByNotificationId(noti.id);
+  const template: Templates | null = await getTemplateById(noti.templateId);
 
-  switch (model.notificationType) {
-    case "ACCOUNT_OTP":
-      break;
-    case "ACCOUNT_PASSWORD_RESET":
-      break;
-    case "ACCOUNT_VALIDATION":
-      const xxx = await accountValidation(model, content, recipients);
-      break;
-    case "ENTITY_NEW":
-      break;
-    default:
-    case "GENERAL":
-      break;
-  }
+  if (!template) throw Error("Unable to find matching template");
+  const fms: FormattedMessage[] = await globalFormatter(
+    noti,
+    recipients,
+    template
+  );
 
   // send the message
+  switchboard(noti, recipients, fms);
 };
 
-const switchboard = async (noti: Notifications, content: NotificationContent, recipients: NotificationRecipients) => {
-    // get user preferences
-}
+const switchboard = async (
+  noti: Notifications,
+  recipients: NotificationRecipients[],
+  fms: FormattedMessage[]
+) => {
+  switch (noti.serviceType) {
+    case "APP":
+      break;
+    default:
+    case "EMAIL":
+      sendToEmailQueue(noti, recipients, fms);
+      break;
+    case "PUSH":
+      break;
+    case "SMS":
+      break;
+    case "VIBER":
+      break;
+    case "VOICE":
+      break;
+    case "WHATSAPP":
+      break;
+  }
+};
+
+const sendToEmailQueue = async (
+  noti: Notifications,
+  recipients: NotificationRecipients[],
+  fms: FormattedMessage[] | null
+) => {
+  var ccArray = recipients
+    .filter((x) => x.copyType == CopyTypes.CC)
+    .map((x) => x.email);
+  var bccArray = recipients
+    .filter((x) => x.copyType == CopyTypes.BCC)
+    .map((x) => x.email);
+
+  const request: SimpleEmailMessage = {
+    bcc: bccArray,
+    cc: ccArray,
+    from: 
+  };
+
+  var service = await insertService(
+    request,
+    tenantId,
+    ServiceTypes.EMAIL,
+    MessageTypes.EMAIL_SIMPLE
+  );
+};

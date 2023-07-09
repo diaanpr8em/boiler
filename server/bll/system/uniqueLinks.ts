@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { UniqueLinkCreateSchema, UniqueLinkRequest } from "~/server/models/system/uniqueLinks";
+import { UniqueLinkCreateSchema, UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks";
 import { v4 as uuidv4 } from 'uuid';
 import { createUniqueLink } from "~/server/db/uniqueLinks";
 

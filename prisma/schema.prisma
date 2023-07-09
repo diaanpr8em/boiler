@@ -119,20 +119,7 @@ model Notifications {
   useSystemPreferences   Boolean                  @default(false)
   createdAt              DateTime                 @default(now())
   updatedAt              DateTime                 @updatedAt
-  NotificationContent    NotificationContent[]
   NotificationRecipients NotificationRecipients[]
-}
-
-model NotificationContent {
-  id             Int           @id @default(autoincrement())
-  notifications  Notifications @relation(fields: [notificationId], references: [id])
-  notificationId Int
-  contentType    ContentTypes  @default(HTML)
-  content        String        @db.Text()
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-
-  @@index([notificationId], name: "NotificationContent_notificationId")
 }
 
 model NotificationRecipients {
@@ -146,6 +133,7 @@ model NotificationRecipients {
   email          String
   mobile         String
   handle         String
+  placeholders   String        @db.Text()
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
@@ -212,6 +200,8 @@ model ProductStock {
 
 model Services {
   id               Int          @id @default(autoincrement())
+  tenants          Tenants      @relation(fields: [tenantId], references: [id])
+  tenantId         Int
   userId           Int
   serviceType      ServiceTypes @default(SMS)
   messageType      MessageTypes @default(SMS_SIMPLE)
@@ -263,10 +253,11 @@ model SystemSettings {
 model Templates {
   id            Int             @id @default(autoincrement())
   tenants       Tenants         @relation(fields: [tenantId], references: [id])
-  tenantId      Int
+  tenantId      Int           
   name          String
-  htmlBody      String          @db.Text()
-  textBody      String
+  htmlBody      String          @default("") @db.Text()
+  textBody      String          @default("") @db.Text()
+  placeHolders  String          @default("") @db.Text()
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   Notifications Notifications[]
@@ -289,6 +280,7 @@ model Tenants {
   Settings        SystemSettings[]
   Templates       Templates[]
   UserTenantLinks UserTenantLinks[]
+  Services        Services[]
 }
 
 model UniqueLinks {
@@ -310,10 +302,10 @@ model Users {
   email           String            @unique
   name            String
   surname         String
+  userRole        UserRole          @default(USER)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   UserSecurity    UserSecurity?
-  UserRole        UserRole          @default(USER)
   UniqueLinks     UniqueLinks[]
   Subscriptions   Subscriptions[]
   UserPreferences UserPreferences[]
@@ -404,7 +396,7 @@ enum NotificationTypes {
 enum ProviderType {
   ELMNTRY
   INFOBIP
-  SMTP
+  SELF
 }
 
 enum ServiceTypes {

@@ -1,7 +1,7 @@
 import { JobStatus, MessageTypes, ProviderType, ServiceTypes, StatusTypes } from "@prisma/client";
 import { prisma } from "./prismaConnection";
 
-export const insert = async(model: any, serviceType: ServiceTypes, messageType: MessageTypes, providerType?: ProviderType) => {
+export const insert = async(request: any, tenantId: number, serviceType: ServiceTypes, messageType: MessageTypes, providerType?: ProviderType) => {
   // queue the job
   // insert the data
   return prisma.services.create({
@@ -10,12 +10,13 @@ export const insert = async(model: any, serviceType: ServiceTypes, messageType: 
       serviceType: serviceType,
       messageType: messageType,
       providerType: providerType,
-      request: JSON.stringify(model),
+      request: JSON.stringify(request),
       response: "",
       providerRequest: "",
       providerResponse: "",
       userId: 1,
       status: JobStatus.NEW,
+      tenantId: tenantId
     },
   });
 };

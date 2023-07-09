@@ -1,12 +1,12 @@
 import { prisma } from "../prismaConnection";
 
-export const getById = (id: number) => {
+export const getById = async (id: number) => {
     return prisma.notificationRecipients.findUnique({
         where: { id: id}
     })
 }
 
-export const getByNotificationID = (id: number) => {
+export const getByNotificationId = async (id: number) => {
     return prisma.notificationRecipients.findMany({
         where: { notificationId: id}
     })

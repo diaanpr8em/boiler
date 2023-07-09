@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { userLogin, UserLoginResponse } from '~/server/models/users'
+import { userLogin, UserLoginResponse } from '~/server/models/validation/users'
 import { Users } from '@prisma/client'
 
 type userLoginInput = z.infer<typeof userLogin>

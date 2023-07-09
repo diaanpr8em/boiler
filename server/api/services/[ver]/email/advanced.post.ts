@@ -2,8 +2,9 @@ import { z } from "zod"
 import { sendError } from 'h3'
 import { queueEmail } from "~/server/bll/services/email";
 import { BusinessError } from "~/server/models/exceptions/BusinessError";
-import { messageSchema } from "~/server/models/validation/services/email/advanced";
+import { messageSchema, PostRequest } from "~/server/models/validation/services/email/advanced";
 import { MessageTypes } from "@prisma/client";
+import { EmailMessage } from "~/server/models/services/email_advanced";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -14,8 +15,8 @@ export default defineEventHandler(async (event) => {
     //if (route.params.ver != "1" ) return;
 
     // map the custom body into a generic body
-    const parsedBody = messageSchema.parse(body);
-    var email = await queueEmail(parsedBody, MessageTypes.EMAIL_ADVANCED, event)
+    const parsedBody: PostRequest = messageSchema.parse(body);
+    var email = await queueEmail(parsedBody, MessageTypes.EMAIL_ADVANCED, event);
 
 		return {
 			email
