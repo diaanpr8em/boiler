@@ -7,7 +7,9 @@ export default defineEventHandler(async (event) => {
 	// these are admin only endpoints
 	const adminEndpoints = [
 		'/api/tenants',
-		'/api/tenants/*'
+		'/api/tenants/*',
+		'/api/users',
+		'/api/users/*',
 	]
 	const clientAdminEndpoints = [
 		'/api/client-admin/*' // this is not actually endpoint, there is ts issue with empty array

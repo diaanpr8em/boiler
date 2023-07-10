@@ -18,7 +18,7 @@ export const sendAccountValidationNotification = async(user: Users) => {
                 fullName: `${user.name} ${user.surname}`,
                 mobile: "",
                 userId: user.id,
-                placeholders: 
+                // placeholders: 
             }
         },
         userId: user.id,

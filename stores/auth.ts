@@ -100,7 +100,8 @@ export const useAuthStore = defineStore('auth', () => {
       
       return new UserLoginResponse({token, user, tenantId} as UserLoginResponse)
     } catch (error) {
-      throw error;
+      logout()
+      throw error
     } finally {
       setAuthLoading(false)
     }

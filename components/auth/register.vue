@@ -36,7 +36,7 @@
             v-model="formData.passwordConfirmation"
             :rules="confirmPasswordRules"
             :type="hideConfirmPass ? 'password' : 'text'"
-            :append-inner-icon="hidePass ? 'mdi-eye-outline' : 'mdi-eye-off-outline'" 
+            :append-inner-icon="hideConfirmPass ? 'mdi-eye-outline' : 'mdi-eye-off-outline'" 
             @click:append-inner="toggleConfirmPassword" 
         ></v-text-field>
         <!-- center the buttons -->
@@ -75,11 +75,8 @@
 	})
 
     const requiredRules = (message: string) => useValidationRules('required', '', message)
-
     const emailRules = useValidationRules('email')
-
 	const passwordRules = useValidationRules('password')
-    
     let confirmPasswordRules = useValidationRules('confirmPassword', formData.password)
     watch(() => formData.passwordConfirmation, () => confirmPasswordRules = useValidationRules('confirmPassword', formData.password))
 

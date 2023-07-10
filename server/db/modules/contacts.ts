@@ -41,40 +41,29 @@ export const deleteById = (id: number) => {
 };
 
 export const search = async (data: ContactsSearchRequest) => {
-  const skip = (data.page - 1) * data.rows;
+  const { searchTerm, page, rows: take, sortBy } = data;
+  const skip = (page - 1) * take;
 
-  const sortBy = {
-    orderBy: sortByFix(data.sortBy),
-  }
+  const orderBy = sortBy ? sortByFix(sortBy) : {}
 
-  const where = {
-    where: {
-      OR: [
-        {
-          email: { contains: data.searchTerm }
-        },
-        {
-          fullName: { contains: data.searchTerm }
-        },
-        {
-          mobile: { contains: data.searchTerm }
-        }
-      ]
-    }
-  }
+  const where = searchTerm ? {
+    OR: [
+      { email: { contains: searchTerm } },
+      { fullName: { contains: searchTerm } },
+      { mobile: { contains: searchTerm } }
+    ]
+  } : {}
 
-  const total = await prisma.contacts.count({
-    ...(data.searchTerm != '' ? where : {})
-  })
+  const total = await prisma.contacts.count({ where })
 
   const records = await prisma.contacts.findMany({
     include: {
       tenant: true
     },
     skip,
-    take: data.rows,
-    ...(data.searchTerm != '' ? where : {}),
-    ...(data.sortBy ? sortBy : {})
+    take,
+    where,
+    orderBy
   });
 
   return {

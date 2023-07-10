@@ -1,12 +1,12 @@
 import { z } from 'zod'
-import { search } from '~/server/db/tenants/tenants'
-import { tenantSearchSchema } from '~/server/models/validation/tenants'
+import { search } from '~/server/db/users/users'
+import { userSearchSchema } from '~/server/models/validation/users'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
     try {
-        const parsedBody = tenantSearchSchema.parse(body)
+        const parsedBody = userSearchSchema.parse(body)
 
         const result = await search(parsedBody)
         const response = {

@@ -67,16 +67,16 @@ const sendToEmailQueue = async (
     .filter((x) => x.copyType == CopyTypes.BCC)
     .map((x) => x.email);
 
-  const request: SimpleEmailMessage = {
-    bcc: bccArray,
-    cc: ccArray,
-    from: 
-  };
+  // const request: SimpleEmailMessage = {
+  //   bcc: bccArray,
+  //   cc: ccArray,
+  //   from: 
+  // };
 
-  var service = await insertService(
-    request,
-    tenantId,
-    ServiceTypes.EMAIL,
-    MessageTypes.EMAIL_SIMPLE
-  );
+  // var service = await insertService(
+  //   request,
+  //   tenantId,
+  //   ServiceTypes.EMAIL,
+  //   MessageTypes.EMAIL_SIMPLE
+  // );
 };

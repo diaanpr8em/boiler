@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { getAll } from '~/server/db/tenants'
+import { getAll } from '~/server/db/tenants/tenants'
 
 export default defineEventHandler(async (event) => {
 

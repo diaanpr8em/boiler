@@ -1,20 +1,19 @@
 import { z } from 'zod'
-import { search } from '~/server/db/tenants/tenants'
-import { tenantSearchSchema } from '~/server/models/validation/tenants'
+import { backendRegisterUser } from '~/server/db/users/users'
+import { backendRegister } from '~/server/models/validation/users'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
 
     try {
-        const parsedBody = tenantSearchSchema.parse(body)
+        const parsedBody = backendRegister.parse(body)
 
-        const result = await search(parsedBody)
-        const response = {
-            page: parsedBody.page,
-            rows: parsedBody.rows,
-            ...result
+        // TODO: no email validation will be done here
+        const user = await backendRegisterUser(parsedBody)
+
+        return {
+            user
         }
-        return response
     } catch (e) {
         if (e instanceof z.ZodError) {
             return sendError(event, createError({statusCode: 400, statusMessage: JSON.stringify(e.flatten())}))

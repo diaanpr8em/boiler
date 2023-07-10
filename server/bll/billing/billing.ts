@@ -12,7 +12,7 @@ export const processProductTransaction = async (tenantId: number, productId: num
     }
 }
 
-const hasSufficientBalanceAvailable = async (tenantId: number, productId: number, volume: number) => {
+export const hasSufficientBalanceAvailable = async (tenantId: number, productId: number, volume: number) => {
     var sufficient = false;
     // get the stock levels of all products matching
     // so that it still makes sense even if they have multiple bundles
@@ -23,7 +23,7 @@ const hasSufficientBalanceAvailable = async (tenantId: number, productId: number
     return sufficient;
 }
 
-const reduceBalance = async (userId: number, productId: number, volume: number) => {
+export const reduceBalance = async (userId: number, productId: number, volume: number) => {
     // get the stock levels of all products matching
     // so that it still makes sense even if they have multiple bundles
     const stock = await getStockLevels(userId, productId)
