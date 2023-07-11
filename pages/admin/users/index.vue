@@ -2,7 +2,7 @@
     <NotificationConfirmation
         :show-alert="showCheckAction"
         :message="notificationMesg"
-        @confirm="deleteContact"
+        @confirm="deleteUser"
         @decline="deleteCancelled"
     ></NotificationConfirmation>
     <loader v-if="isProcessing">Deleting...</loader>
@@ -48,8 +48,8 @@
                             variant="flat"
                             size="small"
                             color="primary"
-                            to="/admin/contacts/new"
-                            >New Contact</v-btn
+                            to="/admin/users/new"
+                            >New User</v-btn
                         >
                     </v-toolbar>
                 </template>
@@ -59,16 +59,8 @@
                         size="x-small"
                         color="primary"
                         class="mx-1"
-                        :to="`/admin/contacts/${item.columns.id}`">
+                        :to="`/admin/users/${item.columns.id}`">
                         <v-icon>mdi-eye</v-icon>
-                    </v-btn>
-                    <v-btn
-                        icon
-                        size="x-small"
-                        color="info"
-                        class="mx-1"
-                        @click="() => {}">
-                        <v-icon>mdi-email</v-icon>
                     </v-btn>
                     <v-btn
                         icon
@@ -85,59 +77,52 @@
 </template>
 
 <script lang="ts" setup>
-    import { Contacts } from '@prisma/client';
-    import { z } from 'zod';
-    
+    import { Users } from '@prisma/client';
     // models
-    import { ContactsSearchResponse } from '~/server/models/modules/contacts';
-    import { contactSearchSchema } from '~/server/models/validation/modules/contacts';
+    import { UserSearchRequest, UserSearchResponse } from '~/server/models/validation/users';
     import { ReadonlyDataTableHeader } from '~/server/utils/models'
 
     definePageMeta({
-        layout: "admin",
-        title: "Contacts",
-    });
-
-    const route = useRoute();
+        layout: 'admin',
+        title: 'Users'
+    })
 
     const isLoading = ref(false)
     const isProcessing = ref(false)
     const showCheckAction = ref(false)
-    const serverItems = ref<Contacts[]>([])
-    const totalItems = ref(0)
-    const itemsPerPage = ref(10)
     const notificationMesg = ref('You are about to delete this item.')
     const idToDelete = ref(0)
 
+    const serverItems = ref<Users[]>([])
+    const totalItems = ref(0)
+    const itemsPerPage = ref(10)
+
     const headers: ReadonlyDataTableHeader[] = [
         { key: 'id', title: 'ID', value: 'id', align: 'start', sortable: false },
-        { key: 'fullName', title: 'Name', value: 'fullName' },
-        { key: 'tenantName', title: 'Tenant', value: 'tenant.name'},
-        { key: 'email', title: 'Email', value: 'email' },
-        { key: 'mobile', title: 'Mobile', value: 'mobile' },
-        { key: 'handle', title: 'Handle', value: 'handle' },
+        { key: 'name', title: 'Name', value: 'name' },
+        { key: 'surname', title: 'Surname', value: 'surname'},
+        { key: 'email', title: 'Email', value: 'email'},
         { key: 'actions', title: 'Actions', value: 'actions', align: 'end', sortable: false }
     ]
 
-    type SearchRequest = z.infer<typeof contactSearchSchema>;
-    const searchRequest: SearchRequest = {
+    const searchRequest = reactive<UserSearchRequest>({
         page: 1,
         rows: 10,
+        sortBy: [],
         searchTerm: ''
-    }
+    })
     const search = async () => {
-        await useFetchApi<ContactsSearchResponse>('/api/modules/contacts/search', {
+        await useFetchApi<UserSearchResponse>('/api/users/search', {
             method: 'POST',
-            body: searchRequest,
-        }).then(({ total, records } : {total: number, records: Contacts[]}) => {
+            body: searchRequest
+        }).then(({ total, records }: { total: number, records: Users[] }) => {
             serverItems.value = records
             totalItems.value = total
             isLoading.value = false
         }).catch((error: any) => {
             console.log(error)
-        });
+        })
     }
-    search();
 
     const loadItems = ({ page, itemsPerPage, sortBy}: {page: number, itemsPerPage: number, sortBy: any}) => {
         isLoading.value = true
@@ -149,7 +134,7 @@
     }
 
     const onDeleteAction = (item: any) => {
-        notificationMesg.value = `You are about to delete ${item.columns.fullName}.`
+        notificationMesg.value = `You are about to delete ${item.columns.name}.`
         showCheckAction.value = true
         idToDelete.value = item.columns.id
     }
@@ -158,11 +143,11 @@
         showCheckAction.value = false
     }
 
-    const deleteContact = async () => {
+    const deleteUser = async () => {
         isProcessing.value = true
 
         try {
-            await useFetchApi(`/api/modules/contacts/${idToDelete.value}`, {
+            await useFetchApi(`/api/users/${idToDelete.value}`, {
                 method: 'DELETE',
             })
             
@@ -175,4 +160,5 @@
             isProcessing.value = false
         }
     }
+    
 </script>

@@ -14,42 +14,18 @@
         <v-row>
             <v-col>
                 <v-text-field
-                    v-model="formData.fullName"
-                    label="Full Name"
-                    :rules="requiredRules('Full Name is required.')"
+                    v-model="formData.name"
+                    label="Tenant Name"
+                    :rules="requiredRules('Name is required.')"
                     required></v-text-field>
             </v-col>
             <v-col>
                 <v-text-field
-                    v-model="formData.email"
-                    label="Email"
-                    type="email"
-                    :rules="emailRules"
+                    v-model="formData.domain"
+                    label="Domain"
+                    :rules="requiredRules('Domain is required.')"
                     required></v-text-field>
             </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                <v-text-field
-                    v-model="formData.mobile"
-                    label="Mobile"
-                    required></v-text-field>
-            </v-col>
-            <v-col>
-                <v-text-field
-                    v-model="formData.handle"
-                    label="Handle"
-                    required></v-text-field>
-            </v-col>
-        </v-row>
-        <v-row v-if="admin">
-            <v-col>
-                <SelectTenant 
-                    :required="true"
-                    v-model="formData.tenantId"
-                ></SelectTenant>
-            </v-col>
-            <v-col></v-col>
         </v-row>
         <v-btn 
             :disabled="checkEditable"
@@ -61,46 +37,33 @@
 </template>
 
 <script lang="ts" setup>
-    import { Contacts } from '@prisma/client';
-
-    interface IProps {
-        admin: boolean
-    }
-
-    const props = defineProps<IProps>()
-    const authStore = useAuthStore()
+    import { Tenants } from '@prisma/client';
 
     const route = useRoute()
     const router = useRouter()
     const update = route.params.id && parseInt(route.params.id as string) > 0 ? true : false
 
+    const requiredRules = (message: string) => useValidationRules('required', '', message)
+
     const form = ref<HTMLFormElement | null>(null)
     const formData = reactive({
         id: 0,
-        fullName: '',
-        email: '',
-        mobile: '',
-        handle: '',
-        tenantId: 0
-    })   
-    
-    const isLoading = ref(false)
+        name: '',
+        domain: '',
+    }) 
 
-    const requiredRules = (message: string) => useValidationRules('required', '', message)
-    const emailRules = useValidationRules('email')
+    const isLoading = ref(false)
+    const editable = ref(false)
 
     const loadFormData = async () => {
         isLoading.value = true
         try {
-            const { contact } = await useFetchApi<{contact: Contacts}>(`/api/modules/contacts/${route.params.id}`, {
+            const { tenant } = await useFetchApi<{tenant: Tenants}>(`/api/tenants/${route.params.id}`, {
                 method: 'GET'
             })
-            formData.id = contact.id
-            formData.fullName = contact.fullName
-            formData.email = contact.email
-            formData.mobile = contact.mobile
-            formData.handle = contact.handle
-            formData.tenantId = contact.tenantId
+            formData.id = tenant.id
+            formData.name = tenant.name
+            formData.domain = tenant.domain
             isLoading.value = false
         } catch (error) {
             console.log(error)
@@ -108,7 +71,6 @@
     }
     if (update) loadFormData()
 
-    const editable = ref(false)
     const checkEditable = computed(() => {
         if (update && editable.value) {
             return false
@@ -124,22 +86,21 @@
             const { valid } = await form.value?.validate()
 			if (!valid) return
             isLoading.value = true
+            
             if (update) {
                 formData.id = parseInt(route.params.id as string)
-                const response = await useFetchApi(`/api/modules/contacts`, {
+                const response = await useFetchApi(`/api/tenants`, {
                     method: 'PUT', 
                     body: formData
                 })
                 editable.value = false
             } else {
-                if (!authStore.tenantId) throw new Error('Tenant is required.')
-                formData.tenantId = props.admin ? formData.tenantId : authStore.tenantId
-                const {contact} = await useFetchApi<{contact: Contacts}>('/api/modules/contacts', {
+                const {tenant} = await useFetchApi<{tenant: Tenants}>('/api/tenants', {
                     method: 'POST', 
                     body: formData
                 })
 
-                router.push(`/admin/contacts/${contact.id}`)
+                router.push(`/admin/tenants/${tenant.id}`)
             }
         } catch (error) {
             console.log(error)
@@ -147,5 +108,4 @@
             isLoading.value = false
         }
     }
-
 </script>

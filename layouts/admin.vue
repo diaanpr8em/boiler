@@ -59,24 +59,14 @@
                         ></v-list-item>
                     </v-list-group>
 
-					<v-list-group value="Users">
-                        <template v-slot:activator="{ props }">
-                            <v-list-item
-                                v-bind="props"
-                                prepend-icon="mdi-account-outline"
-                                title="Users"
-                            ></v-list-item>
-                        </template>
+					<v-list-item
+						v-for="([title, icon, href], i) in users"
+						:key="i"
+						:title="title"
+						:prepend-icon="icon"
+						:to="href"
+					></v-list-item>
 
-                        <v-list-item 
-                            v-for="([title, icon, href], j) in users"
-                            :key="j"
-                            :title="title"
-                            :prepend-icon="icon"
-                            :value="title"
-                            :to="href"
-                        ></v-list-item>
-                    </v-list-group>
 				</v-list>
 			</v-navigation-drawer>
 

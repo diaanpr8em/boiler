@@ -14,7 +14,12 @@ export default defineNuxtPlugin(nuxtApp => {
     directives,
     defaults: {
       VTextField: {
-        variant: 'outlined'
+        variant: 'outlined',
+        density: 'compact'
+      },
+      VSelect: {
+        variant: 'outlined',
+        density: 'compact'
       }
     }
   })

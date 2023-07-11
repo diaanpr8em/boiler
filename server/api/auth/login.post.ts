@@ -18,6 +18,14 @@ export default defineEventHandler(async (event) => {
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Password or Email is invalid'}))
 		}
 
+		const tenants = user.UserTenantLinks.map(x => x.tenants)
+
+		if (!tenants || tenants.length <= 0) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+
+		const tenant = tenants.find(x => x.domain === event.node.req.headers.host ?? '')
+
+		if (!tenant) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
+
 		if (!user.UserSecurity || !user.UserSecurity.password) {
 			throw new Error('User is not registered')
 		}
@@ -33,7 +41,7 @@ export default defineEventHandler(async (event) => {
 		
 		sendRefreshToken(event, refreshToken)
 
-		return new UserLoginResponse({user, token})
+		return new UserLoginResponse({user, token, tenantId: tenant.id})
 
 	} catch (e) {
 		if (e instanceof z.ZodError) {

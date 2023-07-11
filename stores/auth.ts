@@ -8,19 +8,22 @@ interface IUserAuthState {
   token: string | null
   loggedIn: boolean
   isAuthLoading: boolean
+  tenantId?: number
 }
 
 export const useAuthStore = defineStore('auth', () => {
   const auth =  ref<IUserAuthState>({
-    userData: null,
-    token: null,
-    loggedIn: false,
-    isAuthLoading: true,
+    userData: (localStorage.getItem("auth")) ? JSON.parse(localStorage.getItem("auth") as string).userData as Users | null : null,
+    token: (localStorage.getItem("auth")) ? JSON.parse(localStorage.getItem("auth") as string).token as string | null : null,
+    loggedIn: (localStorage.getItem("auth")) ? JSON.parse(localStorage.getItem("auth") as string).loggedIn as boolean : false,
+    isAuthLoading: (localStorage.getItem("auth")) ? JSON.parse(localStorage.getItem("auth") as string).isAuthLoading as boolean : true,
+    tenantId: (localStorage.getItem("auth")) ? JSON.parse(localStorage.getItem("auth") as string).tenantId as number : 0,
   })
 
   const isAuthLoading = computed(() => auth.value.isAuthLoading)
   const loggedIn = computed(() => auth.value.loggedIn)
   const role = computed(() => auth.value.userData?.UserRole)
+  const tenantId = computed(() => auth.value.tenantId)
   const token = computed(() => auth.value.token)
   const userEmail = computed(() => auth.value.userData?.email)
   const userId = computed(() => auth.value.userData?.id)
@@ -46,15 +49,16 @@ export const useAuthStore = defineStore('auth', () => {
         body
       })
 
-      const { token, user } = new UserLoginResponse(data as UserLoginResponse)
+      const { token, user, tenantId } = new UserLoginResponse(data as UserLoginResponse)
 
       if (token) {
         auth.value.userData = user as Users
         auth.value.token = token
         auth.value.loggedIn = true
+        auth.value.tenantId = tenantId as number
       }
 
-      return {token, user}
+      return {token, user, tenantId}
     } catch (error) {
       throw error
     }
@@ -82,17 +86,22 @@ export const useAuthStore = defineStore('auth', () => {
         auth.value.token = token
       }
 
-      const userData = await useFetchApi('/api/auth/user') as { user: Users }
-      const { user } = userData
+      const userData = await useFetchApi('/api/auth/user') as { user: Users, tenantId: number }
+      const { user, tenantId } = userData
 
       if (user) {
         auth.value.userData = user
         auth.value.loggedIn = true
       }
+
+      if (tenantId) {
+        auth.value.tenantId = tenantId
+      }
       
-      return new UserLoginResponse({token, user} as UserLoginResponse)
+      return new UserLoginResponse({token, user, tenantId} as UserLoginResponse)
     } catch (error) {
-      throw error;
+      logout()
+      throw error
     } finally {
       setAuthLoading(false)
     }
@@ -107,6 +116,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthLoading,
     loggedIn,
     role,
+    tenantId,
     token,
     userEmail,
     userId,
