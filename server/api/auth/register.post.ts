@@ -2,7 +2,7 @@ import { z } from "zod"
 import { userRegister } from "../../models/validation/users"
 import { sendError } from 'h3'
 import { registerUser, userExists } from "../../db/users/users"
-import { sendAccountValidationNotification } from "~/server/bll/notifications/notifications"
+import { Notifications as NotificationsBLL } from "~/server/bll/notifications/notifications"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 		const user = await registerUser(parsedBody, domain as string)
 
 		// send registration email
-		const noti = sendAccountValidationNotification(user);
+		const noti = new NotificationsBLL().sendAccountValidationNotification(user);
 
 		return {
 			user

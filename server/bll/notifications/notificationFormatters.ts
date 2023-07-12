@@ -28,6 +28,9 @@ export class GlobalFormatter extends BusinessBase<GlobalFormatter> {
     if (!toAddy) throw new Error("No TO address has been set");
 
     // the sample placeholders for each template is in the Templates table
+    fms.subject = ejs.render(template.subject, {
+      data: toAddy.placeholders
+    })
     fms.htmlMessage = ejs.render(template.htmlBody, {
       data: toAddy.placeholders
     });

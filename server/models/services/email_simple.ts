@@ -3,7 +3,7 @@ export type EmailMessage = {
     to: string[],
     cc: string[],
     bcc: string[],
-    subject: string,
+    subject: string | undefined,
     text: string | undefined,
     html: string | undefined,
     ampHtml?: string | undefined,

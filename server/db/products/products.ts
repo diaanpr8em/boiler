@@ -1,13 +1,16 @@
 import { prisma } from "../prismaConnection";
 
-export const getById = (id: number) => {
-    return prisma.products.findUnique({
-        where: { id: id}
-    })
-}
+export class Products {
 
-export const getByName = (name: string) => {
-    return prisma.products.findFirst({
-        where: { name: name}
-    })
-};
+    async getById(id: number){
+        return prisma.products.findUnique({
+            where: { id: id}
+        })
+    }
+    
+    async getByName(name: string){
+        return prisma.products.findFirst({
+            where: { name: name}
+        })
+    };
+}

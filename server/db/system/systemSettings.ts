@@ -2,9 +2,9 @@ import { prisma } from "../prismaConnection";
 
 export class SystemSettings {
   
-  async getByTenantId(id: number){
+  async getByTenantId(tenantId: number){
     return prisma.systemSettings.findMany({
-      where: { tenantId: id },
+      where: { tenantId: tenantId },
     });
   };
 

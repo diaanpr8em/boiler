@@ -4,6 +4,7 @@ import {
   TenantUpdateRequest
 } from "~/server/models/validation/tenants";
 import { prisma } from "../prismaConnection";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 export class Tenants {
   async deleteById(id: number) {

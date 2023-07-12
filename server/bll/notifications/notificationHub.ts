@@ -1,14 +1,5 @@
 import { BusinessBase } from "../businessbase";
-import {
-  CopyTypes,
-  MessageTypes,
-  NotificationRecipients,
-  Notifications,
-  ServiceTypes,
-  SystemSettings,
-  Templates,
-  Tenants
-} from "@prisma/client";
+import { CopyTypes, MessageTypes, NotificationRecipients, Notifications, ServiceTypes, SystemSettings, Templates, Tenants } from "@prisma/client";
 import { EmailMessage as SimpleEmailMessage } from "~/server/models/services/email_simple";
 import { FormattedMessage } from "~/server/models/templates/formatted_message";
 import { GlobalFormatter } from "./notificationFormatters";
@@ -17,7 +8,7 @@ import { Services as ServicesBLL } from "~/server/bll/services/services";
 import { SystemSettings as SystemSettingsBLL } from "~/server/bll/system/systemSettings"
 import { Tenants as TenantsBLL } from "~/server/bll/tenants/tenants";
 import { Templates as TemplatesBLL } from "~/server/bll/templates/templates"
-class NotificationHub extends BusinessBase<NotificationHub> {
+export class NotificationHub extends BusinessBase<NotificationHub> {
   
   async dispatch(noti: Notifications) : Promise<void>{
     const recipients: NotificationRecipients[] = await new NotificationRecipientsBLL().getByNotificationId(noti.id);
@@ -54,6 +45,9 @@ class NotificationHub extends BusinessBase<NotificationHub> {
   }
 
   async sendToEmailQueue(noti: Notifications, recipients: NotificationRecipients[], fms: FormattedMessage | null, tenant: Tenants) : Promise<void>{
+    let toArray = recipients
+      .filter((x) => x.copyType == CopyTypes.TO)
+      .map((x) => x.email);
     let ccArray = recipients
       .filter((x) => x.copyType == CopyTypes.CC)
       .map((x) => x.email);
@@ -62,6 +56,7 @@ class NotificationHub extends BusinessBase<NotificationHub> {
       .map((x) => x.email);
 
     // this will dedupe an array and also remove undefined's
+    toArray = [...new Set(toArray)].filter(x => x);
     ccArray = [...new Set(ccArray)].filter(x => x);
     bccArray = [...new Set(bccArray)].filter(x => x);
 
@@ -75,14 +70,14 @@ class NotificationHub extends BusinessBase<NotificationHub> {
       bcc: bccArray,
       cc: ccArray,
       from: emailFrom,
-      to: 
-      subject: 
+      to: toArray,
+      subject: fms?.subject,
       html: fms?.htmlMessage,
       text: fms?.textMessage,
-
+      templateId: noti.templateId
     };
 
-    var service = await insertService(
+    var service = await new ServicesBLL().insert(
       request,
       tenant.id,
       ServiceTypes.EMAIL,
