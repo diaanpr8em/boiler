@@ -1,82 +1,92 @@
+import { BusinessBase } from "../businessbase";
 import {
   CopyTypes,
   MessageTypes,
   NotificationRecipients,
   Notifications,
   ServiceTypes,
+  SystemSettings,
   Templates,
   Tenants
 } from "@prisma/client";
 import { EmailMessage as SimpleEmailMessage } from "~/server/models/services/email_simple";
 import { FormattedMessage } from "~/server/models/templates/formatted_message";
-import { globalFormatter } from "./notificationFormatters";
-import { getByNotificationId as getRecipientsByNotificationId } from "~/server/db/notifications/notificationRecipients";
-import { getByUserId as getUserPrefsByUserId } from "~/server/db/users/userPreferences";
-import { getById as getTemplateById } from "~/server/db/templates/templates";
-import { insert as insertService } from "~/server/db/services";
-import { getTenantByUserId } from "~/server/db/tenants/tenants";
-
-export const dispatch = async (noti: Notifications) => {
-  const recipients: NotificationRecipients[] | null = await getRecipientsByNotificationId(noti.id);
-  const template: Templates | null = await getTemplateById(noti.templateId);
-  const tenant: Tenants | null = await getTenantByUserId(noti.userId);
-
-  if (!template) throw Error("Unable to find matching template");
-  const fms: FormattedMessage[] = await globalFormatter(
-    noti,
-    recipients,
-    template
-  );
-
-  // send the message
-  switchboard(noti, recipients, fms, tenant);
-};
-
-const switchboard = async (noti: Notifications, recipients: NotificationRecipients[], fms: FormattedMessage[], tenant: Tenants | null) => {
-  switch (noti.serviceType) {
-    case "APP":
-      break;
-    default:
-    case "EMAIL":
-      sendToEmailQueue(noti, recipients, fms, tenant);
-      break;
-    case "PUSH":
-      break;
-    case "SMS":
-      break;
-    case "VIBER":
-      break;
-    case "VOICE":
-      break;
-    case "WHATSAPP":
-      break;
+import { GlobalFormatter } from "./notificationFormatters";
+import { NotificationRecipients as NotificationRecipientsBLL } from "~/server/bll/notifications/notificationRecipients";
+import { Services as ServicesBLL } from "~/server/bll/services/services";
+import { SystemSettings as SystemSettingsBLL } from "~/server/bll/system/systemSettings"
+import { Tenants as TenantsBLL } from "~/server/bll/tenants/tenants";
+import { Templates as TemplatesBLL } from "~/server/bll/templates/templates"
+class NotificationHub extends BusinessBase<NotificationHub> {
+  
+  async dispatch(noti: Notifications) : Promise<void>{
+    const recipients: NotificationRecipients[] = await new NotificationRecipientsBLL().getByNotificationId(noti.id);
+    const template: Templates | null = await new TemplatesBLL().getById(noti.templateId);
+    const tenant: Tenants | null = await new TenantsBLL().getByUserId(noti.userId);
+  
+    if (!template) throw Error("Unable to find matching template");
+    const fms: FormattedMessage = await new GlobalFormatter().format(noti, recipients, template);
+  
+    // send the message
+    if (tenant == null) throw Error("Unable to determine tenant");
+    this.switchboard(noti, recipients, fms, tenant);
   }
-};
 
-const sendToEmailQueue = async (noti: Notifications, recipients: NotificationRecipients[], fms: FormattedMessage[] | null, tenant: Tenants | null) => {
-  let ccArray = recipients
-    .filter((x) => x.copyType == CopyTypes.CC)
-    .map((x) => x.email);
-  let bccArray = recipients
-    .filter((x) => x.copyType == CopyTypes.BCC)
-    .map((x) => x.email);
+  async switchboard(noti: Notifications, recipients: NotificationRecipients[], fms: FormattedMessage, tenant: Tenants) : Promise<void>{
+    switch (noti.serviceType) {
+      case "APP":
+        break;
+      default:
+      case "EMAIL":
+        this.sendToEmailQueue(noti, recipients, fms, tenant);
+        break;
+      case "PUSH":
+        break;
+      case "SMS":
+        break;
+      case "VIBER":
+        break;
+      case "VOICE":
+        break;
+      case "WHATSAPP":
+        break;
+    }
+  }
 
-  // this will dedupe an array and also remove undefined's
-  ccArray = [...new Set(ccArray)].filter(x => x);
-  bccArray = [...new Set(bccArray)].filter(x => x);
+  async sendToEmailQueue(noti: Notifications, recipients: NotificationRecipients[], fms: FormattedMessage | null, tenant: Tenants) : Promise<void>{
+    let ccArray = recipients
+      .filter((x) => x.copyType == CopyTypes.CC)
+      .map((x) => x.email);
+    let bccArray = recipients
+      .filter((x) => x.copyType == CopyTypes.BCC)
+      .map((x) => x.email);
 
-  const settings: await 
+    // this will dedupe an array and also remove undefined's
+    ccArray = [...new Set(ccArray)].filter(x => x);
+    bccArray = [...new Set(bccArray)].filter(x => x);
 
-  const request: SimpleEmailMessage = {
-    bcc: bccArray,
-    cc: ccArray,
-    from: 
-  };
+    const settings: SystemSettings[] | null = await new SystemSettingsBLL().getByTenantId(tenant.id);
+    let emailFrom = settings
+      .find((x) => x.module == MODULES.NOTIFICATIONS && x.setting == SETTINGS.NOTIFICATIONS_EMAIL_FROM)
+      ?.value;
+    if (!emailFrom) throw new Error("Unable to determine from email address");
 
-  var service = await insertService(
-    request,
-    tenant.id,
-    ServiceTypes.EMAIL,
-    MessageTypes.EMAIL_SIMPLE
-  );
-};
+    const request: SimpleEmailMessage = {
+      bcc: bccArray,
+      cc: ccArray,
+      from: emailFrom,
+      to: 
+      subject: 
+      html: fms?.htmlMessage,
+      text: fms?.textMessage,
+
+    };
+
+    var service = await insertService(
+      request,
+      tenant.id,
+      ServiceTypes.EMAIL,
+      MessageTypes.EMAIL_SIMPLE
+    );
+  }
+}

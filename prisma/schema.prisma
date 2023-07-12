@@ -217,6 +217,8 @@ model Services {
   response         String       @db.Text
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
+
+  @@index([userId], name: "Services_userId")
 }
 
 model Subscriptions {
@@ -255,6 +257,7 @@ model Templates {
   tenants       Tenants         @relation(fields: [tenantId], references: [id])
   tenantId      Int           
   name          String
+  subject       String          @default("") @db.VarChar(255)
   htmlBody      String          @default("") @db.Text()
   textBody      String          @default("") @db.Text()
   placeHolders  String          @default("") @db.Text()
