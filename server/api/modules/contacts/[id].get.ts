@@ -1,5 +1,5 @@
 import { sendError } from "h3";
-import { getById } from "../../../db/modules/contacts";
+import { getById } from "../../../db/modules/contacts/contacts";
 
 export default defineEventHandler(async (event) => {
   //    const query = await getQuery(event);

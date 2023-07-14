@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { notificationBundle } from "../../../models/validation/modules/notifications"
-import { insertBundle } from "../../../db/modules/notifications"
+import { insertBundle } from "../../../db/modules/notifications/notifications"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)

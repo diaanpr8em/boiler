@@ -1,4 +1,4 @@
-import { prisma } from "../prismaConnection";
+import { prisma } from "../../prismaConnection";
 import { z } from "zod";
 import { notificationBundle } from "~/server/models/validation/modules/notifications";
 

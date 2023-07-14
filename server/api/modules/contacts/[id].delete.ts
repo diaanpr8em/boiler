@@ -1,5 +1,5 @@
 import { sendError } from 'h3'
-import { deleteById } from '~/server/db/modules/contacts';
+import { deleteById } from '~/server/db/modules/contacts/contacts';
 
 export default defineEventHandler(async (event) => {
 	try {
