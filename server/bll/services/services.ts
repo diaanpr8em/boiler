@@ -2,7 +2,7 @@ import { BusinessBase } from "../businessbase";
 import { JobStatus, MessageTypes, Prisma, ProviderType, ServiceTypes } from "@prisma/client";
 import { Services as ServicesDAL } from "~/server/db/services/services"
 
-export class Services extends BusinessBase<Services>{
+class Services extends BusinessBase<Services>{
     async insert(request: any, tenantId: number, serviceType: ServiceTypes, messageType: MessageTypes, providerType?: ProviderType)
     {
         let newRecord: Prisma.ServicesCreateInput;
@@ -25,3 +25,5 @@ export class Services extends BusinessBase<Services>{
         return await new ServicesDAL().insert(newRecord);
     }
 }
+
+export const ServicesBLL = new Services();

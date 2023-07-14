@@ -89,3 +89,5 @@ export class Tenants {
     });
   }
 }
+
+export const TenantsDAL = new Tenants();

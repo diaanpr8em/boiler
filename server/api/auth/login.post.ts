@@ -1,10 +1,10 @@
 import { z } from "zod"
 import { UserLoginResponse, userLogin } from "../../models/validation/users"
 import { sendError } from 'h3'
-import { userExists } from "../../db/users/users"
+import { UsersBLL } from "~/server/bll/users/users"
 import { compare } from "bcrypt"
 import { generateTokens, sendRefreshToken } from "../../utils/jwt"
-import { updateRefreshToken } from "../../db/users/userSecurity"
+import { UserSecurityBLL } from "~/server/bll/users/userSecurity"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		const parsedBody = userLogin.parse(body)
 		
-		const user = await userExists(parsedBody.email)
+		const user = await UsersBLL.userExists(parsedBody.email)
 
 		if (!user) {
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Password or Email is invalid'}))

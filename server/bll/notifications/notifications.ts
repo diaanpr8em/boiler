@@ -1,22 +1,21 @@
 import { insert as insertNotification } from "~/server/db/notifications/notifications"
-import { NotificationHub as NotificationHubBLL } from "./notificationHub";
-import { Tenants as TenantsBLL } from "~/server/bll/tenants/tenants";
-import { SystemSettings as SystemSettingsBLL } from "~/server/bll/system/systemSettings";
+import { NotificationHubBLL } from "./notificationHub";
+import { TenantsBLL } from "~/server/bll/tenants/tenants";
+import { SystemSettingsBLL } from "~/server/bll/system/systemSettings";
 import { CopyTypes, NotificationTypes, Prisma, ServiceTypes, StatusTypes, Users } from "@prisma/client";
 import { BusinessBase } from "../businessbase";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 
-export class Notifications extends BusinessBase<Notifications>{
+class Notifications extends BusinessBase<Notifications>{
     
     async sendAccountValidationNotification(user: Users){
 
         // get the tenant
-        var tenant = await new TenantsBLL().getByUserId(user.id);
+        var tenant = await TenantsBLL.getByUserId(user.id);
         if (tenant == null) throw new BusinessError(Codes.E203);
         // get the settings
-        var settings = await new SystemSettingsBLL().getByTenantId(tenant.id);
+        var settings = await SystemSettingsBLL.getByTenantId(tenant.id);
         if (settings == null) throw new BusinessError(Codes.E204);
-        var baseUrl
 
         let newNoti: Prisma.NotificationsCreateInput;
         newNoti = {
@@ -36,9 +35,11 @@ export class Notifications extends BusinessBase<Notifications>{
                         name: user.name,
                         surname: user.surname,
                         email: user.email,
-                        base_url: 
+                        baseUrl: `https://${tenant.domain}`,
+                        confirmationLink: "", // excluding base url e.g. /confirm/213123123:123123123
+                        unsubscribeLink: "", // excluding base url e.g. /unsubscribe/121212:12121212
+                        tenantName: tenant.name
                     })
-                    
                 }
             },
             userId: user.id,
@@ -49,13 +50,15 @@ export class Notifications extends BusinessBase<Notifications>{
             templates: {},
         }
         const noti = await insertNotification(newNoti);
-        new NotificationHubBLL().dispatch(noti);
+        NotificationHubBLL.dispatch(noti);
         return noti;
     }
 
     async sendNotification(model: Prisma.NotificationsCreateInput){
         const noti = await insertNotification(model);
-        new NotificationHubBLL().dispatch(noti);
+        NotificationHubBLL.dispatch(noti);
         return noti;
     }
 }
+
+export const NotificationsBLL = new Notifications();

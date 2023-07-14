@@ -1,7 +1,7 @@
 import { LinkType } from "@prisma/client"
 import { z } from "zod" 
-import { addUniqueLink } from "~/server/bll/system/uniqueLinks"
-import { userExists } from "~/server/db/users/users"
+import { UniqueLinksBLL } from "~/server/bll/system/uniqueLinks"
+import { UsersBLL } from "~/server/bll/users/users"
 import { UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks"
 import { userForgotPass } from "~/server/models/validation/users"
 
@@ -11,14 +11,14 @@ export default defineEventHandler(async (event) => {
     try {
         const parsedBody = userForgotPass.parse(body)
 
-        const user = await userExists(parsedBody.email)
+        const user = await UsersBLL.userExists(parsedBody.email)
 
         if (!user) {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Password or Email is invalid'}))
         }
 
         // create reset unique link
-        var link = await addUniqueLink(new UniqueLinkRequest({
+        var link = await UniqueLinksBLL.addUniqueLink(new UniqueLinkRequest({
             userId: user.id,
             linkType: LinkType.RESET_PASSWORD
         }))

@@ -1,6 +1,6 @@
 import { LinkType } from "@prisma/client"
 import { z } from "zod"
-import { getUniqueLinkByLinkIdAndType } from "~/server/db/uniqueLinks"
+import { getUniqueLinkByLinkIdAndType } from "~/server/db/system/uniqueLinks"
 import { getById, resetPassword } from "~/server/db/users/users"
 import { userResetPass } from "~/server/models/validation/users"
 

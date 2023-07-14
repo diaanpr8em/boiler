@@ -3,17 +3,17 @@ import { CopyTypes, MessageTypes, NotificationRecipients, Notifications, Service
 import { EmailMessage as SimpleEmailMessage } from "~/server/models/services/email_simple";
 import { FormattedMessage } from "~/server/models/templates/formatted_message";
 import { GlobalFormatter } from "./notificationFormatters";
-import { NotificationRecipients as NotificationRecipientsBLL } from "~/server/bll/notifications/notificationRecipients";
-import { Services as ServicesBLL } from "~/server/bll/services/services";
-import { SystemSettings as SystemSettingsBLL } from "~/server/bll/system/systemSettings"
-import { Tenants as TenantsBLL } from "~/server/bll/tenants/tenants";
-import { Templates as TemplatesBLL } from "~/server/bll/templates/templates"
-export class NotificationHub extends BusinessBase<NotificationHub> {
+import { NotificationRecipientsBLL } from "~/server/bll/notifications/notificationRecipients";
+import { ServicesBLL } from "~/server/bll/services/services";
+import { SystemSettingsBLL } from "~/server/bll/system/systemSettings"
+import { TenantsBLL } from "~/server/bll/tenants/tenants";
+import { TemplatesBLL } from "~/server/bll/templates/templates"
+class NotificationHub extends BusinessBase<NotificationHub> {
   
   async dispatch(noti: Notifications) : Promise<void>{
-    const recipients: NotificationRecipients[] = await new NotificationRecipientsBLL().getByNotificationId(noti.id);
-    const template: Templates | null = await new TemplatesBLL().getById(noti.templateId);
-    const tenant: Tenants | null = await new TenantsBLL().getByUserId(noti.userId);
+    const recipients: NotificationRecipients[] = await NotificationRecipientsBLL.getByNotificationId(noti.id);
+    const template: Templates | null = await TemplatesBLL.getById(noti.templateId);
+    const tenant: Tenants | null = await TenantsBLL.getByUserId(noti.userId);
   
     if (!template) throw Error("Unable to find matching template");
     const fms: FormattedMessage = await new GlobalFormatter().format(noti, recipients, template);
@@ -60,7 +60,7 @@ export class NotificationHub extends BusinessBase<NotificationHub> {
     ccArray = [...new Set(ccArray)].filter(x => x);
     bccArray = [...new Set(bccArray)].filter(x => x);
 
-    const settings: SystemSettings[] | null = await new SystemSettingsBLL().getByTenantId(tenant.id);
+    const settings: SystemSettings[] | null = await SystemSettingsBLL.getByTenantId(tenant.id);
     let emailFrom = settings
       .find((x) => x.module == MODULES.NOTIFICATIONS && x.setting == SETTINGS.NOTIFICATIONS_EMAIL_FROM)
       ?.value;
@@ -77,7 +77,7 @@ export class NotificationHub extends BusinessBase<NotificationHub> {
       templateId: noti.templateId
     };
 
-    var service = await new ServicesBLL().insert(
+    var service = await ServicesBLL.insert(
       request,
       tenant.id,
       ServiceTypes.EMAIL,
@@ -85,3 +85,5 @@ export class NotificationHub extends BusinessBase<NotificationHub> {
     );
   }
 }
+
+export const NotificationHubBLL = new NotificationHub();
