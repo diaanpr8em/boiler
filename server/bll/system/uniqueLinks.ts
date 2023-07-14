@@ -3,6 +3,7 @@ import { UniqueLinkCreateSchema, UniqueLinkRequest } from "~/server/models/valid
 import { v4 as uuidv4 } from 'uuid';
 import { UniqueLinksDAL } from "~/server/db/system/uniqueLinks";
 import { BusinessBase } from "../businessbase";
+import { LinkType } from "@prisma/client";
 
 const config = useRuntimeConfig()
 
@@ -27,6 +28,14 @@ class UniqueLinks extends BusinessBase<UniqueLinks>{
         } 
         
         return await UniqueLinksDAL.createUniqueLink(createModel)
+    }
+
+    async getUniqueLinkById(id: number){
+        return UniqueLinksDAL.getUniqueLinkById(id);
+    }
+    
+    async getUniqueLinkByLinkIdAndType(linkId: string, linkType: LinkType){
+        return UniqueLinksDAL.getUniqueLinkByLinkIdAndType(linkId, linkType);
     }
 }
 

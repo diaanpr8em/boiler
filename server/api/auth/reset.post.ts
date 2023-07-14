@@ -1,7 +1,7 @@
 import { LinkType } from "@prisma/client"
 import { z } from "zod"
-import { getUniqueLinkByLinkIdAndType } from "~/server/db/system/uniqueLinks"
-import { getById, resetPassword } from "~/server/db/users/users"
+import { UniqueLinksBLL } from "~/server/bll/system/uniqueLinks"
+import { UsersBLL } from "~/server/bll/users/users"
 import { userResetPass } from "~/server/models/validation/users"
 
 export default defineEventHandler(async (event) => {
@@ -10,13 +10,13 @@ export default defineEventHandler(async (event) => {
     try {
         const parsedBody = userResetPass.parse(body)
 
-        const uniqueLink = await getUniqueLinkByLinkIdAndType(parsedBody.linkId, LinkType.RESET_PASSWORD)
+        const uniqueLink = await UniqueLinksBLL.getUniqueLinkByLinkIdAndType(parsedBody.linkId, LinkType.RESET_PASSWORD)
 
         if (!uniqueLink || uniqueLink.expiry < new Date()) {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Link is invalid or expired'}))
         }
 
-        const user = await getById(uniqueLink.userId)
+        const user = await UsersBLL.getById(uniqueLink.userId)
 
         if (!user) {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Password or Email is invalid'}))
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Password and password confirmation do not match'}))
         }
 
-        const userUpdated = await resetPassword(user.email, parsedBody.password)
+        const userUpdated = await UsersBLL.resetPassword(user.email, parsedBody.password)
 
         return {success: true, user: userUpdated}
     } catch (e) {

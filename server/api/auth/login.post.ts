@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
 		
 		const { token, refreshToken } = generateTokens(user.id)
 
-		await updateRefreshToken(user.id, refreshToken)
+		await UserSecurityBLL.updateRefreshToken(user.id, refreshToken)
 		
 		sendRefreshToken(event, refreshToken)
 
