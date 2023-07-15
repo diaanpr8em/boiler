@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactGroupInsertSchema } from "~/server/models/validation/modules/contactGroups";
-import { insert } from "~/server/db/modules/contactGroups";
+import { ContactGroupsBLL } from "~/server/bll/modules/contacts/contactGroups";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		const parsedBody = contactGroupInsertSchema.parse(body)
 		
-		const contactGroup = await insert(parsedBody)
+		const contactGroup = await ContactGroupsBLL.insert(parsedBody)
 
 		return {
 			contactGroup

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const contactGroupInsertSchema = z.object({
+export const contactGroupInsertSchema = z.object({
     name: z.string().max(191),
     description: z.string().max(191),
     tenantId: z.number()
@@ -23,8 +23,12 @@ const contactGroupSearchSchema = z.object({
         })
     ).optional(),
 })
-export { 
-    contactGroupInsertSchema, 
-    contactGroupSearchSchema, 
-    contactGroupUpdateSchema 
-}
+//export { 
+//    contactGroupInsertSchema, 
+//    contactGroupSearchSchema, 
+//    contactGroupUpdateSchema 
+//}
+
+export type ContactGroupsInsertRequest = z.TypeOf<typeof contactGroupInsertSchema>;
+export type ContactGroupsUpdateRequest = z.TypeOf<typeof contactGroupUpdateSchema>;
+export type ContactGroupsSearchRequest = z.TypeOf<typeof contactGroupSearchSchema>;
