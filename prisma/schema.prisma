@@ -40,12 +40,12 @@ model BillingUsage {
 
 model Contacts {
   id                 Int                 @id @default(autoincrement())
+  tenant             Tenants             @relation(fields: [tenantId], references: [id])
+  tenantId           Int                 
   fullName           String
   email              String
   mobile             String
   handle             String
-  tenant             Tenants             @relation(fields: [tenantId], references: [id])
-  tenantId           Int
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   ContactGroupsLinks ContactGroupLinks[]

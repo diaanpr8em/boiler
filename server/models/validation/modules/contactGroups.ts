@@ -6,13 +6,13 @@ export const contactGroupInsertSchema = z.object({
     tenantId: z.number()
 })
 
-const contactGroupUpdateSchema = z.object({
+export const contactGroupUpdateSchema = z.object({
     id: z.number(),
     name: z.string().max(191),
     description: z.string().max(191),
 })
 
-const contactGroupSearchSchema = z.object({
+export const contactGroupSearchSchema = z.object({
     searchTerm: z.string().max(150),
     rows: z.number(),
     page: z.number(),
@@ -23,11 +23,6 @@ const contactGroupSearchSchema = z.object({
         })
     ).optional(),
 })
-//export { 
-//    contactGroupInsertSchema, 
-//    contactGroupSearchSchema, 
-//    contactGroupUpdateSchema 
-//}
 
 export type ContactGroupsInsertRequest = z.TypeOf<typeof contactGroupInsertSchema>;
 export type ContactGroupsUpdateRequest = z.TypeOf<typeof contactGroupUpdateSchema>;

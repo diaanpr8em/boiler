@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactGroupSearchSchema } from "~/server/models/validation/modules/contactGroups";
-import { search } from "~/server/db/modules/contacts/contactGroups";
+import { ContactGroupsBLL } from "~/server/bll/modules/contacts/contactGroups";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		const parsedBody = contactGroupSearchSchema.parse(body)
 		
-		const result = await search(parsedBody)
+		const result = await ContactGroupsBLL.search(parsedBody)
 		const response = {
 			page: parsedBody.page,
 			rows: parsedBody.rows,

@@ -1,35 +1,38 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../prismaConnection";
 import { z } from "zod";
 import { BusinessBase } from "~/server/bll/businessbase";
 import {
+  ContactsSearchRequest,
+  ContactsUpdateRequest,
   contactInsertSchema,
   contactSearchSchema,
   contactUpdateSchema,
 } from "~/server/models/validation/modules/contacts";
 import { sortByFix } from "~/server/utils/models";
 
-type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
-type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;
-type ContactsSearchRequest = z.TypeOf<typeof contactSearchSchema>;
-
 class Contacts extends BusinessBase<Contacts>{
 
-  async insert(data: ContactsInsertRequest){
+  async insert(model: Prisma.ContactsUncheckedCreateInput){
     return prisma.contacts.create({ 
       data: {
-        email: data.email,
-        fullName: data.fullName,
-        mobile: data.mobile,
-        tenantId: data.tenantId as number,
-        handle: data.handle,
+        email: model.email,
+        fullName: model.fullName,
+        mobile: model.mobile,
+        tenant: {
+          connect: {
+            id: model.tenantId
+          }
+        },
+        handle: model.handle,
       }
     });
   }
   
-  async update(data: ContactsUpdateRequest){
+  async update(model: Prisma.ContactsUncheckedUpdateInput){
     return prisma.contacts.update({
-      where: { id: data.id },
-      data: data,
+      where: { id: model.id as unknown as number },
+      data: model,
     });
   };
   
