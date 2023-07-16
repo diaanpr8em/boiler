@@ -1,7 +1,7 @@
 import { BusinessBase } from "~/server/bll/businessbase"
 import { prisma } from "../prismaConnection"
 
-export class UserSecurity extends BusinessBase<UserSecurity>{
+class UserSecurity {
 
 	updateRefreshToken(userId: number, refreshToken: string){
 		return prisma.userSecurity.update({

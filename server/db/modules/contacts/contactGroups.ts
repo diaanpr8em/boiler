@@ -4,7 +4,7 @@ import { BusinessBase } from '~/server/bll/businessbase';
 import { ContactGroupsInsertRequest, ContactGroupsSearchRequest, ContactGroupsUpdateRequest } from '~/server/models/validation/modules/contactGroups';
 import { sortByFix } from '~/server/utils/models';
 
-class ContactGroups extends BusinessBase<ContactGroups>{
+class ContactGroups {
 
     insert(data: ContactGroupsInsertRequest){
         return prisma.contactGroups.create({ data });

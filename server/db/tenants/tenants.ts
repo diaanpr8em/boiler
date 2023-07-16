@@ -6,7 +6,7 @@ import {
 import { prisma } from "../prismaConnection";
 import { Prisma, PrismaClient } from "@prisma/client";
 
-export class Tenants {
+class Tenants {
   async deleteById(id: number) {
     return prisma.tenants.delete({
       where: { id: id }

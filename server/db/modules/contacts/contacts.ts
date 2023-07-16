@@ -1,19 +1,16 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../prismaConnection";
 import { z } from "zod";
-import { BusinessBase } from "~/server/bll/businessbase";
 import {
+  ContactsInsertRequest,
   ContactsSearchRequest,
   ContactsUpdateRequest,
-  contactInsertSchema,
-  contactSearchSchema,
-  contactUpdateSchema,
 } from "~/server/models/validation/modules/contacts";
 import { sortByFix } from "~/server/utils/models";
 
-class Contacts extends BusinessBase<Contacts>{
+class Contacts {
 
-  async insert(model: Prisma.ContactsUncheckedCreateInput){
+  async insert(model: ContactsInsertRequest){
     return prisma.contacts.create({ 
       data: {
         email: model.email,
@@ -29,7 +26,7 @@ class Contacts extends BusinessBase<Contacts>{
     });
   }
   
-  async update(model: Prisma.ContactsUncheckedUpdateInput){
+  async update(model: ContactsUpdateRequest){
     return prisma.contacts.update({
       where: { id: model.id as unknown as number },
       data: model,

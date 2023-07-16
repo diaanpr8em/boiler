@@ -20,3 +20,5 @@ export class UniqueLinkRequest {
         }
     }
 }
+
+export type UniqueLinkCreateRequest = z.TypeOf<typeof UniqueLinkCreateSchema>

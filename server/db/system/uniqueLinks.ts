@@ -1,12 +1,11 @@
 import { LinkType } from "@prisma/client"
 import { prisma } from "../prismaConnection"
 import { z } from "zod"
-import { UniqueLinkCreateSchema } from "../../models/validation/system/uniqueLinks"
-import { BusinessBase } from "~/server/bll/businessbase"
+import { UniqueLinkCreateRequest } from "../../models/validation/system/uniqueLinks"
 
-type UniqueLinkCreateRequest = z.TypeOf<typeof UniqueLinkCreateSchema>
 
-class UniqueLinks extends BusinessBase<UniqueLinks>{
+
+class UniqueLinks {
     async getUniqueLinkById(id: number){
         return prisma.uniqueLinks.findUnique({
             where: {

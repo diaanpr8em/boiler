@@ -1,6 +1,6 @@
 import { prisma } from "../prismaConnection";
 
-export class Products {
+class Products {
 
     async getById(id: number){
         return prisma.products.findUnique({
@@ -14,3 +14,5 @@ export class Products {
         })
     };
 }
+
+export const ProductsDAL = new Products();

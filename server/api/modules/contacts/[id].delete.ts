@@ -1,5 +1,5 @@
 import { sendError } from 'h3'
-import { deleteById } from '~/server/db/modules/contacts/contacts';
+import { ContactsBLL } from '~/server/bll/modules/contacts/contacts';
 
 export default defineEventHandler(async (event) => {
 	try {
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
           );
         }
     
-        await deleteById(id);
+        await ContactsBLL.deleteById(id);
 
         return {
           success: true,

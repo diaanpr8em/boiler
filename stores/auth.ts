@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthLoading = computed(() => auth.value.isAuthLoading)
   const loggedIn = computed(() => auth.value.loggedIn)
-  const role = computed(() => auth.value.userData?.UserRole)
+  const role = computed(() => auth.value.userData?.userRole)
   const tenantId = computed(() => auth.value.tenantId)
   const token = computed(() => auth.value.token)
   const userEmail = computed(() => auth.value.userData?.email)

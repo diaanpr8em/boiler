@@ -1,7 +1,6 @@
-import { Prisma } from "@prisma/client";
 import { BusinessBase } from "../../businessbase";
 import { ContactsDAL } from "~/server/db/modules/contacts/contacts";
-import { ContactsSearchRequest } from "~/server/models/validation/modules/contacts";
+import { ContactsSearchRequest, ContactsInsertRequest, ContactsUpdateRequest } from "~/server/models/validation/modules/contacts";
 
 class Contacts extends BusinessBase<Contacts>
 {
@@ -9,7 +8,11 @@ class Contacts extends BusinessBase<Contacts>
         return ContactsDAL.deleteById(id);
     }
 
-    async insert(model: Prisma.ContactsUncheckedCreateInput)
+    async getById(id: number){
+        return ContactsDAL.getById(id);
+    }
+
+    async insert(model: ContactsInsertRequest)
     {
         return ContactsDAL.insert(model);
     }
@@ -18,7 +21,7 @@ class Contacts extends BusinessBase<Contacts>
         return ContactsDAL.search(model);
     }
     
-    async update(model: Prisma.ContactsUncheckedUpdateInput){
+    async update(model: ContactsUpdateRequest){
         return ContactsDAL.update(model);
     }
 

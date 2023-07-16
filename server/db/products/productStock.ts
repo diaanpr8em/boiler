@@ -1,7 +1,7 @@
 import { ProductStock as ProductStockModel } from "@prisma/client"
 import { prisma } from "../prismaConnection";
 
-export class ProductStock {
+class ProductStock {
 
     async update(model: ProductStockModel){
         return prisma.productStock.update({
@@ -32,3 +32,5 @@ export class ProductStock {
         })
     }
 }
+
+export const ProductStockDAL = new ProductStock();

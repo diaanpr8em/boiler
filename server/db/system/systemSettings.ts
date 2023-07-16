@@ -1,6 +1,6 @@
 import { prisma } from "../prismaConnection";
 
-export class SystemSettings {
+class SystemSettings {
   
   async getByTenantId(tenantId: number){
     return prisma.systemSettings.findMany({
@@ -9,3 +9,5 @@ export class SystemSettings {
   };
 
 }
+
+export const SystemSettingsDAL = new SystemSettings();

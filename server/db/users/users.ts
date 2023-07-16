@@ -1,15 +1,12 @@
 import { prisma } from "../prismaConnection"
 import { hashSync } from 'bcrypt'
 import { z } from "zod"
-import { UserSearchRequest, backendRegister, userRegister } from "../../models/validation/users"
+import { BackendRegisterRequest, UserRegisterRequest, UserSearchRequest } from "../../models/validation/users"
 import { BusinessError, Codes } from "../../models/exceptions/BusinessError"
 import { BusinessBase } from "~/server/bll/businessbase"
 import { TenantsBLL } from "~/server/bll/tenants/tenants"
 
-type UserRegisterRequest = z.TypeOf<typeof userRegister>;
-type BackendRegisterRequest = z.TypeOf<typeof backendRegister>;
-
-class Users extends BusinessBase<Users>{
+class Users {
 	deleteById(id: number){
 		return prisma.users.delete({
 			where: { id: id}

@@ -1,6 +1,6 @@
 import { prisma } from "../prismaConnection";
 
-export class Templates {
+class Templates {
     async getById(id: number){
         return prisma.templates.findUnique({
             where: { id: id}
@@ -13,3 +13,5 @@ export class Templates {
         })
     }
 }
+
+export const TemplatesDAL = new Templates();

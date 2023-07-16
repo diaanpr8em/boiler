@@ -5,7 +5,7 @@ export const contactInsertSchema = z.object({
     email: z.string().email(),
     mobile: z.string().min(0).max(50),
     handle: z.string().min(0).max(150),
-    tenantId: z.number().optional(),
+    tenantId: z.number(),
 })
 
 export const contactUpdateSchema = z.object({
@@ -14,6 +14,7 @@ export const contactUpdateSchema = z.object({
     email: z.string().email(),
     mobile: z.string().min(0).max(50),
     handle: z.string().min(0).max(150),
+    tenantId: z.number(),
 })
 
 export const contactSearchSchema = z.object({
@@ -27,6 +28,7 @@ export const contactSearchSchema = z.object({
         })
     ).optional(),
 })
+
 export type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
 export type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;
 export type ContactsSearchRequest = z.TypeOf<typeof contactSearchSchema>;
