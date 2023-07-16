@@ -1,4 +1,4 @@
-import { BusinessBase } from "../businessbase"
+import { BusinessBase } from "../businessBase"
 import { Templates as TemplatesDAL } from "../../db/templates/templates"
 
 class Templates extends BusinessBase<Templates>{

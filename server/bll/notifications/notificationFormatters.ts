@@ -1,4 +1,4 @@
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import {
   CopyTypes,
   NotificationRecipients,

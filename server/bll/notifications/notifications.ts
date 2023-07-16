@@ -3,7 +3,7 @@ import { NotificationHubBLL } from "./notificationHub";
 import { TenantsBLL } from "~/server/bll/tenants/tenants";
 import { SystemSettingsBLL } from "~/server/bll/system/systemSettings";
 import { CopyTypes, NotificationTypes, Prisma, ServiceTypes, StatusTypes, Users } from "@prisma/client";
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 
 class Notifications extends BusinessBase<Notifications>{

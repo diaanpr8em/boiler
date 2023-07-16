@@ -2,7 +2,7 @@ import { z } from "zod"
 import { UniqueLinkCreateSchema, UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks";
 import { v4 as uuidv4 } from 'uuid';
 import { UniqueLinksDAL } from "~/server/db/system/uniqueLinks";
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import { LinkType } from "@prisma/client";
 
 const config = useRuntimeConfig()

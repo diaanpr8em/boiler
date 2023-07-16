@@ -1,4 +1,4 @@
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import { CopyTypes, MessageTypes, NotificationRecipients, Notifications, ServiceTypes, SystemSettings, Templates, Tenants } from "@prisma/client";
 import { EmailMessage as SimpleEmailMessage } from "~/server/models/services/email_simple";
 import { FormattedMessage } from "~/server/models/templates/formatted_message";

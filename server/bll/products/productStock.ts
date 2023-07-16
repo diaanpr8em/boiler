@@ -1,4 +1,4 @@
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import { ProductStock as ProductStockDAL } from "~/server/db/products/productStock";
 import { ProductStock as ProductStockModel } from "@prisma/client"
 

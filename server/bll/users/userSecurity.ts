@@ -1,7 +1,14 @@
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import { UserSecurityDAL } from "~/server/db/users/userSecurity";
+import { UserSecurity as pUserSecurity } from "@prisma/client";
+import { prisma } from "~/server/db/prismaConnection";
 
-class UserSecurity extends BusinessBase<UserSecurity>{
+class UserSecurity extends BusinessBase<pUserSecurity>{
+
+	constructor(){
+		super(prisma.userSecurity);
+	}
+
     updateRefreshToken(userId: number, refreshToken: string){
         return UserSecurityDAL.updateRefreshToken(userId, refreshToken);
 	}

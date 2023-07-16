@@ -1,5 +1,5 @@
 import { getByNotificationId as getRecipientsByNotificationId } from "~/server/db/notifications/notificationRecipients";
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 
 class NotificationRecipients extends BusinessBase<NotificationRecipients>{
     async getByNotificationId(notificationId: number){

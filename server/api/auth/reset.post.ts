@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Link is invalid or expired'}))
         }
 
-        const user = await UsersBLL.getById(uniqueLink.userId)
+        const user = await UsersBLL.getUserById(uniqueLink.userId)
 
         if (!user) {
             return sendError(event, createError({statusCode: 400, statusMessage: 'Password or Email is invalid'}))

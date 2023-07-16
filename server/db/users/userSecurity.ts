@@ -1,4 +1,3 @@
-import { BusinessBase } from "~/server/bll/businessbase"
 import { prisma } from "../prismaConnection"
 
 class UserSecurity {

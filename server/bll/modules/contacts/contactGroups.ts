@@ -1,4 +1,4 @@
-import { BusinessBase } from "../../businessbase";
+import { BusinessBase } from "../../businessBase";
 import { ContactGroupsInsertRequest, ContactGroupsSearchRequest, ContactGroupsUpdateRequest } from '~/server/models/validation/modules/contactGroups';
 import { ContactGroupsDAL } from "~/server/db/modules/contacts/contactGroups"
 

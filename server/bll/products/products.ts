@@ -1,4 +1,4 @@
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 
 export class Products extends BusinessBase<Products> {
 

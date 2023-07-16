@@ -1,6 +1,6 @@
 import { prisma } from '../../prismaConnection'
 import { z } from 'zod'
-import { BusinessBase } from '~/server/bll/businessbase';
+import { BusinessBase } from '~/server/bll/businessBase';
 import { ContactGroupsInsertRequest, ContactGroupsSearchRequest, ContactGroupsUpdateRequest } from '~/server/models/validation/modules/contactGroups';
 import { sortByFix } from '~/server/utils/models';
 

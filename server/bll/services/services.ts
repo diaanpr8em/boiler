@@ -1,4 +1,4 @@
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import { JobStatus, MessageTypes, Prisma, ProviderType, ServiceTypes } from "@prisma/client";
 import { Services as ServicesDAL } from "~/server/db/services/services"
 

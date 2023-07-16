@@ -1,5 +1,5 @@
 import { TenantInsertRequest, TenantSearchRequest, TenantUpdateRequest } from "~/server/models/validation/tenants";
-import { BusinessBase } from "../businessbase";
+import { BusinessBase } from "../businessBase";
 import { TenantsDAL } from "~/server/db/tenants/tenants"
 
 class Tenants extends BusinessBase<Tenants>{

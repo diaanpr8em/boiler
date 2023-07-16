@@ -1,4 +1,4 @@
-import { BusinessBase } from "~/server/bll/businessbase";
+import { BusinessBase } from "~/server/bll/businessBase";
 import { prisma } from "../../prismaConnection";
 import { Prisma } from "@prisma/client";
 

@@ -1,4 +1,4 @@
-import { BusinessBase } from '../businessbase';
+import { BusinessBase } from '../businessBase';
 import { SystemSettings as SystemSettingsDAL } from "~/server/db/system/systemSettings";
 
 class SystemSettings extends BusinessBase<SystemSettings>{

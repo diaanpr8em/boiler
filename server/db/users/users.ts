@@ -1,9 +1,7 @@
 import { prisma } from "../prismaConnection"
 import { hashSync } from 'bcrypt'
-import { z } from "zod"
 import { BackendRegisterRequest, UserRegisterRequest, UserSearchRequest } from "../../models/validation/users"
 import { BusinessError, Codes } from "../../models/exceptions/BusinessError"
-import { BusinessBase } from "~/server/bll/businessbase"
 import { TenantsBLL } from "~/server/bll/tenants/tenants"
 
 class Users {
@@ -23,7 +21,7 @@ class Users {
 				email: true,
 				name: true,
 				surname: true,
-				userRole: true,
+				UserRole: true,
 				UserTenantLinks: {
 					select: {
 						tenants: true
@@ -101,7 +99,7 @@ class Users {
 				name: parsedBody.name,
 				surname: parsedBody.surname,
 				
-				userRole: parsedBody.userRole,
+				UserRole: parsedBody.userRole,
 	
 				UserSecurity: {
 					create: {
