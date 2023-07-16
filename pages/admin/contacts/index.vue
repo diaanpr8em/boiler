@@ -129,7 +129,7 @@
         await useFetchApi<ContactsSearchResponse>('/api/modules/contacts/search', {
             method: 'POST',
             body: searchRequest,
-        }).then(({ total, records } : {total: number, records: Contacts[]}) => {
+        }).then(({records, total}) => {
             serverItems.value = records
             totalItems.value = total
             isLoading.value = false
