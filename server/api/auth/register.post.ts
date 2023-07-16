@@ -1,8 +1,8 @@
 import { z } from "zod"
 import { userRegister } from "../../models/validation/users"
 import { sendError } from 'h3'
-import { registerUser, userExists } from "../../db/users/users"
-import { sendAccountValidationNotification } from "~/server/bll/notifications/notifications"
+import { UsersBLL } from "~/server/bll/users/users"
+import { NotificationsBLL } from "~/server/bll/notifications/notifications"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -14,16 +14,16 @@ export default defineEventHandler(async (event) => {
 			return sendError(event, createError({statusCode: 400, statusMessage: 'Password and password confirmation do not match'}))
 		}
 
-		const exists = await userExists(parsedBody.email)
+		const exists = await UsersBLL.userExists(parsedBody.email)
 
 		if (exists) {
 			return sendError(event, createError({statusCode: 409, statusMessage: 'User already exists'}))
 		}
 		const domain = event.node.req.headers.host
-		const user = await registerUser(parsedBody, domain as string)
+		const user = await UsersBLL.registerUser(parsedBody, domain as string)
 
 		// send registration email
-		const noti = sendAccountValidationNotification(user);
+		const noti = await NotificationsBLL.sendAccountValidationNotification(user);
 
 		return {
 			user

@@ -1,4 +1,4 @@
-import { insert } from "~/server/db/services";
+import { insert } from "~/server/db/services/services";
 import { queueServiceJob } from "~/server/bll/queues/queue";
 import { JobNames, QueueNames } from "~/server/models/enums/queues";
 import { processProductTransaction } from "~/server/bll/billing/billing";

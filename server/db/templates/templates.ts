@@ -1,13 +1,17 @@
 import { prisma } from "../prismaConnection";
 
-export const getById = (id: number) => {
-    return prisma.templates.findUnique({
-        where: { id: id}
-    })
+class Templates {
+    async getById(id: number){
+        return prisma.templates.findUnique({
+            where: { id: id}
+        })
+    }
+
+    async getByName(name: string){
+        return prisma.templates.findFirst({
+            where: { name: name}
+        })
+    }
 }
 
-export const getByName = (name: string) => {
-    return prisma.templates.findFirst({
-        where: { name: name}
-    })
-};
+export const TemplatesDAL = new Templates();

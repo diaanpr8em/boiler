@@ -1,14 +1,19 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../prismaConnection";
 
-export const getById = (id: number) => {
-    return prisma.notifications.findUnique({
-        where: { id: id}
-    })
+class Notifications {
+    
+    getById(id: number){
+        return prisma.notifications.findUnique({
+            where: { id: id}
+        })
+    }
+    
+    async insert(data: Prisma.NotificationsCreateInput){
+        return prisma.notifications.create({
+            data
+        })
+    }
 }
 
-export const insert = async (data: Prisma.NotificationsCreateInput) => {
-	return prisma.notifications.create({
-		data
-	})
-}
+export const NotificationsDAL = new Notifications();

@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactInsertSchema } from '~/server/models/validation/modules/contacts';
-import { insert } from "~/server/db/modules/contacts";
+import { insert } from "~/server/db/modules/contacts/contacts";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)

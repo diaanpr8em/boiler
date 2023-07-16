@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactSearchSchema } from '~/server/models/validation/modules/contacts';
-import { search } from './../../../db/modules/contacts';
+import { search } from '../../../db/modules/contacts/contacts';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)

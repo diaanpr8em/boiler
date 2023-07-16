@@ -1,5 +1,5 @@
 import { sendError } from "h3";
-import { getById } from "../../../db/modules/contacts";
+import { ContactsBLL } from "~/server/bll/modules/contacts/contacts";
 
 export default defineEventHandler(async (event) => {
   //    const query = await getQuery(event);
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
     const id = parseInt(event.context.params.id) as number;
 
-    const contact = await getById(id);
+    const contact = await ContactsBLL.getById(id);
 
     return {
       contact,

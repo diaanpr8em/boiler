@@ -1,6 +1,6 @@
 import { sendError } from 'h3'
 import { JwtPayload } from 'jsonwebtoken'
-import { getRefreshToken } from '~/server/db/users/userSecurity'
+import { UserSecurityBLL } from '~/server/bll/users/userSecurity'
 import { decodeRefreshToken, generateTokens } from '~/server/utils/jwt'
 
 export default defineEventHandler(async (event) => {
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
 			return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 		}
 
-		const dbToken = getRefreshToken(cToken)
+		const dbToken = UserSecurityBLL.getRefreshToken(cToken)
 		if (!dbToken) {
 			return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 		}

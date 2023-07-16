@@ -23,7 +23,8 @@ enum Codes {
     E200 = "Insufficient funds to complete request",
     E201 = "No product found for this service",
     E202 = "No product found matching this id",
-    E203 = "No tenant found for this user"
+    E203 = "No tenant found for this user",
+    E204 = "No settings found for this tenant"
 }
 
 export {Codes}

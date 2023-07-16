@@ -1,24 +1,42 @@
-import { NotificationRecipients, Notifications, Templates } from "@prisma/client";
+import { BusinessBase } from "../businessbase";
+import {
+  CopyTypes,
+  NotificationRecipients,
+  Notifications,
+  Templates
+} from "@prisma/client";
 import { logger } from "../logging/logger";
-import ejs from "ejs"
+import ejs from "ejs";
 import { FormattedMessage } from "~/server/models/templates/formatted_message";
 
-export const globalFormatter = async(noti: Notifications, recipients: NotificationRecipients[] | null, template: Templates | null) => {
+export class GlobalFormatter extends BusinessBase<GlobalFormatter> {
+  
+  async format(
+    noti: Notifications,
+    recipients: NotificationRecipients[] | null,
+    template: Templates | null
+  ) {
     if (noti.templateId <= 0) throw new Error("No template set for this notification");
     if (recipients == null) throw new Error("No NotificationRecipients entries for this notification");
-    if (template == null) throw new Error("No template data")
+    if (template == null) throw new Error("No template data");
 
-    var fms = new Array<FormattedMessage>();
-    for(const rec of recipients)
-    {
-        // we only format messages for TO recipients, the rest get it as is
-        if (rec.copyType != "TO") continue;
-        // the sample placeholders for each template is in the Templates table
-        var mesgs = {} as FormattedMessage;
-        mesgs.htmlMessage = ejs.render(template.htmlBody, { data: rec.placeholders });
-        mesgs.textMessage = ejs.render(template.textBody, { data: rec.placeholders });
-        fms.push(mesgs);
-    }
+    let fms: FormattedMessage;
+    fms = {} as FormattedMessage;
+    // only format the first TO addy (if there are more, somethings wrong)
+    let toAddy: NotificationRecipients | undefined;
+    toAddy = recipients.find((x) => x.copyType == CopyTypes.TO);
+    if (!toAddy) throw new Error("No TO address has been set");
+
+    // the sample placeholders for each template is in the Templates table
+    fms.subject = ejs.render(template.subject, {
+      data: toAddy.placeholders
+    })
+    fms.htmlMessage = ejs.render(template.htmlBody, {
+      data: toAddy.placeholders
+    });
+    fms.textMessage = ejs.render(template.textBody, {
+      data: toAddy.placeholders
+    });
 
     return fms;
     // e.g. code
@@ -77,5 +95,5 @@ export const globalFormatter = async(noti: Notifications, recipients: Notificati
     </body>
     </html>
     */
-
+  }
 }

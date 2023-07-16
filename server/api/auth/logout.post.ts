@@ -1,10 +1,10 @@
-import { removeRefreshToken } from "~/server/db/users/userSecurity"
+import { UserSecurityBLL } from "~/server/bll/users/userSecurity"
 
 export default defineEventHandler(async (event) => {
     
     try {
         const cToken = getCookie(event, 'refreshToken')		
-        await removeRefreshToken(cToken as string)
+        await UserSecurityBLL.removeRefreshToken(cToken as string)
     } catch (error) {}
 
     sendRefreshToken(event, 'null')

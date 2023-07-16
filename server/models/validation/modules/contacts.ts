@@ -1,22 +1,23 @@
 import { z } from 'zod'
 
-const contactInsertSchema = z.object({
+export const contactInsertSchema = z.object({
     fullName: z.string().min(3).max(150),
     email: z.string().email(),
     mobile: z.string().min(0).max(50),
     handle: z.string().min(0).max(150),
-    tenantId: z.number().optional(),
+    tenantId: z.number(),
 })
 
-const contactUpdateSchema = z.object({
+export const contactUpdateSchema = z.object({
     id: z.number(),
     fullName: z.string().min(3).max(150),
     email: z.string().email(),
     mobile: z.string().min(0).max(50),
     handle: z.string().min(0).max(150),
+    tenantId: z.number(),
 })
 
-const contactSearchSchema = z.object({
+export const contactSearchSchema = z.object({
     searchTerm: z.string().max(150),
     rows: z.number(),
     page: z.number(),
@@ -27,4 +28,7 @@ const contactSearchSchema = z.object({
         })
     ).optional(),
 })
-export { contactInsertSchema, contactSearchSchema, contactUpdateSchema }
+
+export type ContactsInsertRequest = z.TypeOf<typeof contactInsertSchema>;
+export type ContactsUpdateRequest = z.TypeOf<typeof contactUpdateSchema>;
+export type ContactsSearchRequest = z.TypeOf<typeof contactSearchSchema>;
