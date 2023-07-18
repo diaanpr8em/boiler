@@ -12,15 +12,18 @@ class UniqueLinks {
     
         const linkId = `${uuidv4()}${uuidv4()}`;
 
+        var action = "";
         switch(model.linkType){
             case LinkType.RESET_PASSWORD:
+                action = "reset";
                 break;
             case LinkType.VALIDATE_ACCOUNT:
+                action = "validate";
                 break;
             default:
                 throw new Error("Invalid link type");
         }
-        const urlPath = `${config.BASE_URL}/reset/${linkId}`;
+        const urlPath = `${config.BASE_URL}/${action}/${linkId}`;
         let expiry = new Date();
         expiry.setHours(expiry.getHours() + 4);
     

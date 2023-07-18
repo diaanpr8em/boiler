@@ -1,13 +1,15 @@
-import { NotificationsDAL } from "~/server/db/notifications/notifications"
-import { NotificationHubBLL } from "./notificationHub";
-import { TenantsBLL } from "~/server/bll/tenants/tenants";
-import { SystemSettingsBLL } from "~/server/bll/system/systemSettings";
-import { CopyTypes, NotificationTypes, ServiceTypes, StatusTypes, Users } from "@prisma/client";
 import { BusinessBase } from "../businessBase";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
+import { CopyTypes, LinkType, NotificationTypes, ServiceTypes, StatusTypes, Users } from "@prisma/client";
 import { Notifications as pNotifications } from "@prisma/client";
-import { prisma } from "~/server/db/prismaConnection";
+import { NotificationsDAL } from "~/server/db/notifications/notifications"
+import { NotificationHubBLL } from "./notificationHub";
 import { NotificationRequest } from "~/server/models/validation/notifications/notifications";
+import { prisma } from "~/server/db/prismaConnection";
+import { SystemSettingsBLL } from "~/server/bll/system/systemSettings";
+import { TenantsBLL } from "~/server/bll/tenants/tenants";
+import { UniqueLinksBLL } from "~/server/bll/system/uniqueLinks";
+import { UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks";
 
 class Notifications extends BusinessBase<pNotifications>{
     
@@ -23,6 +25,15 @@ class Notifications extends BusinessBase<pNotifications>{
         // get the settings
         var settings = await SystemSettingsBLL.getByTenantId(tenant.id);
         if (settings == null) throw new BusinessError(Codes.E204);
+        // unique links
+        var validateLink = await UniqueLinksBLL.addUniqueLink(new UniqueLinkRequest({
+            userId: user.id,
+            linkType: LinkType.VALIDATE_ACCOUNT
+        }));
+        var unsubLink = await UniqueLinksBLL.addUniqueLink(new UniqueLinkRequest({
+            userId: user.id,
+            linkType: LinkType.UNSUBSCRIBE
+        }))
 
         let newNoti: NotificationRequest;
         newNoti = {
@@ -50,8 +61,8 @@ class Notifications extends BusinessBase<pNotifications>{
                         surname: user.surname,
                         email: user.email,
                         baseUrl: `https://${tenant.domain}`,
-                        confirmationLink: "", // excluding base url e.g. /confirm/213123123:123123123
-                        unsubscribeLink: "", // excluding base url e.g. /unsubscribe/121212:12121212
+                        confirmationLink: validateLink.urlPath, // full url e.g. baseurl/validate/213123123:123123123
+                        unsubscribeLink: unsubLink.urlPath, // full url e.g. baseurl/unsubscribe/121212:12121212
                         tenantName: tenant.name
                     })
                 }

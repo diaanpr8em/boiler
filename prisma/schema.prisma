@@ -380,6 +380,7 @@ enum JobStatus {
 
 enum LinkType {
   RESET_PASSWORD
+  UNSUBSCRIBE
   VALIDATE_ACCOUNT
 }
 
