@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
           );
         }
     
-        await ContactsBLL.deleteById(id);
+        await ContactsBLL.delete(id);
 
         return {
           success: true,

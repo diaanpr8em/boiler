@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactSearchSchema } from '~/server/models/validation/modules/contacts';
-import { search } from '../../../db/modules/contacts/contacts';
+import { ContactsBLL } from '~/server/bll/modules/contacts/contacts';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		const parsedBody = contactSearchSchema.parse(body)
 		
-		const result = await search(parsedBody)
+		const result = await ContactsBLL.search(parsedBody)
 		const response = {
 			page: parsedBody.page,
 			rows: parsedBody.rows,

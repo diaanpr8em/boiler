@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactInsertSchema } from '~/server/models/validation/modules/contacts';
-import { insert } from "~/server/db/modules/contacts/contacts";
+import { ContactsBLL } from "~/server/bll/modules/contacts/contacts";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
 		if (!parsedBody.tenantId) sendError(event, createError({statusCode: 400, statusMessage: 'Tenant ID is required'}))
 
-		const contact = await insert(parsedBody)
+		const contact = await ContactsBLL.insert(parsedBody)
 
 		return {
 			contact

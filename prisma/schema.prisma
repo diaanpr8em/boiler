@@ -378,6 +378,11 @@ enum JobStatus {
   SUCCESS
 }
 
+enum LinkType {
+  RESET_PASSWORD
+  VALIDATE_ACCOUNT
+}
+
 enum MessageTypes {
   EMAIL_ADVANCED
   EMAIL_DELIVERY_REPORT
@@ -419,9 +424,6 @@ enum StatusTypes {
   FAILED
 }
 
-enum LinkType {
-  RESET_PASSWORD
-}
 
 enum UserRole {
   ADMIN // admin

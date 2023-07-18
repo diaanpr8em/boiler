@@ -21,7 +21,7 @@ class Users {
 				email: true,
 				name: true,
 				surname: true,
-				UserRole: true,
+				userRole: true,
 				UserTenantLinks: {
 					select: {
 						tenants: true
@@ -98,8 +98,7 @@ class Users {
 				email: parsedBody.email,
 				name: parsedBody.name,
 				surname: parsedBody.surname,
-				
-				UserRole: parsedBody.userRole,
+				userRole: parsedBody.userRole,
 	
 				UserSecurity: {
 					create: {

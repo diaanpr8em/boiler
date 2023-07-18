@@ -1,12 +1,8 @@
 import { UsersDAL } from "~/server/db/users/users";
 import { BusinessBase } from "../businessBase";
-import { z } from "zod";
-import { UserSearchRequest, backendRegister, userRegister } from "~/server/models/validation/users";
+import { BackendRegisterRequest, UserRegisterRequest, UserSearchRequest } from "~/server/models/validation/users";
 import { Users as pUsers } from "@prisma/client";
 import { prisma } from "~/server/db/prismaConnection";
-
-type UserRegisterRequest = z.TypeOf<typeof userRegister>;
-type BackendRegisterRequest = z.TypeOf<typeof backendRegister>;
 
 class Users extends BusinessBase<pUsers>{
 

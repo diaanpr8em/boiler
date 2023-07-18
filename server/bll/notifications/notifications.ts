@@ -1,13 +1,20 @@
-import { insert as insertNotification } from "~/server/db/notifications/notifications"
+import { NotificationsDAL } from "~/server/db/notifications/notifications"
 import { NotificationHubBLL } from "./notificationHub";
 import { TenantsBLL } from "~/server/bll/tenants/tenants";
 import { SystemSettingsBLL } from "~/server/bll/system/systemSettings";
-import { CopyTypes, NotificationTypes, Prisma, ServiceTypes, StatusTypes, Users } from "@prisma/client";
+import { CopyTypes, NotificationTypes, ServiceTypes, StatusTypes, Users } from "@prisma/client";
 import { BusinessBase } from "../businessBase";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
+import { Notifications as pNotifications } from "@prisma/client";
+import { prisma } from "~/server/db/prismaConnection";
+import { NotificationRequest } from "~/server/models/validation/notifications/notifications";
 
-class Notifications extends BusinessBase<Notifications>{
+class Notifications extends BusinessBase<pNotifications>{
     
+    constructor() {
+        super(prisma.notifications);
+    }
+
     async sendAccountValidationNotification(user: Users){
 
         // get the tenant
@@ -17,14 +24,21 @@ class Notifications extends BusinessBase<Notifications>{
         var settings = await SystemSettingsBLL.getByTenantId(tenant.id);
         if (settings == null) throw new BusinessError(Codes.E204);
 
-        let newNoti: Prisma.NotificationsCreateInput;
+        let newNoti: NotificationRequest;
         newNoti = {
-            entity: ENTITIES.USER,
-            entityId: user.id,
-            notificationType: NotificationTypes.ACCOUNT_VALIDATION,
-            NotificationRecipients: {
-                create: {
-                    contactId: 0,
+            notification: {
+                entity: ENTITIES.USER,
+                entityId: user.id,
+                notificationType: NotificationTypes.ACCOUNT_VALIDATION,
+                serviceType: ServiceTypes.EMAIL,
+                status: StatusTypes.NEW,
+                templateId: settings.templates.accountValidation,
+                type: NotificationTypes.ACCOUNT_VALIDATION,
+                userId: user.id,
+                useSystemPreferences: false
+            },
+            recipients: [
+                {
                     copyType: CopyTypes.TO,
                     email: user.email,
                     handle: "",
@@ -41,21 +55,15 @@ class Notifications extends BusinessBase<Notifications>{
                         tenantName: tenant.name
                     })
                 }
-            },
-            userId: user.id,
-            retryCount: 0,
-            serviceType: ServiceTypes.EMAIL,
-            status: StatusTypes.NEW,
-            statusMessage: "",
-            templates: {},
-        }
-        const noti = await insertNotification(newNoti);
+            ]
+        };
+        const noti = await NotificationsDAL.insert(newNoti);
         NotificationHubBLL.dispatch(noti);
         return noti;
     }
 
-    async sendNotification(model: Prisma.NotificationsCreateInput){
-        const noti = await insertNotification(model);
+    async sendNotification(model: NotificationRequest){
+        const noti = await NotificationsDAL.insert(model);
         NotificationHubBLL.dispatch(noti);
         return noti;
     }

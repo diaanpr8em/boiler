@@ -1,7 +1,7 @@
 import { z } from "zod"
 import { sendError } from 'h3'
 import { contactUpdateSchema } from '~/server/models/validation/modules/contacts';
-import { update } from '../../../db/modules/contacts/contacts';
+import { ContactsBLL } from '~/server/bll/modules/contacts/contacts';
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		const parsedBody = contactUpdateSchema.parse(body)
 		
-		const contact = await update(parsedBody)
+		const contact = await ContactsBLL.update(parsedBody)
 
 		return {
 			contact

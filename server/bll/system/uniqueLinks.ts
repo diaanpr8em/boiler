@@ -1,20 +1,25 @@
 import { z } from "zod"
-import { UniqueLinkCreateSchema, UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks";
+import { UniqueLinkCreateRequest, UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks";
 import { v4 as uuidv4 } from 'uuid';
 import { UniqueLinksDAL } from "~/server/db/system/uniqueLinks";
-import { BusinessBase } from "../businessBase";
 import { LinkType } from "@prisma/client";
 
 const config = useRuntimeConfig()
-
-type UniqueLinkCreateRequest = z.TypeOf<typeof UniqueLinkCreateSchema>
-
-class UniqueLinks extends BusinessBase<UniqueLinks>{
+class UniqueLinks {
 
     async addUniqueLink(model: UniqueLinkRequest){
         // generate a unique link id guid
     
         const linkId = `${uuidv4()}${uuidv4()}`;
+
+        switch(model.linkType){
+            case LinkType.RESET_PASSWORD:
+                break;
+            case LinkType.VALIDATE_ACCOUNT:
+                break;
+            default:
+                throw new Error("Invalid link type");
+        }
         const urlPath = `${config.BASE_URL}/reset/${linkId}`;
         let expiry = new Date();
         expiry.setHours(expiry.getHours() + 4);

@@ -28,7 +28,7 @@ class Contacts {
   
   async update(model: ContactsUpdateRequest){
     return prisma.contacts.update({
-      where: { id: model.id as unknown as number },
+      where: { id: model.id },
       data: model,
     });
   };

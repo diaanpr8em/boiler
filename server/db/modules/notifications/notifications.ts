@@ -1,6 +1,6 @@
 import { prisma } from "../../prismaConnection";
 import { z } from "zod";
-import { NotificationRequest } from "~/server/models/validation/modules/notifications";
+import { NotificationRequest } from "~/server/models/validation/notifications/notifications";
 
 class Notifications {
 

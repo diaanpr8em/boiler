@@ -1,20 +1,18 @@
 import { BusinessBase } from "../../businessBase";
 import { ContactsDAL } from "~/server/db/modules/contacts/contacts";
-import { ContactsSearchRequest, ContactsInsertRequest, ContactsUpdateRequest } from "~/server/models/validation/modules/contacts";
+import { ContactsInsertRequest, ContactsSearchRequest, ContactsUpdateRequest } from "~/server/models/validation/modules/contacts";
+import { Contacts as pContacts } from "@prisma/client";
+import { prisma } from "~/server/db/prismaConnection";
 
-class Contacts extends BusinessBase<Contacts>
+class Contacts extends BusinessBase<pContacts>
 {
-    async deleteById(id: number){
-        return ContactsDAL.deleteById(id);
+    constructor() {
+        super(prisma.contacts);
     }
-
-    async getById(id: number){
-        return ContactsDAL.getById(id);
-    }
-
+    
     async insert(model: ContactsInsertRequest)
     {
-        return ContactsDAL.insert(model);
+         return ContactsDAL.insert(model);
     }
 
     async search(model: ContactsSearchRequest){

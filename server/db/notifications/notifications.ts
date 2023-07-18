@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { NotificationRequest } from "~/server/models/validation/notifications/notifications";
 import { prisma } from "../prismaConnection";
 
 class Notifications {
@@ -9,10 +9,38 @@ class Notifications {
         })
     }
     
-    async insert(data: Prisma.NotificationsCreateInput){
-        return prisma.notifications.create({
-            data
+    async insert(data: NotificationRequest){
+        const nr = await prisma.notifications.create({
+            data: {
+                entity: data.notification.entity,
+                entityId: data.notification.entityId,
+                notificationType: data.notification.type,
+                userId: data.notification.userId,
+                templates: {
+                    connect: {
+                        id: data.notification.templateId
+                    }
+                },
+            }
         })
+
+        prisma.notificationRecipients.createMany({
+            data: data.recipients.map(r => {
+                return {
+                    contactId: r.contactid as unknown as number,
+                    copyType: r.copyType,
+                    email: r.email,
+                    fullName: r.fullName,
+                    handle: r.handle,
+                    mobile: r.mobile,
+                    notificationId: nr.id,
+                    placeholders: r.placeholders as unknown as string,
+                    userId: r.userId
+                }
+            }
+        )})
+
+        return nr;
     }
 }
 

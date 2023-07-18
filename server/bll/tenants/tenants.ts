@@ -1,11 +1,13 @@
-import { TenantInsertRequest, TenantSearchRequest, TenantUpdateRequest } from "~/server/models/validation/tenants";
+import { TenantSearchRequest } from "~/server/models/validation/tenants";
 import { BusinessBase } from "../businessBase";
+import { Tenants as pTenants} from "@prisma/client"
 import { TenantsDAL } from "~/server/db/tenants/tenants"
+import { prisma } from "~/server/db/prismaConnection";
 
-class Tenants extends BusinessBase<Tenants>{
+class Tenants extends BusinessBase<pTenants>{
 
-    async deleteById(id: number){
-        return TenantsDAL.deleteById(id);
+    constructor() {
+        super(prisma.tenants);
     }
 
     async getAll(){
@@ -16,25 +18,21 @@ class Tenants extends BusinessBase<Tenants>{
         return TenantsDAL.getByDomain(domain);
     }
 
-    async getById(id: number){
-        return TenantsDAL.getById(id);
-    }
-
     async getByUserId(userId: number){
         return TenantsDAL.getByUserId(userId);
     }
 
-    async insert(data: TenantInsertRequest){
-        return TenantsDAL.insert(data);
-    }
+    //async insert(data: TenantInsertRequest){
+    //    return TenantsDAL.insert(data);
+    //}
 
     async search(data: TenantSearchRequest){
         return TenantsDAL.search(data);
     }
 
-    async update(data: TenantUpdateRequest){
-        return TenantsDAL.update(data);
-    }
+    //async update(data: TenantUpdateRequest){
+    //    return TenantsDAL.update(data);
+    //}
 }
 
 export const TenantsBLL = new Tenants();

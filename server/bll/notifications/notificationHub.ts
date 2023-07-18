@@ -8,7 +8,7 @@ import { ServicesBLL } from "~/server/bll/services/services";
 import { SystemSettingsBLL } from "~/server/bll/system/systemSettings"
 import { TenantsBLL } from "~/server/bll/tenants/tenants";
 import { TemplatesBLL } from "~/server/bll/templates/templates"
-class NotificationHub extends BusinessBase<NotificationHub> {
+class NotificationHub  {
   
   async dispatch(noti: Notifications) : Promise<void>{
     const recipients: NotificationRecipients[] = await NotificationRecipientsBLL.getByNotificationId(noti.id);
