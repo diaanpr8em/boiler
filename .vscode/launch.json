@@ -3,15 +3,15 @@
   // Hover to view descriptions of existing attributes.
   "version": "0.2.0",
   "configurations": [
-  {
-    "name": "queue: bullmq",
-    "program": "${workspaceFolder}/queue/test.js",
-    "request": "launch",
+    {
+      "name": "queue: bullmq",
+      "program": "${workspaceFolder}/queue/test.js",
+      "request": "launch",
     "skipFiles": [
       "<node_internals>/**"
     ],
-    "type": "node"
-  },
+      "type": "node"
+    },
     {
       "type": "chrome",
       "request": "launch",

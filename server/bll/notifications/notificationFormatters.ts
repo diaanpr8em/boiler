@@ -1,4 +1,3 @@
-import { BusinessBase } from "../businessBase";
 import {
   CopyTypes,
   NotificationRecipients,
@@ -9,7 +8,7 @@ import { logger } from "../logging/logger";
 import ejs from "ejs";
 import { FormattedMessage } from "~/server/models/templates/formatted_message";
 
-export class GlobalFormatter extends BusinessBase<GlobalFormatter> {
+export class GlobalFormatter {
   
   async format(
     noti: Notifications,
