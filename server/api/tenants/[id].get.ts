@@ -1,5 +1,5 @@
 import { sendError } from "h3";
-import { getById } from "~/server/db/tenants/tenants";
+import { TenantsBLL } from "~/server/bll/tenants/tenants";
 
 export default defineEventHandler(async (event) => {
   //    const query = await getQuery(event);
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
 
     const id = parseInt(event.context.params.id) as number;
 
-    const tenant = await getById(id);
+    const tenant = await TenantsBLL.getById(id);
 
     return {
       tenant,

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { search } from '~/server/db/tenants/tenants'
+import { TenantsBLL } from '~/server/bll/tenants/tenants'
 import { tenantSearchSchema } from '~/server/models/validation/tenants'
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     try {
         const parsedBody = tenantSearchSchema.parse(body)
 
-        const result = await search(parsedBody)
+        const result = await TenantsBLL.search(parsedBody)
         const response = {
             page: parsedBody.page,
             rows: parsedBody.rows,

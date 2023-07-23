@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { search } from '~/server/db/users/users'
+import { UsersBLL } from '~/server/bll/users/users'
 import { userSearchSchema } from '~/server/models/validation/users'
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     try {
         const parsedBody = userSearchSchema.parse(body)
 
-        const result = await search(parsedBody)
+        const result = await UsersBLL.search(parsedBody)
         const response = {
             page: parsedBody.page,
             rows: parsedBody.rows,

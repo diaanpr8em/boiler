@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { insert } from '~/server/db/tenants/tenants'
+import { TenantsBLL } from '~/server/bll/tenants/tenants'
 import { tenantInsertSchema } from '~/server/models/validation/tenants'
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     try {
         const parsedBody = tenantInsertSchema.parse(body)
 
-        const tenant = await insert(parsedBody)
+        const tenant = await TenantsBLL.insert(parsedBody)
 
         return {
             tenant

@@ -1,5 +1,5 @@
 import { sendError } from 'h3'
-import { deleteById } from '~/server/db/users/users';
+import { UsersBLL } from '~/server/bll/users/users';
 
 export default defineEventHandler(async (event) => {
 	try {
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
           );
         }
     
-        await deleteById(id);
+        await UsersBLL.delete(id);
 
         return {
           success: true,

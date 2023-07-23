@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { processSMS } from "~/server/bll/services/sms";
+import { SMSBLL } from "~/server/bll/services/sms";
 import { BusinessError } from "~/server/models/exceptions/BusinessError";
 import { requestSchema } from "~/server/models/validation/services/sms/advanced";
 import { MessageTypes } from "@prisma/client";
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
     // map the custom body into a generic body
     const parsedBody = requestSchema.parse(body);
-    var sms = await processSMS(parsedBody, MessageTypes.SMS_ADVANCED, event)
+    var sms = await SMSBLL.queueSMS(parsedBody, MessageTypes.SMS_ADVANCED, event)
 
 		return {
 			sms

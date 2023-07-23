@@ -1,5 +1,5 @@
 import { sendError } from "h3";
-import { getById } from "~/server/db/users/users";
+import { UsersBLL } from "~/server/bll/users/users";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
     const id = parseInt(event.context.params.id) as number;
 
-    const user = await getById(id);
+    const user = await UsersBLL.getById(id);
 
     return {
       user,

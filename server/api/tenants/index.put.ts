@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { update } from "~/server/db/tenants/tenants"
+import { TenantsBLL } from "~/server/bll/tenants/tenants"
 import { tenantUpdateSchema } from "~/server/models/validation/tenants"
 
 export default defineEventHandler(async (event) => {
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		const parsedBody = tenantUpdateSchema.parse(body)
 		
-		const tenant = await update(parsedBody)
+		const tenant = await TenantsBLL.update(parsedBody)
 
 		return {
 			tenant

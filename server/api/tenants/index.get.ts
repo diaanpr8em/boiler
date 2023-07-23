@@ -1,10 +1,10 @@
 import { z } from 'zod'
-import { getAll } from '~/server/db/tenants/tenants'
+import { TenantsBLL } from '~/server/bll/tenants/tenants'
 
 export default defineEventHandler(async (event) => {
 
     try {
-        const tenants = await getAll()
+        const tenants = await TenantsBLL.getAll()
 
         return {
             tenants

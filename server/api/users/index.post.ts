@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { backendRegisterUser } from '~/server/db/users/users'
+import { UsersBLL } from '~/server/bll/users/users'
 import { backendRegister } from '~/server/models/validation/users'
 
 export default defineEventHandler(async (event) => {
@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
         const parsedBody = backendRegister.parse(body)
 
         // TODO: no email validation will be done here
-        const user = await backendRegisterUser(parsedBody)
+        const user = await UsersBLL.backendRegisterUser(parsedBody)
 
         return {
             user
