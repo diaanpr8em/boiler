@@ -27,6 +27,9 @@ const notificationBundle = z.object({
 	recipients: z.array(recipientSchema),
 })
 
+export {
+    notificationBundle
+}
+
 export type NotificationRecipient = z.TypeOf<typeof recipientSchema>;
 export type NotificationRequest = z.TypeOf<typeof notificationBundle>;
-

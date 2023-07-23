@@ -1,9 +1,15 @@
-import { ProductStock as ProductStockModel } from "@prisma/client"
+import { ProductStockRequest } from "~/server/models/validation/products/productStock";
 import { prisma } from "../prismaConnection";
 
 class ProductStock {
 
-    async update(model: ProductStockModel){
+    async insert(model: ProductStockRequest){
+        return prisma.productStock.create({
+            data: model
+        })
+    }
+    
+    async update(model: ProductStockRequest){
         return prisma.productStock.update({
             where: { id: model.id },
             data: model

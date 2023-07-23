@@ -1,13 +1,15 @@
+import { ProductStockRequest } from "~/server/models/validation/products/productStock";
 import { BusinessBase } from "../businessBase";
-import { ProductStock as ProductStockDAL } from "~/server/db/products/productStock";
-import { ProductStock as ProductStockModel } from "@prisma/client"
+import { ProductStockDAL } from "~/server/db/products/productStock";
 
-export class ProductStock extends BusinessBase<ProductStock>{
+class ProductStock {
     async getStockLevels(tenantId: number, productId: number){
-        return await new ProductStockDAL().getStockLevels(tenantId, productId);
+        return await ProductStockDAL.getStockLevels(tenantId, productId);
     }
 
-    async update(model: ProductStockModel){
-        return await new ProductStockDAL().update(model);
+    async update(model: ProductStockRequest){
+        return await ProductStockDAL.update(model);
     }
 }
+
+export const ProductStockBLL = new ProductStock();

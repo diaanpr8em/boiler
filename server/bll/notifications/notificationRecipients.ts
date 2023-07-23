@@ -1,9 +1,9 @@
-import { getByNotificationId as getRecipientsByNotificationId } from "~/server/db/notifications/notificationRecipients";
+import { NotificationRecipientsDAL } from "~/server/db/notifications/notificationRecipients";
 import { BusinessBase } from "../businessBase";
 
-class NotificationRecipients extends BusinessBase<NotificationRecipients>{
+class NotificationRecipients {
     async getByNotificationId(notificationId: number){
-        return await getRecipientsByNotificationId(notificationId);
+        return await NotificationRecipientsDAL.getByNotificationId(notificationId);
     }
 }
 

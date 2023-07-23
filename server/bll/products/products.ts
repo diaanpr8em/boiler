@@ -1,5 +1,9 @@
-import { BusinessBase } from "../businessBase";
+import { ProductsDAL } from "~/server/db/products/products";
 
-export class Products extends BusinessBase<Products> {
-
+class Products {
+    async getByName(name: string) {
+        return ProductsDAL.getByName(name);
+    }
 }
+
+export const ProductsBLL = new Products();

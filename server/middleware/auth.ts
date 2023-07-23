@@ -1,7 +1,7 @@
 import UrlPattern from 'url-pattern'
 import { decodeAccessToken } from '../utils/jwt'
 import { JwtPayload } from 'jsonwebtoken'
-import { getUserAuthDataById } from '../db/users/users'
+import { UsersBLL } from '~/server/bll/users/users'
 
 export default defineEventHandler(async (event) => {
 	// these are admin only endpoints
@@ -33,13 +33,13 @@ export default defineEventHandler(async (event) => {
 	
 	try {
 		const { userId } = decoded as JwtPayload
-		const user = await getUserAuthDataById(userId)
+		const user = await UsersBLL.getUserAuthDataById(userId)
 
 		if (!user) return sendError(event, createError({statusCode: 401, statusMessage: 'Unauthorized'}))
 
 		// if user is not an admin, check if they are allowed to access the endpoint
 		let unAuthEndpoints: string[] = [] 
-		switch (user.UserRole) {
+		switch (user.userRole) {
 			case 'USER':
 				unAuthEndpoints = [...clientAdminEndpoints, ...adminEndpoints]
 				break
@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
 		event.context.auth = { 
 			user,
 			tenantId: tenant.id,
-			role: user.UserRole
+			role: user.userRole
 		}
 	} catch (e) {
 		return

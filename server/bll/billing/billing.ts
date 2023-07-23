@@ -1,10 +1,8 @@
 import { ProductStock as ProductStockBLL } from "~/server/bll/products/productStock";
 import { boolean } from "zod";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
-import { BusinessBase } from "../businessBase";
-import { Prisma } from "@prisma/client";
 
-export class Billing extends BusinessBase<typeof Prisma.ModelName.Billing>{
+class Billing {
     
     async processProductTransaction(tenantId: number, productId: number, volume: number){
         var sufficient = this.hasSufficientBalanceAvailable(tenantId, productId, volume);
@@ -54,4 +52,6 @@ export class Billing extends BusinessBase<typeof Prisma.ModelName.Billing>{
         }
     }
 }
+
+export const BillingBLL = new Billing();
 

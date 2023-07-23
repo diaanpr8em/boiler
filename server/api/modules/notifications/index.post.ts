@@ -1,7 +1,8 @@
 import { z } from "zod"
 import { sendError } from 'h3'
-import { notificationBundle } from "../../../models/validation/notifications/notifications"
 import { NotificationsBLL} from "~/server/bll/notifications/notifications"
+import { notificationBundle } from '~/server/models/validation/notifications/notifications';
+
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
@@ -9,7 +10,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		const parsedBody = notificationBundle.parse(body)
 		
-		const notification = await NotificationsBLL.insertBundle(parsedBody)
+		const notification = await NotificationsBLL.insert(parsedBody)
 
 		return {
 			notification

@@ -1,9 +1,9 @@
 import { BusinessBase } from '../businessBase';
-import { SystemSettings as SystemSettingsDAL } from "~/server/db/system/systemSettings";
+import { SystemSettingsDAL } from "~/server/db/system/systemSettings";
 
-class SystemSettings extends BusinessBase<SystemSettings>{
+class SystemSettings {
     async getByTenantId(tenantId: number){
-        return await new SystemSettingsDAL().getByTenantId(tenantId);
+        return await SystemSettingsDAL.getByTenantId(tenantId);
     }
 }
 

@@ -1,28 +1,15 @@
-import { BusinessBase } from "../businessBase";
-import { JobStatus, MessageTypes, Prisma, ProviderType, ServiceTypes } from "@prisma/client";
-import { Services as ServicesDAL } from "~/server/db/services/services"
+import { JobStatus, MessageTypes, ProviderType, ServiceTypes } from "@prisma/client";
+import { ServicesDAL } from "~/server/db/services/services"
+import { ServiceRequest } from "~/server/models/validation/services/services";
 
-class Services extends BusinessBase<Services>{
-    async insert(request: any, tenantId: number, serviceType: ServiceTypes, messageType: MessageTypes, providerType?: ProviderType)
+class Services {
+    async insert(model: ServiceRequest)
     {
-        let newRecord: Prisma.ServicesCreateInput;
-        newRecord = {
-            jobStatus: JobStatus.NEW,
-            serviceType: serviceType,
-            messageType: messageType,
-            providerType: providerType,
-            request: JSON.stringify(request),
-            response: "",
-            providerRequest: "",
-            providerResponse: "",
-            userId: 1,
-            status: JobStatus.NEW,
-            tenants: {
-                connect: { id: tenantId }
-            }
-        }
+        const service = await ServicesDAL.insert(model);
+        // now link the tenant
+        await ServicesDAL.linkTenantId(service.id, model.tenantId);
 
-        return await new ServicesDAL().insert(newRecord);
+        return service;
     }
 }
 

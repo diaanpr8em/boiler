@@ -1,19 +1,14 @@
-import { JobStatus, MessageTypes, Prisma, ProviderType, ServiceTypes, StatusTypes } from "@prisma/client";
+import { JobStatus, MessageTypes, ProviderType, ServiceTypes, StatusTypes } from "@prisma/client";
 import { prisma } from "../prismaConnection";
+import { ServiceRequest } from "~/server/models/validation/services/services";
 
 class Services {
     
-  async insertAsModel(model: Prisma.ServicesCreateInput){
+  async insert(model: ServiceRequest){
       return prisma.services.create({
         data: model
       });
     }
-
-  async insert(request: any, tenantId: number, serviceType: ServiceTypes, messageType: MessageTypes, providerType?: ProviderType){
-    // queue the job
-    // insert the data
-    
-  };
   
   async update(id: number, jobId: string, jobStatus: JobStatus, status: StatusTypes, statusMessage: string){
     return prisma.services.update({
@@ -27,7 +22,7 @@ class Services {
     });
   };
   
-  async getById(id: number){
+  getById(id: number){
     return prisma.services.findUnique({
       where: { id: id },
     });
@@ -39,6 +34,14 @@ class Services {
     });
   };
 
+  linkTenantId(serviceId: number, tenantId: number){
+    return prisma.services.update({
+      where: { id: serviceId },
+      data: {
+          tenantId: tenantId
+      }
+    });
+  }
 }  
 
 export const ServicesDAL = new Services();

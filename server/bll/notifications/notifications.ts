@@ -1,20 +1,18 @@
 import { BusinessBase } from "../businessBase";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 import { CopyTypes, LinkType, NotificationTypes, ServiceTypes, StatusTypes, Users } from "@prisma/client";
-import { Notifications as pNotifications } from "@prisma/client";
 import { NotificationsDAL } from "~/server/db/notifications/notifications"
 import { NotificationHubBLL } from "./notificationHub";
 import { NotificationRequest } from "~/server/models/validation/notifications/notifications";
-import { prisma } from "~/server/db/prismaConnection";
 import { SystemSettingsBLL } from "~/server/bll/system/systemSettings";
 import { TenantsBLL } from "~/server/bll/tenants/tenants";
 import { UniqueLinksBLL } from "~/server/bll/system/uniqueLinks";
 import { UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks";
 
-class Notifications extends BusinessBase<pNotifications>{
+class Notifications {
     
-    constructor() {
-        super(prisma.notifications);
+    async insert(model: NotificationRequest){
+        const noti = await NotificationsDAL.insert(model);
     }
 
     async sendAccountValidationNotification(user: Users){
