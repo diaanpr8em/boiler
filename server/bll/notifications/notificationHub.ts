@@ -8,6 +8,7 @@ import { ServicesBLL } from "~/server/bll/services/services";
 import { SystemSettingsBLL } from "~/server/bll/system/systemSettings"
 import { TenantsBLL } from "~/server/bll/tenants/tenants";
 import { TemplatesBLL } from "~/server/bll/templates/templates"
+import { ServiceRequest } from "~/server/models/validation/services/services";
 class NotificationHub  {
   
   async dispatch(noti: Notifications) : Promise<void>{
@@ -61,6 +62,8 @@ class NotificationHub  {
     bccArray = [...new Set(bccArray)].filter(x => x);
 
     const settings: SystemSettings[] | null = await SystemSettingsBLL.getByTenantId(tenant.id);
+    if (!settings) throw new Error("Settings not available for tenant");
+
     let emailFrom = settings
       .find((x) => x.module == MODULES.NOTIFICATIONS && x.setting == SETTINGS.NOTIFICATIONS_EMAIL_FROM)
       ?.value;
@@ -77,6 +80,18 @@ class NotificationHub  {
       templateId: noti.templateId
     };
 
+    let newService: ServiceRequest;
+    newService = {
+      jobStatus: JobStatus.NEW,
+      serviceType: ServiceTypes.EMAIL,
+      messageType: MessageTypes.EMAIL_SIMPLE,
+      providerType: ProviderType.SENDGRID,
+      request: JSON.stringify(request),
+      response: "",
+      providerRequest: "",
+      providerResponse: "",
+      userId: noti.userId,
+    }
     var service = await ServicesBLL.insert(
       request,
       tenant.id,
