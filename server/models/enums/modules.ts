@@ -7,3 +7,5 @@ enum MODULES {
     SUBSCRIPTIONS = "SUBSCRIPTIONS",
     SYSTEMS = "SYSTEMS"
 }
+
+export { MODULES }
