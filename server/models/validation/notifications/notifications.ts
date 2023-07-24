@@ -1,5 +1,6 @@
 import { CopyTypes, NotificationTypes, ServiceTypes, StatusTypes } from '@prisma/client';
 import { z } from 'zod'
+import { ENTITIES } from '~/server/models/enums/entities';
 
 const recipientSchema = z.object({
     userId: z.number(),
