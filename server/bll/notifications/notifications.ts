@@ -1,4 +1,3 @@
-import { BusinessBase } from "../businessBase";
 import { BusinessError, Codes } from "~/server/models/exceptions/BusinessError";
 import { CopyTypes, LinkType, NotificationTypes, ServiceTypes, StatusTypes, Users } from "@prisma/client";
 import { NotificationsDAL } from "~/server/db/notifications/notifications"
@@ -8,6 +7,7 @@ import { SystemSettingsBLL } from "~/server/bll/system/systemSettings";
 import { TenantsBLL } from "~/server/bll/tenants/tenants";
 import { UniqueLinksBLL } from "~/server/bll/system/uniqueLinks";
 import { UniqueLinkRequest } from "~/server/models/validation/system/uniqueLinks";
+import { ENTITIES } from "~/server/models/enums/entities";
 
 class Notifications {
     
@@ -41,7 +41,7 @@ class Notifications {
                 notificationType: NotificationTypes.ACCOUNT_VALIDATION,
                 serviceType: ServiceTypes.EMAIL,
                 status: StatusTypes.NEW,
-                templateId: settings.templates.accountValidation,
+                templateId: 0, // TODO: add template
                 type: NotificationTypes.ACCOUNT_VALIDATION,
                 userId: user.id,
                 useSystemPreferences: false

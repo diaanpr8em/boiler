@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 const destination = z.object({
-  to: z.string().email().min(3).max(50),
+  email: z.string().email().min(3).max(50),
   placeholders: z.array(
     z.object({
       key: z.string().min(3).max(50),
       value: z.string().min(3).max(150),
     })
-  ),
+  ).optional(),
 });
 
 const messageSchema = z.object({

@@ -34,6 +34,26 @@
 					density="compact"
 					nav
 				>
+
+					<v-list-group value="Contacts">
+                        <template v-slot:activator="{ props }">
+                            <v-list-item
+                                v-bind="props"
+                                prepend-icon="mdi-account-multiple-outline"
+                                title="Contacts"
+                            ></v-list-item>
+                        </template>
+
+                        <v-list-item 
+                            v-for="([title, icon, href], i) in contacts"
+                            :key="i"
+                            :title="title"
+                            :prepend-icon="icon"
+                            :value="title"
+                            :to="href"
+                        ></v-list-item>
+                    </v-list-group>
+
 					<v-list-item
 						v-for="(item, i) in items"
 						:key="i"
@@ -91,18 +111,56 @@
 	const authStore = useAuthStore()
     const router = useRouter()
 
+	const accounting = [
+		['Billing', 'mdi-video-outline', '/client/billing'],
+		['Invoicing', 'mdi-video-outline', '/client/invoicing'],
+		['Payments', 'mdi-video-outline', '/client/payments'],
+		['Payroll', 'mdi-video-outline', '/client/payroll'],
+	]
+
+	const communication = [
+		['Email', 'mdi-email-outline', '/client/email'],
+		['SMS', 'mdi-message-text-outline', '/client/sms'],
+		['Chat', 'mdi-whatsapp', 'client/chat'],
+		['Meetings', 'mdi-video-outline', '/client/meetings'],
+		['Polls', 'mdi-video-outline', '/client/polls'],
+	]
+	
+	const contacts = [
+		['Contacts List', 'mdi-account-multiple-outline', '/client/contacts/contacts'],
+        ['Contact Groups', 'mdi-account-group-outline', '/client/contacts/contact-groups']
+    ]
+
+	const hr = [
+
+	]
+
+	const listings = [
+		['Listings', 'mdi-format-list-text', 'client/listings/listings'],
+		['Portals', 'mdi-web', 'clients/listings/portals']
+	]
+
+	const support = [
+		['Helpdesk', 'mdi-video-outline', '/client/helpdesk'],
+		['Tickets', 'mdi-video-outline', '/client/tickets'],
+	]
+	
+	const tasks = [
+		['Task Management', 'mdi-video-outline', '/client/task-management'],
+		['Time Tracking', 'mdi-video-outline', '/client/time-tracking'],
+	]
+
+	
+	const items = [
+		{ text: 'Communication', icon: 'mdi-send-check' },
+		{ text: 'My Files', icon: 'mdi-folder' },
+		{ text: 'Shared with me', icon: 'mdi-folder-account-outline' },
+		{ text: 'Training', icon: 'mdi-human-male-board' },
+	]
+
     const logout = () => {
         authStore.logout()
         router.push('/')
     }
 
-	const items = [
-        { text: 'My Files', icon: 'mdi-folder' },
-        { text: 'Shared with me', icon: 'mdi-account-multiple' },
-        { text: 'Starred', icon: 'mdi-star' },
-        { text: 'Recent', icon: 'mdi-history' },
-        { text: 'Offline', icon: 'mdi-check-circle' },
-        { text: 'Uploads', icon: 'mdi-upload' },
-        { text: 'Backups', icon: 'mdi-cloud-upload' },
-	]
 </script>
