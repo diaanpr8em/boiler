@@ -90,7 +90,29 @@ async function main() {
       { tenantId: 1, module: "NOTIFICATIONS", setting: "NOTIFICATIONS_SMTP_USER", value: "no-reply@talentforge.co.za"}
     ]
   })
-  //console.log({ mike, diaan });
+
+  await prisma.modules.createMany({
+    data: [
+      { name: "Accounting"},
+      { name: "Billing" },
+      { name: "Contacts" },
+      { name: "Communication" },
+      { name: "Human Resources" },
+      { name: "Inventory" },
+      { name: "Marketing" },
+      { name: "Listings" },
+      { name: "Support" },
+      { name: "Tasks" },
+      { name: "Training" }
+    ]
+  })
+
+  await prisma.moduleItems.createMany({
+    data: [
+      { moduleId: 1, name: "Chart of Accounts", description: "Manage your chart of accounts", icon: "account_balance", url: "/accounting/chart-of-accounts", order: 1 },
+    ]
+  })
+
 }
 main()
   .then(async () => {

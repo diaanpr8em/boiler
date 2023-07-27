@@ -4,7 +4,6 @@ import { queueEmail } from "~/server/bll/services/email";
 import { BusinessError } from "~/server/models/exceptions/BusinessError";
 import { messageSchema, PostRequest } from "~/server/models/validation/services/email/advanced";
 import { MessageTypes } from "@prisma/client";
-import { EmailMessage } from "~/server/models/services/email_advanced";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)

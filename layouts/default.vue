@@ -119,9 +119,9 @@
 	]
 
 	const communication = [
-		['Email', 'mdi-email-outline', '/client/email'],
-		['SMS', 'mdi-message-text-outline', '/client/sms'],
-		['Chat', 'mdi-whatsapp', 'client/chat'],
+		['Email', 'mdi-email-outline', '/comms/email'],
+		['SMS', 'mdi-message-text-outline', '/comms/sms'],
+		['Chat', 'mdi-whatsapp', 'comms/chat'],
 		['Meetings', 'mdi-video-outline', '/client/meetings'],
 		['Polls', 'mdi-video-outline', '/client/polls'],
 	]
