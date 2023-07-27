@@ -41,7 +41,7 @@ model BillingUsage {
 model Contacts {
   id                 Int                 @id @default(autoincrement())
   tenant             Tenants             @relation(fields: [tenantId], references: [id])
-  tenantId           Int                 
+  tenantId           Int
   fullName           String
   email              String
   mobile             String
@@ -102,6 +102,37 @@ model LookupCurrencies {
   dollar_exchange_rate Decimal         @default(1) @db.Decimal(7, 4)
   updateAt             DateTime        @updatedAt
   Subscriptions        Subscriptions[]
+}
+
+model Modules {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  ModuleItems       ModuleItems[]
+  ModuleTenantLinks ModuleTenantLinks[]
+}
+
+model ModuleItems {
+  id        Int      @id @default(autoincrement())
+  modules   Modules  @relation(fields: [moduleId], references: [id])
+  moduleId  Int
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ModuleTenantLinks {
+  id        Int      @id @default(autoincrement())
+  modules   Modules  @relation(fields: [moduleId], references: [id])
+  moduleId  Int
+  tenants   Tenants  @relation(fields: [tenantId], references: [id])
+  tenantId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([moduleId], name: "ModuleTenantLinks_userId")
+  @@index([tenantId], name: "ModuleTenantLinks_tenantId")
 }
 
 model Notifications {
@@ -255,7 +286,7 @@ model SystemSettings {
 model Templates {
   id            Int             @id @default(autoincrement())
   tenants       Tenants         @relation(fields: [tenantId], references: [id])
-  tenantId      Int           
+  tenantId      Int
   name          String
   subject       String          @default("") @db.VarChar(255)
   htmlBody      String          @default("") @db.Text()
@@ -269,21 +300,22 @@ model Templates {
 }
 
 model Tenants {
-  id              Int               @id @default(autoincrement())
-  name            String            @default("")
-  domain          String
-  currency        Currencies        @default(ZAR)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  Contacts        Contacts[]
-  ContactGroups   ContactGroups[]
-  Invoices        Invoices[]
-  Orders          Orders[]
-  ProductStock    ProductStock[]
-  Settings        SystemSettings[]
-  Templates       Templates[]
-  UserTenantLinks UserTenantLinks[]
-  Services        Services[]
+  id                Int                 @id @default(autoincrement())
+  name              String              @default("")
+  domain            String
+  currency          Currencies          @default(ZAR)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  Contacts          Contacts[]
+  ContactGroups     ContactGroups[]
+  Invoices          Invoices[]
+  Orders            Orders[]
+  ProductStock      ProductStock[]
+  Settings          SystemSettings[]
+  Templates         Templates[]
+  UserTenantLinks   UserTenantLinks[]
+  Services          Services[]
+  ModuleTenantLinks ModuleTenantLinks[]
 }
 
 model UniqueLinks {
@@ -424,7 +456,6 @@ enum StatusTypes {
   COMPLETE
   FAILED
 }
-
 
 enum UserRole {
   ADMIN // admin
