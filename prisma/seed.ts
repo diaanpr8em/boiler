@@ -93,23 +93,23 @@ async function main() {
 
   await prisma.modules.createMany({
     data: [
-      { name: "Accounting"},
-      { name: "Billing" },
-      { name: "Contacts" },
-      { name: "Communication" },
-      { name: "Human Resources" },
-      { name: "Inventory" },
-      { name: "Marketing" },
-      { name: "Listings" },
-      { name: "Support" },
-      { name: "Tasks" },
-      { name: "Training" }
+      { name: "Accounting", icon: "mdi-calculator", url: "/accounting", order: 1 },
+      { name: "Billing", icon: "mdi-receipt-text", url: "/billing", order: 2 },
+      { name: "Contacts", icon: "mdi-card-account-mail", url: "/contacts", order: 3 },
+      { name: "Communication", icon: "mdi-account-voice", url: "/communication", order: 4 },
+      { name: "Human Resources", icon: "mdi-badge-account", url: "/hr", order: 5 },
+      { name: "Inventory", icon: "mdi-warehouse", url: "/inventory", order: 6 },
+      { name: "Marketing", icon: "mdi-bullhorn", url: "/marketing", order: 7 },
+      { name: "Listings", icon: "mdi-image-frame", url: "/listings", order: 8 },
+      { name: "Support", icon: "mdi-face-agent", url: "/support", order: 9 },
+      { name: "Tasks", icon: "mdi-calendar-check", url: "/tasks", order: 10 },
+      { name: "Training", icon: "mdi-human-male-board-poll", url: "/training", order: 11 },
     ]
   })
 
   await prisma.moduleItems.createMany({
     data: [
-      { moduleId: 1, name: "Chart of Accounts", description: "Manage your chart of accounts", icon: "account_balance", url: "/accounting/chart-of-accounts", order: 1 },
+      { moduleId: 1, name: "Chart of Accounts", description: "Manage your chart of accounts", icon: "mdi-chart-box-outline", url: "/accounting/chart-of-accounts", order: 1 },
     ]
   })
 
