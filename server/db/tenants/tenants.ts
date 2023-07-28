@@ -5,6 +5,7 @@ import {
 } from "~/server/models/validation/tenants";
 import { prisma } from "../prismaConnection";
 import { Prisma, PrismaClient } from "@prisma/client";
+import { UsersTenants } from './../../../.nuxt/components.d';
 
 class Tenants {
   async deleteById(id: number) {
@@ -41,9 +42,9 @@ class Tenants {
 
   async getByUserId(userId: number) {
     return await prisma.tenants.findFirst({
-      where: {
+      include: {
         UserTenantLinks: {
-          every: {
+          where: {
             userId: userId
           }
         }

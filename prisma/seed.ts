@@ -109,7 +109,13 @@ async function main() {
 
   await prisma.moduleItems.createMany({
     data: [
+      // Accounting
       { moduleId: 1, name: "Chart of Accounts", description: "Manage your chart of accounts", icon: "mdi-chart-box-outline", url: "/accounting/chart-of-accounts", order: 1 },
+      // Billing
+      { moduleId: 2, name: "Quotes", description: "List of quotes", icon: "mdi-chart-box-outline", url: "/billing/quotes", order: 1 },
+      // Contacts
+      { moduleId: 3, name: "Contacts", description: "List of contacts", icon: "mdi-chart-box-outline", url: "/contacts/contacts", order: 1 },
+      // Communication
     ]
   })
 

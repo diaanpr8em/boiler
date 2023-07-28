@@ -3,6 +3,7 @@ import { UniqueLinkCreateRequest, UniqueLinkRequest } from "~/server/models/vali
 import { v4 as uuidv4 } from 'uuid';
 import { UniqueLinksDAL } from "~/server/db/system/uniqueLinks";
 import { LinkType } from "@prisma/client";
+import { Link } from "~/.nuxt/components";
 
 const config = useRuntimeConfig()
 class UniqueLinks {
@@ -17,6 +18,9 @@ class UniqueLinks {
             case LinkType.RESET_PASSWORD:
                 action = "reset";
                 break;
+            case LinkType.UNSUBSCRIBE:
+                    action = "unsubscribe";
+                    break;
             case LinkType.VALIDATE_ACCOUNT:
                 action = "validate";
                 break;
