@@ -114,8 +114,42 @@ async function main() {
       // Billing
       { moduleId: 2, name: "Quotes", description: "List of quotes", icon: "mdi-chart-box-outline", url: "/billing/quotes", order: 1 },
       // Contacts
-      { moduleId: 3, name: "Contacts", description: "List of contacts", icon: "mdi-chart-box-outline", url: "/contacts/contacts", order: 1 },
+      { moduleId: 3, name: "Contacts", description: "List of contacts", icon: "mdi-chart-box-outline", url: "/contacts/search", order: 1 },
       // Communication
+      { moduleId: 4, name: "Email", description: "Send emails", icon: "mdi-chart-box-outline", url: "/communication/email", order: 1 },
+      { moduleId: 4, name: "SMS", description: "Send SMS", icon: "mdi-chart-box-outline", url: "/communication/sms", order: 2 },
+      { moduleId: 4, name: "WhatsApp", description: "Send WhatsApp messages", icon: "mdi-chart-box-outline", url: "/communication/whatsapp", order: 3 },
+      { moduleId: 4, name: "Meetings", description: "Schedule meetings", icon: "mdi-chart-box-outline", url: "/communication/meetings", order: 4 },
+      { moduleId: 4, name: "Polls", description: "Create polls", icon: "mdi-chart-box-outline", url: "/communication/polls", order: 5 },
+      // Human Resources
+      { moduleId: 5, name: "Employees", description: "Manage employees", icon: "mdi-chart-box-outline", url: "/hr/employees", order: 1 },
+      { moduleId: 5, name: "Payroll", description: "Manage payroll", icon: "mdi-chart-box-outline", url: "/hr/payroll", order: 2 },
+      { moduleId: 5, name: "Leave", description: "Manage leave", icon: "mdi-chart-box-outline", url: "/hr/leave", order: 3 },
+      { moduleId: 5, name: "Training", description: "Manage training", icon: "mdi-chart-box-outline", url: "/hr/training", order: 4 },
+      { moduleId: 5, name: "Performance", description: "Manage performance", icon: "mdi-chart-box-outline", url: "/hr/performance", order: 5 },
+      { moduleId: 5, name: "Recruitment", description: "Manage recruitment", icon: "mdi-chart-box-outline", url: "/hr/recruitment", order: 6 },
+      // Inventory
+      { moduleId: 6, name: "Products", description: "Manage products", icon: "mdi-chart-box-outline", url: "/inventory/products", order: 1 },
+      { moduleId: 6, name: "Stock", description: "Manage stock", icon: "mdi-chart-box-outline", url: "/inventory/stock", order: 2 },
+      { moduleId: 6, name: "Orders", description: "Manage orders", icon: "mdi-chart-box-outline", url: "/inventory/orders", order: 3 },
+      { moduleId: 6, name: "Suppliers", description: "Manage suppliers", icon: "mdi-chart-box-outline", url: "/inventory/suppliers", order: 4 },
+      // Marketing
+      { moduleId: 7, name: "Campaigns", description: "Manage campaigns", icon: "mdi-chart-box-outline", url: "/marketing/campaigns", order: 1 },
+      { moduleId: 7, name: "Leads", description: "Manage leads", icon: "mdi-chart-box-outline", url: "/marketing/leads", order: 2 },
+      { moduleId: 7, name: "Opportunities", description: "Manage opportunities", icon: "mdi-chart-box-outline", url: "/marketing/opportunities", order: 3 },
+      { moduleId: 7, name: "Customers", description: "Manage customers", icon: "mdi-chart-box-outline", url: "/marketing/customers", order: 4 },
+      // Listings
+      { moduleId: 8, name: "Listings", description: "Manage listings", icon: "mdi-chart-box-outline", url: "/listings/listings", order: 1 },
+      { moduleId: 8, name: "Portals", description: "Manage portals", icon: "mdi-chart-box-outline", url: "/listings/portals", order: 2 },
+      { moduleId: 8, name: "Agents", description: "Manage agents", icon: "mdi-chart-box-outline", url: "/listings/agents", order: 3 },
+      // Support
+      { moduleId: 9, name: "Tickets", description: "Manage tickets", icon: "mdi-chart-box-outline", url: "/support/tickets", order: 1 },
+      { moduleId: 9, name: "Knowledge Base", description: "Manage knowledge base", icon: "mdi-chart-box-outline", url: "/support/knowledge-base", order: 2 },
+      // Tasks
+      { moduleId: 10, name: "Tasks", description: "Manage tasks", icon: "mdi-chart-box-outline", url: "/tasks/tasks", order: 1 },
+      { moduleId: 10, name: "Projects", description: "Manage projects", icon: "mdi-chart-box-outline", url: "/tasks/projects", order: 2 },
+      { moduleId: 10, name: "Time Tracking", description: "Manage time tracking", icon: "mdi-chart-box-outline", url: "/tasks/time-tracking", order: 3 },
+      
     ]
   })
 
